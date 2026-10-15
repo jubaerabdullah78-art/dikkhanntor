@@ -8,7 +8,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+ <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.8/dist/umd/supabase.js"></script>
   
   <!-- Dedicated Question Files -->
   <script src="questions_a_unit.js"></script>
@@ -384,7 +384,7 @@
   <script>
     // EXACT PROJECT SUBDOMAIN & JWT KEY
     const SUPABASE_URL = "https://qhyzpgkcbcjvjothjhbec.supabase.co";
-    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFoeXpwZ2tjYmN2am90aGpoYmVjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIwNTE3NDgsImV4cCI6MjEwNzYyNzc0OH0.7DCPPIYAMhQSa3O8ijqhV8Fboh9wgLNQf2tcQuzpjWM";
+   const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFoeXpwZ2tjYmN2am90aGpoYmVjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIwNTE3NDgsImV4cCI6MjEwNzYyNzc0OH0.7DCPPIYAMhQSa3O8ijqhV8Fboh9wgLNQf2tcQuzpjWM"
     const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     let currentUser = null;
