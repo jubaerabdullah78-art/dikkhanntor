@@ -1,1159 +1,224 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>দীক্ষান্তর | বিশ্ববিদ্যালয় ভর্তি মডেল টেস্ট ও ক্যারিয়ার হাব</title>
-  
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://unpkg.com/lucide@latest"></script>
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-
-  <!-- Google Firebase SDKs (Browser Compat) -->
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-  
-  <!-- Dedicated Question Files -->
-  <script src="questions_a_unit.js"></script>
-  <script src="questions_b_unit.js"></script>
-  <script src="questions_c_unit.js"></script>
-
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Hind+Siliguri:wght@400;500;600;700&display=swap');
-    * { font-family: 'Plus Jakarta Sans', 'Hind Siliguri', sans-serif; }
-    .custom-scroll::-webkit-scrollbar { width: 6px; }
-    .custom-scroll::-webkit-scrollbar-track { background: #f8fafc; }
-    .custom-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dikkhanntor - দিকক্ষান্তর | বিশ্ববিদ্যালয় ভর্তি মডেল টেস্ট</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Firebase App & Auth & Firestore SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap');
+        body { font-family: 'Hind Siliguri', sans-serif; }
+    </style>
 </head>
-<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col custom-scroll antialiased selection:bg-indigo-600 selection:text-white">
+<body class="bg-slate-50 min-h-screen text-slate-800 flex flex-col justify-between">
 
-  <!-- NAVBAR -->
-  <nav class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-      
-      <!-- Brand & Official Logo -->
-      <div class="flex items-center gap-3 cursor-pointer" onclick="showView('homeView')">
-        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-900 via-indigo-700 to-violet-600 flex items-center justify-center shadow-md shadow-indigo-200 p-1.5 border border-white/20">
-          <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full">
-            <path d="M50 15L85 32L50 49L15 32L50 15Z" fill="#FBBF24"/>
-            <path d="M50 49L85 32V42L50 59L15 42V32L50 49Z" fill="#F59E0B" fill-opacity="0.7"/>
-            <path d="M22 62C34 60 46 64 50 72C54 64 66 60 78 62V88C66 86 54 90 50 96C46 90 34 86 22 88V62Z" fill="#FFFFFF"/>
-            <path d="M50 72V96" stroke="#4F46E5" stroke-width="3" stroke-linecap="round"/>
-            <circle cx="82" cy="20" r="3" fill="#FDE68A"/>
-          </svg>
-        </div>
-        <div>
-          <span class="text-xl font-black tracking-tight text-slate-900">দীক্ষান্তর</span>
-          <span class="text-[10px] uppercase font-black bg-indigo-50 text-indigo-700 border border-indigo-200/50 px-1.5 py-0.5 rounded ml-1">Admission 2026</span>
-        </div>
-      </div>
-
-      <!-- Action Navigation -->
-      <div class="flex items-center gap-3">
-        <div id="walletBadge" class="hidden flex items-center gap-2 bg-emerald-50 border border-emerald-200 px-3.5 py-1.5 rounded-full cursor-pointer hover:bg-emerald-100 transition" onclick="openModal('rechargeModal')">
-          <i data-lucide="wallet" class="w-4 h-4 text-emerald-600"></i>
-          <span class="text-xs text-slate-600 font-semibold">ওয়ালেট:</span>
-          <span class="text-sm font-black text-emerald-800">৳<span id="navBalance">0.00</span></span>
-          <span class="w-5 h-5 rounded-full bg-emerald-600 text-white flex items-center justify-center text-xs font-bold shadow-xs">+</span>
-        </div>
-
-        <button id="dashNavBtn" onclick="showView('dashboardView')" class="hidden sm:flex items-center gap-1.5 text-xs font-bold text-slate-700 hover:text-indigo-600 px-3 py-2 rounded-xl hover:bg-indigo-50 transition">
-          <i data-lucide="layout-dashboard" class="w-4 h-4 text-indigo-600"></i>
-          <span>ড্যাশবোর্ড</span>
-        </button>
-
-        <button id="adminNavBtn" onclick="showView('adminView')" class="hidden flex items-center gap-1.5 text-xs font-bold bg-slate-900 hover:bg-slate-800 text-amber-400 px-3.5 py-2 rounded-xl shadow-xs transition">
-          <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
-          <span>Owner Panel</span>
-        </button>
-
-        <div id="authContainer" class="flex flex-col items-center">
-          <button id="authBtn" onclick="handleGoogleSignIn()" class="flex items-center gap-2 text-xs font-extrabold bg-indigo-900 hover:bg-indigo-800 text-white px-4 py-2 rounded-xl transition shadow-xs">
-            <svg class="w-4 h-4" viewBox="0 0 24 24">
-              <path fill="#EA4335" d="M12 5c1.6 0 3 .6 4.1 1.7l3.1-3.1C17.3 1.8 14.8 1 12 1 7.5 1 3.7 3.6 1.9 7.3l3.7 2.9C6.5 7.4 9 5 12 5z"/>
-              <path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.7-.2-2.3H12v4.6h6.5c-.3 1.5-1.1 2.8-2.4 3.7l3.7 2.9c2.2-2 3.7-5 3.7-8.9z"/>
-              <path fill="#FBBC05" d="M5.6 14.8c-.2-.7-.4-1.5-.4-2.3s.2-1.6.4-2.3L1.9 7.3C.7 9.7 0 12 0 14.8s.7 5.1 1.9 7.5l3.7-2.9z"/>
-              <path fill="#34A853" d="M12 23.5c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3 0-5.5-2.4-6.4-5.2L1.9 16.5C3.7 20.2 7.5 23.5 12 23.5z"/>
-            </svg>
-            <span id="authBtnText">গুগল দিয়ে লগইন</span>
-          </button>
-          <button onclick="handleGuestEntry()" class="text-[10px] text-slate-400 hover:text-indigo-600 underline mt-1">
-            বা সরাসরি মোবাইল নম্বর দিয়ে লগইন
-          </button>
-        </div>
-
-        <button id="logoutBtn" onclick="handleLogout()" class="hidden text-xs font-bold text-rose-600 hover:bg-rose-50 px-3 py-2 rounded-xl transition">
-          <i data-lucide="log-out" class="w-4 h-4"></i>
-        </button>
-      </div>
-
-    </div>
-  </nav>
-
-  <!-- MAIN CONTAINER -->
-  <main class="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
-
-    <!-- VIEW 1: HOME & EXAM DIRECTORY -->
-    <section id="homeView" class="space-y-8">
-      
-      <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-indigo-950 via-slate-900 to-indigo-900 text-white p-8 sm:p-12 shadow-2xl">
-        <div class="max-w-3xl space-y-4">
-          <div class="inline-flex items-center gap-2 bg-indigo-800/60 border border-indigo-700/60 text-indigo-200 px-3.5 py-1 rounded-full text-xs font-bold uppercase tracking-wider">
-            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            বিজ্ঞান • মানবিক • ব্যবসায় শিক্ষা ১০০ নম্বরের পূর্ণাঙ্গ টেস্ট
-          </div>
-          <h1 class="text-3xl sm:text-5xl font-black tracking-tight leading-tight">
-            স্বপ্নের বিশ্ববিদ্যালয়ে চান্স নিশ্চিত করতে হোক <span class="bg-gradient-to-r from-amber-400 via-orange-300 to-amber-200 bg-clip-text text-transparent">দীক্ষান্তর-এর সাথে প্রস্তুতি</span>
-          </h1>
-          <p class="text-slate-300 text-xs sm:text-sm leading-relaxed max-w-2xl">
-            ঢাকা বিশ্ববিদ্যালয় (DU), জবি, জাবি, চবি এবং গুচ্ছের বিগত বছরের স্ট্যান্ডার্ড প্রশ্নে ১০০টি এমসিকিউ টেস্ট। প্রতিটি ভুল উত্তরের জন্য -০.২৫ নেগেটিভ মার্কিং। পরীক্ষা শেষে সম্পূর্ণ নির্ভুল উত্তর সমাধানসহ দেখে নাও।
-          </p>
-
-          <div class="pt-2 flex flex-wrap items-center gap-3">
-            <div class="bg-white/10 backdrop-blur-md border border-white/20 px-3.5 py-1.5 rounded-xl text-xs font-bold text-amber-300">
-              ⚡ প্রতি পরীক্ষা মাত্র ৫ টাকা
+    <!-- Navbar -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <span class="text-2xl font-bold text-indigo-600">দিকক্ষান্তর</span>
+                <span class="text-xs bg-indigo-100 text-indigo-800 px-2 py-0.5 rounded-full font-medium">ভর্তি প্রস্তুতি</span>
             </div>
-            <div class="bg-emerald-500/20 border border-emerald-400/30 px-3.5 py-1.5 rounded-xl text-xs font-bold text-emerald-300">
-              🔥 মেগা অফার: ১২টি পরীক্ষা মাত্র ৫০ টাকায়!
+            <div id="navAuthArea" class="flex items-center space-x-4">
+                <!-- Dynamic Login/User State -->
+                <div id="loggedOutState">
+                    <button onclick="handleGoogleSignIn()" id="authBtn" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-medium shadow transition flex items-center space-x-2">
+                        <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M12.24 10.285V13.4h6.806c-.275 1.765-2.056 5.174-6.806 5.174-4.095 0-7.439-3.389-7.439-7.574s3.344-7.574 7.439-7.574c2.33 0 3.891.989 4.785 1.849l3.254-3.138C18.189 1.186 15.479 0 12.24 0 5.48 0 0 5.48 0 12.24s5.48 12.24 12.24 12.24c7.058 0 11.734-4.964 11.734-11.96 0-.828-.085-1.455-.189-2.035H12.24z"/></svg>
+                        <span id="authBtnText">গুগল দিয়ে লগইন</span>
+                    </button>
+                </div>
+                <div id="loggedInState" class="hidden flex items-center space-x-3">
+                    <div class="text-right hidden sm:block">
+                        <div id="userNameDisplay" class="font-semibold text-sm">ইউজার</div>
+                        <div class="text-xs text-emerald-600 font-medium">ব্যালেন্স: <span id="userBalance">১০</span> টাকা</div>
+                    </div>
+                    <button id="adminPanelBtn" onclick="openAdminPanel()" class="hidden bg-amber-500 hover:bg-amber-600 text-white px-3 py-1.5 rounded-lg text-sm font-medium shadow">ওনার প্যানেল</button>
+                    <button onclick="handleLogout()" class="text-slate-500 hover:text-red-600 text-sm font-medium">লগআউট</button>
+                </div>
             </div>
-          </div>
         </div>
-      </div>
+    </header>
 
-      <!-- STREAM / UNIT SELECTION TABS -->
-      <div class="space-y-4">
-        <div>
-          <h2 class="text-xl font-extrabold text-slate-900 tracking-tight">অনুষদ ও ইউনিট নির্বাচন করো</h2>
-          <p class="text-xs text-slate-500 font-medium">তোমার বিভাগ অনুযায়ী ইউনিট বেছে নিয়ে ২০টি পূর্ণাঙ্গ মডেল টেস্ট শুরু করো</p>
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3" id="unitTabs">
-          <button onclick="switchUnit('B_UNIT')" id="tab_B_UNIT" class="p-4 rounded-2xl border-2 border-indigo-600 bg-indigo-50/60 text-left transition shadow-xs">
-            <div class="flex justify-between items-center mb-1">
-              <span class="text-xs font-extrabold uppercase text-indigo-700 bg-indigo-100 px-2.5 py-0.5 rounded-full">মানবিক শাখা</span>
-              <i data-lucide="book-open" class="w-4 h-4 text-indigo-600"></i>
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 py-8 flex-grow w-full">
+        <!-- Hero Section -->
+        <div class="bg-indigo-900 text-white rounded-2xl p-8 mb-8 shadow-lg flex flex-col md:flex-row justify-between items-center">
+            <div class="mb-6 md:mb-0 max-w-xl">
+                <h1 class="text-3xl md:text-4xl font-bold mb-3">বিশ্ববিদ্যালয় ভর্তি প্রস্তুতি এখন আরও গোছানো</h1>
+                <p class="text-indigo-200 text-sm md:text-base leading-relaxed">এ, বি এবং সি ইউনিটের ১০০ নম্বরের স্ট্যান্ডার্ড মডেল টেস্টে অংশ নিন। নেগেটিভ মার্কিং (-০.২৫) সহ নিজের প্রস্তুতি যাচাই করুন ঘরে বসেই।</p>
             </div>
-            <div class="font-black text-slate-900 text-base">B-Unit / কলা ও সামাজিক বিজ্ঞান</div>
-            <div class="text-[11px] text-slate-500 mt-0.5">বাংলা, English ও সাধারণ জ্ঞান (১০০ প্রশ্ন)</div>
-          </button>
-
-          <button onclick="switchUnit('A_UNIT')" id="tab_A_UNIT" class="p-4 rounded-2xl border-2 border-slate-200 bg-white text-left transition hover:border-slate-300">
-            <div class="flex justify-between items-center mb-1">
-              <span class="text-xs font-extrabold uppercase text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full">বিজ্ঞান শাখা</span>
-              <i data-lucide="atom" class="w-4 h-4 text-emerald-600"></i>
+            <div class="bg-white/10 backdrop-blur-md p-6 rounded-xl border border-white/20 text-center">
+                <div class="text-xs uppercase tracking-wider text-indigo-300 mb-1">মোট মডেল টেস্ট</div>
+                <div class="text-3xl font-bold text-white mb-3">১৫+ লাইভ পরীক্ষা</div>
+                <button onclick="scrollToExams()" class="bg-emerald-500 hover:bg-emerald-600 text-white px-6 py-2.5 rounded-lg font-semibold shadow transition">পরীক্ষা শুরু করুন</button>
             </div>
-            <div class="font-black text-slate-900 text-base">A-Unit / বিজ্ঞান অনুষদ</div>
-            <div class="text-[11px] text-slate-500 mt-0.5">পদার্থ, রসায়ন, জীববিজ্ঞান ও গণিত (১০০ প্রশ্ন)</div>
-          </button>
+        </div>
 
-          <button onclick="switchUnit('C_UNIT')" id="tab_C_UNIT" class="p-4 rounded-2xl border-2 border-slate-200 bg-white text-left transition hover:border-slate-300">
-            <div class="flex justify-between items-center mb-1">
-              <span class="text-xs font-extrabold uppercase text-amber-700 bg-amber-50 px-2.5 py-0.5 rounded-full">ব্যবসায় শিক্ষা</span>
-              <i data-lucide="briefcase" class="w-4 h-4 text-amber-600"></i>
+        <!-- Exam Section -->
+        <div id="examSection">
+            <h2 class="text-2xl font-bold text-slate-800 mb-6 border-b pb-2">উপলব্ধ ইউনিটসমূহ</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Unit A -->
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 flex flex-col justify-between hover:shadow-md transition">
+                    <div>
+                        <span class="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-1 rounded">বিজ্ঞান বিভাগ</span>
+                        <h3 class="text-xl font-bold mt-3 mb-2">এ ইউনিট (A Unit)</h3>
+                        <p class="text-slate-600 text-sm mb-4">গণিত, পদার্থবিজ্ঞান, রসায়ন ও ইংরেজি বিষয়ের ওপর পূর্ণাঙ্গ ১০০ নম্বরের মডেল টেস্ট।</p>
+                        <ul class="text-xs text-slate-500 space-y-1.5 mb-6">
+                            <li>✔️ পূর্ণমান: ১০০</li>
+                            <li>✔️ সময়: ৬০ মিনিট</li>
+                            <li>✔️ নেগেটিভ মার্কিং: -০.২৫</li>
+                        </ul>
+                    </div>
+                    <button onclick="startModelTest('A')" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-lg font-medium transition">পরীক্ষায় অংশ নিন (১০ টাকা)</button>
+                </div>
+
+                <!-- Unit B -->
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 flex flex-col justify-between hover:shadow-md transition">
+                    <div>
+                        <span class="bg-purple-100 text-purple-800 text-xs font-semibold px-2.5 py-1 rounded">মানবিক বিভাগ</span>
+                        <h3 class="text-xl font-bold mt-3 mb-2">বি ইউনিট (B Unit)</h3>
+                        <p class="text-slate-600 text-sm mb-4">বাংলা, ইংরেজি ও সাধারণ জ্ঞান বিষয়ের ওপর স্ট্যান্ডার্ড প্রশ্ন ব্যাংক।</p>
+                        <ul class="text-xs text-slate-500 space-y-1.5 mb-6">
+                            <li>✔️ পূর্ণমান: ১০০</li>
+                            <li>✔️ সময়: ৬০ মিনিট</li>
+                            <li>✔️ নেগেটিভ মার্কিং: -০.২৫</li>
+                        </ul>
+                    </div>
+                    <button onclick="startModelTest('B')" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-lg font-medium transition">পরীক্ষায় অংশ নিন (১০ টাকা)</button>
+                </div>
+
+                <!-- Unit C -->
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 flex flex-col justify-between hover:shadow-md transition">
+                    <div>
+                        <span class="bg-emerald-100 text-emerald-800 text-xs font-semibold px-2.5 py-1 rounded">ব্যবসায় শিক্ষা</span>
+                        <h3 class="text-xl font-bold mt-3 mb-2">সি ইউনিট (C Unit)</h3>
+                        <p class="text-slate-600 text-sm mb-4">হিসাববিজ্ঞান, ব্যবসায় ব্যবস্থাপনা, মার্কেটিং ও ফিন্যান্সভিত্তিক প্রশ্ন।</p>
+                        <ul class="text-xs text-slate-500 space-y-1.5 mb-6">
+                            <li>✔️ পূর্ণমান: ১০০</li>
+                            <li>✔️ সময়: ৬০ মিনিট</li>
+                            <li>✔️ নেগেটিভ মার্কিং: -০.২৫</li>
+                        </ul>
+                    </div>
+                    <button onclick="startModelTest('C')" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-lg font-medium transition">পরীক্ষায় অংশ নিন (১০ টাকা)</button>
+                </div>
             </div>
-            <div class="font-black text-slate-900 text-base">C-Unit / ব্যবসায় শিক্ষা অনুষদ</div>
-            <div class="text-[11px] text-slate-500 mt-0.5">হিসাববিজ্ঞান, ব্যবস্থাপনা, ফিন্যান্স, বাংলা ও ইংরেজি</div>
-          </button>
         </div>
-
-        <div id="examCardsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 pt-4"></div>
-      </div>
-
-    </section>
-
-    <!-- VIEW 2: STUDENT DASHBOARD -->
-    <section id="dashboardView" class="hidden space-y-8">
-      <div class="flex justify-between items-center border-b border-slate-200 pb-5">
-        <div>
-          <h2 class="text-2xl font-extrabold text-slate-900">শিক্ষার্থী প্রগ্রেস ড্যাশবোর্ড</h2>
-          <p class="text-xs text-slate-500 mt-0.5">তোমার অতীতের সকল পরীক্ষার হিস্ট্রি, প্রাপ্ত মার্ক এবং ভুল বিশ্লেষণ</p>
-        </div>
-        <button onclick="showView('homeView')" class="px-3.5 py-2 text-xs font-bold bg-slate-200 hover:bg-slate-300 text-slate-800 rounded-xl transition">
-          ← পরীক্ষায় ফিরে যাও
-        </button>
-      </div>
-
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
-          <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">মোট অংশগ্রহণ</span>
-          <div class="text-2xl sm:text-3xl font-extrabold text-indigo-700 mt-2" id="kpiTotalAttempts">0</div>
-        </div>
-        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
-          <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">গড় স্কোর (১০০-তে)</span>
-          <div class="text-2xl sm:text-3xl font-extrabold text-emerald-600 mt-2" id="kpiAvgScore">0.00</div>
-        </div>
-        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
-          <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">সর্বোচ্চ স্কোর</span>
-          <div class="text-2xl sm:text-3xl font-extrabold text-amber-500 mt-2" id="kpiMaxScore">0.00</div>
-        </div>
-        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
-          <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">মোট ভুল উত্তর</span>
-          <div class="text-2xl sm:text-3xl font-extrabold text-rose-500 mt-2" id="kpiTotalWrongs">0</div>
-        </div>
-      </div>
-
-      <div class="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
-        <div class="p-4 sm:p-5 border-b border-slate-100 flex items-center justify-between">
-          <h3 class="font-extrabold text-slate-900 text-sm sm:text-base">পরীক্ষার ফলাফল হিস্ট্রি</h3>
-          <span class="text-xs text-slate-400">সর্বশেষ ফলাফলসমূহ</span>
-        </div>
-        <div class="overflow-x-auto">
-          <table class="w-full text-left text-xs sm:text-sm">
-            <thead class="bg-slate-50 text-slate-600 uppercase text-[11px] font-bold border-b border-slate-100">
-              <tr>
-                <th class="px-5 py-3.5">তারিখ</th>
-                <th class="px-5 py-3.5">মডেল টেস্টের নাম</th>
-                <th class="px-5 py-3.5">প্রাপ্ত মার্ক (১০০-তে)</th>
-                <th class="px-5 py-3.5">সঠিক</th>
-                <th class="px-5 py-3.5">ভুল (-০.২৫)</th>
-                <th class="px-5 py-3.5">ছেড়ে দেওয়া</th>
-                <th class="px-5 py-3.5 text-right">পর্যালোচনা</th>
-              </tr>
-            </thead>
-            <tbody id="historyTableBody" class="divide-y divide-slate-100 text-slate-700"></tbody>
-          </table>
-        </div>
-      </div>
-    </section>
-
-    <!-- VIEW 3: LIVE EXAM VIEW -->
-    <section id="examView" class="hidden max-w-4xl mx-auto space-y-6">
-      <div class="sticky top-20 z-40 bg-white/95 backdrop-blur-md border border-slate-200 rounded-2xl p-4 sm:p-5 shadow-sm flex items-center justify-between">
-        <div>
-          <span id="activeExamBadge" class="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full bg-indigo-50 text-indigo-700">B-Unit</span>
-          <h3 class="text-lg font-black text-slate-900 mt-0.5" id="activeExamTitle">মডেল টেস্ট</h3>
-        </div>
-        <div class="flex items-center gap-2">
-          <div class="text-right hidden sm:block">
-            <div class="text-[11px] text-slate-400 font-bold uppercase">অবশিষ্ট সময়</div>
-            <div class="text-[10px] text-rose-500 font-medium">নেগেটিভ: -০.২৫</div>
-          </div>
-          <div class="text-xl sm:text-2xl font-black font-mono text-rose-600 bg-rose-50 border border-rose-200 px-4 py-1.5 rounded-xl tracking-wider" id="examTimer">
-            60:00
-          </div>
-        </div>
-      </div>
-
-      <form id="activeQuestionsForm" class="space-y-4"></form>
-
-      <div class="pt-4">
-        <button type="button" onclick="submitExam()" class="w-full py-4 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-extrabold text-base rounded-2xl shadow-lg shadow-emerald-600/20 hover:scale-[1.005] active:scale-[0.99] transition">
-          পরীক্ষা সমাপ্ত করো ও ফলাফল জমা দাও (১০০ মার্ক)
-        </button>
-      </div>
-    </section>
-
-    <!-- VIEW 4: RESULT & REVIEW -->
-    <section id="resultView" class="hidden max-w-3xl mx-auto space-y-6">
-      <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 text-center shadow-xs">
-        <span class="text-xs font-bold uppercase text-slate-400 tracking-wider">পরীক্ষার চূড়ান্ত ফলাফল</span>
-        <div class="text-4xl sm:text-5xl font-black text-indigo-900 my-3" id="resScoreText">0.00 / 100</div>
-        <div id="resPraiseMessage" class="max-w-md mx-auto p-4 rounded-xl text-xs sm:text-sm font-bold leading-relaxed mb-6"></div>
-
-        <div class="grid grid-cols-3 gap-3 max-w-lg mx-auto text-xs sm:text-sm font-bold">
-          <div class="bg-emerald-50 text-emerald-700 border border-emerald-100 p-3 rounded-xl" id="resCorrectText">সঠিক: 0</div>
-          <div class="bg-rose-50 text-rose-700 border border-rose-100 p-3 rounded-xl" id="resWrongText">ভুল: 0 (-০.২৫)</div>
-          <div class="bg-slate-50 text-slate-600 border border-slate-200 p-3 rounded-xl" id="resSkippedText">ছেড়ে দেওয়া: 0</div>
-        </div>
-      </div>
-
-      <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-xs space-y-4">
-        <div class="flex items-center justify-between border-b border-slate-100 pb-3">
-          <h3 class="font-black text-slate-900 text-base">উত্তর পর্যালোচনা ও ভুল সংশোধন গাইড</h3>
-          <span class="text-xs text-slate-400">প্রতিটি প্রশ্নের সঠিক সমাধান</span>
-        </div>
-        <div id="resReviewContainer" class="space-y-3"></div>
-        <button onclick="showView('dashboardView')" class="w-full mt-4 py-3 bg-indigo-900 hover:bg-indigo-800 text-white font-bold text-sm rounded-xl transition">
-          ড্যাশবোর্ডে ফিরে যাও
-        </button>
-      </div>
-    </section>
-
-    <!-- VIEW 5: COMPLETE OWNER ADMIN CRM & CONTROL PANEL -->
-    <section id="adminView" class="hidden space-y-8">
-      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b pb-4 gap-3">
-        <div>
-          <h2 class="text-2xl font-black text-slate-900 flex items-center gap-2">
-            <i data-lucide="crown" class="w-6 h-6 text-amber-500"></i>
-            দীক্ষান্তর Owner Control & Marketing Panel
-          </h2>
-          <p class="text-xs text-slate-500">নিবন্ধিত শিক্ষার্থী, ফোন নম্বর তালিকা, পরীক্ষার লাইভ রেকর্ড ও রিচার্জ অনুমোদন</p>
-        </div>
-        <div class="flex gap-2">
-          <button onclick="exportStudentsCSV()" class="flex items-center gap-1.5 px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-xs transition">
-            <i data-lucide="download" class="w-4 h-4"></i>
-            মার্কেটিং তালিকা ডাউনলোড (CSV)
-          </button>
-          <button onclick="showView('homeView')" class="px-3.5 py-2 text-xs font-bold bg-slate-200 hover:bg-slate-300 text-slate-800 rounded-xl transition">
-            ← হোম
-          </button>
-        </div>
-      </div>
-
-      <!-- Owner Metrics Cards -->
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
-          <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">মোট শিক্ষার্থী</span>
-          <div class="text-2xl sm:text-3xl font-extrabold text-indigo-700 mt-2" id="adminTotalStudents">0</div>
-        </div>
-        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
-          <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">মোট শিক্ষার্থী ব্যালেন্স</span>
-          <div class="text-2xl sm:text-3xl font-extrabold text-emerald-600 mt-2" id="adminTotalBalance">৳0.00</div>
-        </div>
-        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
-          <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">মোট অনুষ্ঠিত পরীক্ষা</span>
-          <div class="text-2xl sm:text-3xl font-extrabold text-amber-500 mt-2" id="adminTotalAttemptsCount">0</div>
-        </div>
-        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
-          <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">পেন্ডিং রিচার্জ</span>
-          <div class="text-2xl sm:text-3xl font-extrabold text-rose-500 mt-2" id="adminPendingCount">0</div>
-        </div>
-      </div>
-
-      <!-- Section A: Pending Wallet Recharges -->
-      <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-xs space-y-4">
-        <div class="flex justify-between items-center">
-          <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
-            <i data-lucide="wallet" class="w-4 h-4 text-emerald-600"></i>
-            পেন্ডিং ওয়ালেট রিচার্জ রিকোয়েস্ট (bKash / Nagad)
-          </h3>
-          <button onclick="loadAdminQueue()" class="text-xs text-indigo-600 font-bold hover:underline">রিফ্রেশ</button>
-        </div>
-        <div id="adminRechargeList" class="space-y-2"></div>
-      </div>
-
-      <!-- Section B: All Registered Students CRM -->
-      <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-xs space-y-4">
-        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
-          <div>
-            <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
-              <i data-lucide="users" class="w-4 h-4 text-indigo-600"></i>
-              নিবন্ধিত শিক্ষার্থী তালিকা (মার্কেটিং ফোনবুক)
-            </h3>
-            <p class="text-xs text-slate-400">প্রতিটি শিক্ষার্থীর নাম, ইমেইল ও ফোন নম্বর</p>
-          </div>
-          <input type="text" id="adminStudentSearch" onkeyup="filterAdminStudents()" placeholder="নাম বা ইমেইল দিয়ে সার্চ..." class="border border-slate-200 px-3 py-1.5 rounded-xl text-xs w-full sm:w-64">
-        </div>
-        <div class="overflow-x-auto">
-          <table class="w-full text-left text-xs sm:text-sm">
-            <thead class="bg-slate-50 text-slate-600 uppercase text-[11px] font-bold border-b border-slate-100">
-              <tr>
-                <th class="px-4 py-3">নাম</th>
-                <th class="px-4 py-3">ইমেইল / ইউজার আইডি</th>
-                <th class="px-4 py-3">মোবাইল নম্বর</th>
-                <th class="px-4 py-3">ওয়ালেট ব্যালেন্স</th>
-                <th class="px-4 py-3">যোগদানের তারিখ</th>
-              </tr>
-            </thead>
-            <tbody id="adminStudentsTableBody" class="divide-y divide-slate-100 text-slate-700"></tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- Section C: All Student Exam Submissions -->
-      <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-xs space-y-4">
-        <div>
-          <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
-            <i data-lucide="clipboard-check" class="w-4 h-4 text-emerald-600"></i>
-            সকল শিক্ষার্থীর পরীক্ষার ফলাফল ও বিস্তারিত মার্কস
-          </h3>
-          <p class="text-xs text-slate-400">লাইভ পরীক্ষার হিস্ট্রি</p>
-        </div>
-        <div class="overflow-x-auto">
-          <table class="w-full text-left text-xs sm:text-sm">
-            <thead class="bg-slate-50 text-slate-600 uppercase text-[11px] font-bold border-b border-slate-100">
-              <tr>
-                <th class="px-4 py-3">তারিখ ও সময়</th>
-                <th class="px-4 py-3">শিক্ষার্থী</th>
-                <th class="px-4 py-3">পরীক্ষার নাম</th>
-                <th class="px-4 py-3">প্রাপ্ত মার্ক (১০০-তে)</th>
-                <th class="px-4 py-3">সঠিক</th>
-                <th class="px-4 py-3">ভুল (-০.২৫)</th>
-                <th class="px-4 py-3">ছেড়ে দেওয়া</th>
-              </tr>
-            </thead>
-            <tbody id="adminAllAttemptsTableBody" class="divide-y divide-slate-100 text-slate-700"></tbody>
-          </table>
-        </div>
-      </div>
-    </section>
-
-  </main>
-
-  <!-- RECHARGE MODAL -->
-  <div id="rechargeModal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
-    <div class="bg-white max-w-md w-full rounded-3xl p-6 sm:p-8 shadow-2xl relative space-y-5 text-xs animate-in fade-in zoom-in-95 duration-200">
-      <button onclick="closeModal('rechargeModal')" class="absolute top-5 right-5 text-slate-400 hover:text-slate-600">✕</button>
-
-      <div>
-        <h3 class="text-base font-extrabold text-slate-900 flex items-center gap-2">
-          <i data-lucide="wallet-cards" class="w-5 h-5 text-indigo-600"></i> ওয়ালেট ব্যালেন্স রিচার্জ
-        </h3>
-        <p class="text-slate-500 mt-0.5">নিচের নম্বরে Send Money করে ব্যালেন্স যুক্ত করুন।</p>
-      </div>
-
-      <div class="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-2xl p-3.5 space-y-1 text-slate-800">
-        <div class="font-extrabold text-amber-900 flex items-center gap-1.5">
-          <span>🔥</span> স্পেশাল প্যাকেজ অফার:
-        </div>
-        <div class="text-[11px] leading-relaxed text-slate-700">
-          • <strong>৫০ টাকা রিচার্জে ১২টি পরীক্ষা</strong> (প্রতি টেস্ট মাত্র ৪.১৬ টাকা!)<br>
-          • অথবা যেকোনো পরিমাণ (কমপক্ষে ১০ টাকা) রিচার্জ করতে পারো।
-        </div>
-      </div>
-
-      <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 space-y-2">
-        <div class="flex justify-between items-center">
-          <span class="font-bold text-pink-600">bKash Personal:</span>
-          <span class="font-mono font-extrabold bg-white px-2 py-0.5 rounded border border-slate-200 select-all">01570204036</span>
-        </div>
-        <div class="flex justify-between items-center">
-          <span class="font-bold text-orange-600">Nagad Personal:</span>
-          <span class="font-mono font-extrabold bg-white px-2 py-0.5 rounded border border-slate-200 select-all">01570204036</span>
-        </div>
-        <p class="text-[11px] text-slate-400 pt-1 leading-normal">* সেন্ড মানি সফল হলে নিচের বক্সে TrxID ও টাকার পরিমাণ লিখে সাবমিট করো।</p>
-      </div>
-
-      <div class="space-y-3">
-        <div>
-          <label class="block font-bold text-slate-600 mb-1">পেমেন্ট মেথড</label>
-          <select id="recMethod" class="w-full border p-2.5 rounded-xl">
-            <option value="bKash">bKash Personal</option>
-            <option value="Nagad">Nagad Personal</option>
-          </select>
-        </div>
-        <div>
-          <label class="block font-bold text-slate-600 mb-1">টাকার পরিমাণ (BDT)</label>
-          <input type="number" id="recAmount" placeholder="৫০ (১২টি টেস্টের অফার)" class="w-full border p-2.5 rounded-xl">
-        </div>
-        <div>
-          <label class="block font-bold text-slate-600 mb-1">TrxID (ট্রানজেকশন আইডি)</label>
-          <input type="text" id="recTrxId" placeholder="e.g. BKT98A2F" class="w-full border p-2.5 rounded-xl font-mono uppercase">
-        </div>
-        <button onclick="submitRechargeRequest()" class="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold rounded-xl transition shadow-md shadow-emerald-600/20">
-          রিচার্জ রিকোয়েস্ট সাবমিট করো
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- FLOATING WHATSAPP SUPPORT BUTTON -->
-  <a href="https://wa.me/8801570204036?text=Hello%20Dikkhanntor%20Support%2C%20I%20need%20help." target="_blank"
-     class="fixed bottom-6 right-6 z-40 bg-emerald-500 hover:bg-emerald-600 text-white p-3.5 rounded-full shadow-2xl flex items-center justify-center hover:scale-105 transition">
-    <i data-lucide="message-circle" class="w-6 h-6"></i>
-    <span class="text-xs font-bold ml-2 pr-1 hidden sm:inline">Online Support</span>
-  </a>
-
-  <!-- ================= FIREBASE CLOUD & GOOGLE AUTH ENGINE ================= -->
-  <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyDwFuUm21bbQc1MXG9zPalMZTIpAqRYX4U",
-      authDomain: "dikkhanntor.firebaseapp.com",
-      projectId: "dikkhanntor",
-      storageBucket: "dikkhanntor.firebasestorage.app",
-      messagingSenderId: "296903284339",
-      appId: "1:296903284339:web:2fd585dfe348c88e9c3c06",
-      measurementId: "G-BEYVS51YH2"
-    };
-
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const db = firebase.firestore();
-
-    let currentUser = null;
-    let currentProfile = null;
-    let activeUnit = "B_UNIT";
-    let activeQuestions = [];
-    let currentExam = null;
-    let examTimerInterval = null;
-    let remainingSeconds = 60 * 60;
-    let allLoadedStudents = [];
-    let isSigningIn = false;
-
-    window.addEventListener("DOMContentLoaded", async () => {
-      if (window.lucide) lucide.createIcons();
-      switchUnit("B_UNIT");
-
-      // 1. Force Local Browser Persistence to kill login loops
-      try {
-        await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
-      } catch (e) {}
-
-      // 2. Check Local Backup Session (for zero-cookie guest logins)
-      const cachedUid = localStorage.getItem('dikkhanntor_active_uid');
-      const cachedProfile = localStorage.getItem('dikkhanntor_active_profile');
-      if (cachedUid && cachedProfile) {
-        try {
-          currentUser = { uid: cachedUid, email: JSON.parse(cachedProfile).email };
-          currentProfile = JSON.parse(cachedProfile);
-          updateNavAfterLogin();
-        } catch(e) {}
-      }
-
-      // 3. Realtime Firebase Listener
-      auth.onAuthStateChanged(async (user) => {
-        if (user) {
-          currentUser = user;
-          localStorage.setItem('dikkhanntor_active_uid', user.uid);
-          await syncUserProfile(user);
-        } else if (!cachedUid) {
-          currentUser = null;
-          currentProfile = null;
-          updateNavAfterLogout();
-        }
-      });
-    });
-
-    // 1-Click Clean Google Login
-    async function handleGoogleSignIn() {
-      if (isSigningIn) return;
-      isSigningIn = true;
-      const btn = document.getElementById('authBtn');
-      const btnText = document.getElementById('authBtnText');
-      if (btn) btn.disabled = true;
-      if (btnText) btnText.innerText = "লগইন হচ্ছে...";
-
-      const provider = new firebase.auth.GoogleAuthProvider();
-      provider.setCustomParameters({ prompt: 'select_account' });
-
-      try {
-        const result = await auth.signInWithPopup(provider);
-        if (result && result.user) {
-          currentUser = result.user;
-          localStorage.setItem('dikkhanntor_active_uid', result.user.uid);
-          await syncUserProfile(result.user);
-          location.reload();
-        }
-      } catch (error) {
-        if (error.code !== 'auth/popup-closed-by-user' && error.code !== 'auth/cancelled-popup-request') {
-          alert("লগইন সমস্যা: " + error.message);
-        }
-      } finally {
-        isSigningIn = false;
-        if (btn) btn.disabled = false;
-        if (btnText) btnText.innerText = "গুগল দিয়ে লগইন";
-      }
-    }
-
-    // Direct Instant Student Entry Fallback (Zero Third-Party Cookies Required)
-    async function handleGuestEntry() {
-      const name = prompt("আপনার পুরো নাম লিখুন:");
-      if (!name) return;
-      const phone = prompt("আপনার ১১ ডিজিটের মোবাইল নম্বর (বিকাশ/নগদ):");
-      if (!phone || phone.length < 11) {
-        alert("সঠিক মোবাইল নম্বর প্রদান করা আবশ্যক।");
-        return;
-      }
-
-      const cleanPhone = phone.replace(/[^0-9]/g, '');
-      const isOwner = (cleanPhone === '01570204036');
-      const uid = "std_" + cleanPhone;
-
-      const profile = {
-        id: uid,
-        full_name: name,
-        email: cleanPhone + "@dikkhanntor.com",
-        phone: cleanPhone,
-        wallet_balance: isOwner ? 500.00 : 10.00,
-        is_admin: isOwner,
-        created_at: firebase.firestore.FieldValue.serverTimestamp()
-      };
-
-      try {
-        await db.collection("profiles").doc(uid).set(profile, { merge: true });
-      } catch(e) {}
-
-      currentUser = { uid: uid, email: profile.email, displayName: name };
-      currentProfile = profile;
-      localStorage.setItem('dikkhanntor_active_uid', uid);
-      localStorage.setItem('dikkhanntor_active_profile', JSON.stringify(profile));
-      alert(`স্বাগতম ${name}! আপনার ওয়ালেটে ১০ টাকা ওয়েলকাম বোনাস দেওয়া হয়েছে।`);
-      location.reload();
-    }
-
-    async function syncUserProfile(user) {
-      try {
-        const userRef = db.collection("profiles").doc(user.uid);
-        const docSnap = await userRef.get();
-        const isOwner = (user.email === 'jubaerabdullah78@gmail.com');
-
-        if (docSnap.exists) {
-          currentProfile = docSnap.data();
-          if (isOwner && !currentProfile.is_admin) {
-            await userRef.update({ is_admin: true });
-            currentProfile.is_admin = true;
-          }
-        } else {
-          currentProfile = {
-            id: user.uid,
-            full_name: user.displayName || 'Student',
-            email: user.email,
-            phone: user.phoneNumber || '',
-            wallet_balance: isOwner ? 500.00 : 10.00,
-            is_admin: isOwner,
-            created_at: firebase.firestore.FieldValue.serverTimestamp()
-          };
-          await userRef.set(currentProfile);
-          confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
-          alert(`স্বাগতম ${currentProfile.full_name}! আপনার ওয়ালেটে ১০ টাকা ওয়েলকাম বোনাস দেওয়া হয়েছে।`);
-        }
-        localStorage.setItem('dikkhanntor_active_profile', JSON.stringify(currentProfile));
-        updateNavAfterLogin();
-      } catch (err) {
-        console.error("Profile sync error:", err);
-      }
-    }
-
-    function updateNavAfterLogin() {
-      document.getElementById('walletBadge')?.classList.remove('hidden');
-      document.getElementById('dashNavBtn')?.classList.remove('hidden');
-      document.getElementById('authContainer')?.classList.add('hidden');
-      document.getElementById('logoutBtn')?.classList.remove('hidden');
-      
-      const bal = currentProfile?.wallet_balance !== undefined ? currentProfile.wallet_balance : 10.00;
-      const navBal = document.getElementById('navBalance');
-      if (navBal) navBal.innerText = parseFloat(bal).toFixed(2);
-
-      // STRICT OWNER VERIFICATION: Only jubaerabdullah78@gmail.com or 01570204036
-      const isOwner = (currentUser?.email === 'jubaerabdullah78@gmail.com') || 
-                      (currentProfile?.phone === '01570204036') || 
-                      (currentProfile?.is_admin === true);
-
-      if (isOwner) {
-        document.getElementById('adminNavBtn')?.classList.remove('hidden');
-      } else {
-        document.getElementById('adminNavBtn')?.classList.add('hidden');
-      }
-    }
-
-    function updateNavAfterLogout() {
-      document.getElementById('walletBadge')?.classList.add('hidden');
-      document.getElementById('dashNavBtn')?.classList.add('hidden');
-      document.getElementById('adminNavBtn')?.classList.add('hidden');
-      document.getElementById('authContainer')?.classList.remove('hidden');
-      document.getElementById('logoutBtn')?.classList.add('hidden');
-    }
-
-    async function handleLogout() {
-      try {
-        await auth.signOut();
-      } catch(e) {}
-      localStorage.removeItem('dikkhanntor_active_uid');
-      localStorage.removeItem('dikkhanntor_active_profile');
-      location.reload();
-    }
-
-    function showView(viewId) {
-      ['homeView', 'dashboardView', 'examView', 'resultView', 'adminView'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.classList.toggle('hidden', id !== viewId);
-      });
-      if (viewId === 'dashboardView') loadDashboardAnalytics();
-      if (viewId === 'adminView') loadAdminQueue();
-      window.scrollTo(0, 0);
-    }
-
-    function openModal(id) { 
-      const el = document.getElementById(id);
-      if (el) el.classList.remove('hidden'); 
-    }
-    
-    function closeModal(id) { 
-      const el = document.getElementById(id);
-      if (el) el.classList.add('hidden'); 
-    }
-
-    function switchUnit(unit) {
-      activeUnit = unit;
-      ['A_UNIT', 'B_UNIT', 'C_UNIT'].forEach(u => {
-        const tab = document.getElementById(`tab_${u}`);
-        if (tab) {
-          if (u === unit) {
-            tab.className = "p-4 rounded-2xl border-2 border-indigo-600 bg-indigo-50/60 text-left transition shadow-xs";
-          } else {
-            tab.className = "p-4 rounded-2xl border-2 border-slate-200 bg-white text-left transition hover:border-slate-300";
-          }
-        }
-      });
-      renderUnitExams(unit);
-    }
-
-    function renderUnitExams(unit) {
-      const grid = document.getElementById('examCardsGrid');
-      if (!grid) return;
-      let exams = [];
-      let unitLabel = unit === 'A_UNIT' ? 'বিজ্ঞান A-Unit' : (unit === 'C_UNIT' ? 'ব্যবসায় শিক্ষা C-Unit' : 'মানবিক B-Unit');
-
-      for (let i = 1; i <= 20; i++) {
-        exams.push({
-          id: i,
-          unit: unit,
-          title: `${unitLabel} স্পেশাল টেস্ট ${i < 10 ? '0' + i : i}`,
-          university: "ঢাবি • জবি • জাবি • চবি • গুচ্ছ",
-          fee: 5.00,
-          duration: 60
-        });
-      }
-
-      grid.innerHTML = exams.map(e => `
-        <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-xs hover:shadow-lg hover:-translate-y-0.5 transition duration-200 flex flex-col justify-between">
-          <div>
-            <div class="flex items-center justify-between mb-3">
-              <span class="text-[11px] font-extrabold uppercase px-2.5 py-1 rounded-md bg-indigo-50 text-indigo-700">${e.university}</span>
-              <span class="text-xs font-black text-emerald-700 bg-emerald-50 px-2 py-1 rounded-md border border-emerald-200">ফি: ৳${e.fee.toFixed(2)}</span>
-            </div>
-            <h3 class="font-extrabold text-slate-900 text-base mb-1">${e.title}</h3>
-            <p class="text-xs text-slate-500 mb-4">১০০টি প্রশ্ন • ৬০ মিনিট • নেগেটিভ মার্কিং -০.২৫</p>
-          </div>
-          <button onclick="payAndStartExam('${e.unit}', ${e.id}, ${e.fee}, '${e.title}', ${e.duration})" 
-                  class="w-full py-3 bg-indigo-900 hover:bg-indigo-800 text-white font-extrabold text-xs rounded-xl transition flex items-center justify-center gap-2 shadow-sm">
-            <i data-lucide="play" class="w-3.5 h-3.5 fill-current"></i> পরীক্ষা শুরু করো
-          </button>
-        </div>
-      `).join("");
-      if (window.lucide) lucide.createIcons();
-    }
-
-    async function payAndStartExam(unit, examId, fee, title, duration) {
-      if (!currentUser) { 
-        handleGoogleSignIn();
-        return; 
-      }
-      const bal = currentProfile?.wallet_balance !== undefined ? currentProfile.wallet_balance : 10.00;
-      if (bal < fee) {
-        alert(`ওয়ালেটে পর্যাপ্ত ব্যালেন্স নেই! এই পরীক্ষার ফি ৳${fee.toFixed(2)}। দয়া করে রিচার্জ করুন।`);
-        openModal('rechargeModal');
-        return;
-      }
-
-      if (!confirm(`এই পরীক্ষার জন্য আপনার ওয়ালেট থেকে ৳${fee.toFixed(2)} কাটা হবে। আপনি কি প্রস্তুত?`)) return;
-
-      const newBal = bal - fee;
-      currentProfile.wallet_balance = newBal;
-      localStorage.setItem('dikkhanntor_active_profile', JSON.stringify(currentProfile));
-      
-      const navBal = document.getElementById('navBalance');
-      if (navBal) navBal.innerText = parseFloat(newBal).toFixed(2);
-
-      try {
-        await db.collection("profiles").doc(currentUser.uid).update({ wallet_balance: newBal });
-      } catch(e) {}
-
-      currentExam = { unit, examId, title, duration };
-      
-      let getterFn = null;
-      if (unit === 'A_UNIT' && typeof getAUnitQuestions === 'function') getterFn = getAUnitQuestions;
-      else if (unit === 'C_UNIT' && typeof getCUnitQuestions === 'function') getterFn = getCUnitQuestions;
-      else if (typeof getBUnitQuestions === 'function') getterFn = getBUnitQuestions;
-
-      if (!getterFn) {
-        alert("প্রশ্ন ফাইলটি পাওয়া যায়নি! দয়া করে পেজটি রিফ্রেশ করুন।");
-        return;
-      }
-
-      activeQuestions = getterFn(examId);
-
-      document.getElementById('activeExamTitle').innerText = title;
-      document.getElementById('activeExamBadge').innerText = unit.replace('_', ' ');
-
-      const form = document.getElementById('activeQuestionsForm');
-      form.innerHTML = activeQuestions.map((q, idx) => `
-        <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs">
-          <div class="flex items-center gap-2 mb-2">
-            <span class="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded bg-indigo-50 text-indigo-700">${q.s}</span>
-          </div>
-          <p class="font-bold text-slate-900 text-sm sm:text-base leading-relaxed mb-3">${idx + 1}. ${q.q}</p>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs sm:text-sm">
-            ${q.o.map((opt, oIdx) => {
-              const letter = ["A", "B", "C", "D"][oIdx];
-              return `
-                <label class="flex items-center gap-2.5 p-3 rounded-xl border border-slate-200 cursor-pointer hover:bg-slate-50 transition">
-                  <input type="radio" name="q_${idx}" value="${letter}" class="text-indigo-600 focus:ring-0">
-                  <span class="font-medium text-slate-800"><strong>${letter})</strong>${opt}</span>
-                </label>
-              `;
-            }).join("")}
-          </div>
-        </div>
-      `).join("");
-
-      showView('examView');
-
-      remainingSeconds = duration * 60;
-      clearInterval(examTimerInterval);
-      examTimerInterval = setInterval(() => {
-        remainingSeconds--;
-        let m = Math.floor(remainingSeconds / 60);
-        let s = remainingSeconds % 60;
-        document.getElementById('examTimer').innerText = `${m < 10 ? '0' : ''}${m}:${s < 10 ? '0' : ''}${s}`;
-        if (remainingSeconds <= 0) {
-          clearInterval(examTimerInterval);
-          alert("সময় শেষ! পরীক্ষা জমা নেওয়া হলো।");
-          submitExam();
-        }
-      }, 1000);
-    }
-
-    async function submitExam() {
-      clearInterval(examTimerInterval);
-      let correct = 0, wrong = 0, skipped = 0;
-      let reviewData = [];
-
-      activeQuestions.forEach((q, idx) => {
-        const sel = document.querySelector(`input[name="q_${idx}"]:checked`);
-        const userAns = sel ? sel.value : null;
-        const isCorrect = userAns === q.a;
-        
-        if (!sel) skipped++;
-        else if (isCorrect) correct++;
-        else wrong++;
-
-        const getOptText = (letter) => {
-          const map = { 'A': 0, 'B': 1, 'C': 2, 'D': 3 };
-          return q.o[map[letter]] || letter;
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 py-6 text-center text-sm text-slate-500">
+        <p>&copy; ২০২৬ দিকক্ষান্তর (Dikkhanntor). সর্বস্বত্ব সংরক্ষিত।</p>
+    </footer>
+
+    <!-- Firebase Configuration & Script Logic -->
+    <script>
+        // Firebase Configuration (আপনার প্রজেক্টের সঠিক কনফিগারেশন)
+        const firebaseConfig = {
+            apiKey: "AIzaSyD...", // আপনার প্রজেক্টের কনফিগারেশন এখানে বসবে (বা পূর্বের কনফিগারেশন রাখবেন)
+            authDomain: "dikkhanntor.firebaseapp.com",
+            projectId: "dikkhanntor",
+            storageBucket: "dikkhanntor.appspot.com",
+            messagingSenderId: "YOUR_SENDER_ID",
+            appId: "YOUR_APP_ID"
         };
 
-        reviewData.push({
-          num: idx + 1,
-          subject: q.s,
-          question: q.q,
-          userAns: userAns,
-          userAnsText: userAns ? getOptText(userAns) : null,
-          correctAns: q.a,
-          correctAnsText: getOptText(q.a),
-          isCorrect: isCorrect,
-          isSkipped: !userAns
-        });
-      });
-
-      const finalScore = (correct * 1.0) - (wrong * 0.25);
-
-      const attempt = {
-        userId: currentUser ? currentUser.uid : "guest",
-        studentName: currentProfile?.full_name || currentUser?.displayName || 'Student',
-        studentEmail: currentUser?.email || '',
-        studentPhone: currentProfile?.phone || '',
-        date: new Date().toLocaleDateString('bn-BD'),
-        timestamp: new Date().toLocaleString('bn-BD'),
-        unit: currentExam?.unit || 'B_UNIT',
-        examTitle: currentExam?.title || 'মডেল টেস্ট',
-        score: finalScore,
-        correct_count: correct,
-        wrong_count: wrong,
-        skipped_count: skipped,
-        reviewData: reviewData,
-        created_at: firebase.firestore.FieldValue.serverTimestamp()
-      };
-
-      if (currentUser) {
-        try {
-          const docRef = await db.collection("exam_attempts").add(attempt);
-          attempt.id = docRef.id;
-        } catch(e) {}
-      }
-
-      displayResultScreen(attempt);
-    }
-
-    function displayResultScreen(attempt) {
-      document.getElementById('resScoreText').innerText = `${attempt.score.toFixed(2)} / 100`;
-      document.getElementById('resCorrectText').innerText = `সঠিক: ${attempt.correct_count}`;
-      document.getElementById('resWrongText').innerText = `ভুল: ${attempt.wrong_count} (-০.২৫)`;
-      document.getElementById('resSkippedText').innerText = `ছেড়ে দেওয়া: ${attempt.skipped_count}`;
-
-      let reviewHTML = "";
-      (attempt.reviewData || []).forEach(item => {
-        if (item.isSkipped) {
-          reviewHTML += `
-            <div class="p-4 rounded-xl border border-slate-200 bg-slate-50 text-xs sm:text-sm">
-              <p class="font-bold text-slate-800 mb-1">${item.num}. [${item.subject}] ${item.question}</p>
-              <span class="text-slate-400 font-semibold">⚠️ ছেড়ে দিয়েছো</span> | সঠিক উত্তর: <strong class="text-emerald-700">${item.correctAns}) ${item.correctAnsText}</strong>
-            </div>
-          `;
-        } else if (item.isCorrect) {
-          reviewHTML += `
-            <div class="p-4 rounded-xl border border-emerald-200 bg-emerald-50/70 text-xs sm:text-sm">
-              <p class="font-bold text-slate-800 mb-1">${item.num}. [${item.subject}] ${item.question}</p>
-              <span class="text-emerald-700 font-bold">✅ সঠিক উত্তর (+১.০)</span> | তোমার উত্তর: <strong>${item.userAns}) ${item.userAnsText}</strong>
-            </div>
-          `;
-        } else {
-          reviewHTML += `
-            <div class="p-4 rounded-xl border border-rose-200 bg-rose-50/70 text-xs sm:text-sm">
-              <p class="font-bold text-slate-800 mb-1">${item.num}. [${item.subject}] ${item.question}</p>
-              <span class="text-rose-700 font-bold">❌ ভুল উত্তর (-০.২৫)</span> | তোমার উত্তর ছিল: <strong>${item.userAns}) ${item.userAnsText}</strong> | সঠিক উত্তর: <strong class="text-emerald-700">${item.correctAns}) ${item.correctAnsText}</strong>
-            </div>
-          `;
+        // Initialize Firebase
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
         }
-      });
+        const auth = firebase.auth();
+        const db = firebase.firestore();
 
-      document.getElementById('resReviewContainer').innerHTML = reviewHTML;
+        const ADMIN_EMAIL = "jubaerabdullah78@gmail.com";
+        let currentUser = null;
 
-      const praise = document.getElementById('resPraiseMessage');
-      if (attempt.score >= 60) {
-        confetti({ particleCount: 160, spread: 80, origin: { y: 0.6 } });
-        praise.className = "max-w-md mx-auto p-4 rounded-xl text-xs sm:text-sm font-bold bg-emerald-50 text-emerald-800 border border-emerald-200";
-        praise.innerText = "🎉 চমৎকার প্রস্তুতি! নিয়মিত অনুশীলন চালিয়ে যাও, সফলতা নিশ্চিত!";
-      } else if (attempt.score >= 40) {
-        praise.className = "max-w-md mx-auto p-4 rounded-xl text-xs sm:text-sm font-bold bg-amber-50 text-amber-800 border border-amber-200";
-        praise.innerText = "👏 ভালো হয়েছে, তবে নেগেティブ মার্কিং কমাতে হবে। নিচের ভুলগুলো ভালো করে দেখে নাও।";
-      } else {
-        praise.className = "max-w-md mx-auto p-4 rounded-xl text-xs sm:text-sm font-bold bg-rose-50 text-rose-800 border border-rose-200";
-        praise.innerText = "💪 মন খারাপ করবে না! ভুলগুলো শুধরে নিয়ে আবার চেষ্টা করো।";
-      }
+        // Auth State Listener (লুপ সমস্যা সমাধানের মূল চাবিকাঠি)
+        auth.onAuthStateChanged(async (user) => {
+            if (user) {
+                currentUser = user;
+                document.getElementById('loggedOutState').classList.add('hidden');
+                document.getElementById('loggedInState').classList.remove('hidden');
+                document.getElementById('userNameDisplay').innerText = user.displayName || user.email;
 
-      showView('resultView');
-    }
+                // Check Admin Access
+                if (user.email === ADMIN_EMAIL) {
+                    document.getElementById('adminPanelBtn').classList.remove('hidden');
+                }
 
-    async function viewPastAttemptReview(attemptId) {
-      try {
-        const doc = await db.collection("exam_attempts").doc(attemptId).get();
-        if (doc.exists) {
-          displayResultScreen(doc.data());
-        } else {
-          alert("এই পরীক্ষার বিস্তারিত প্রশ্ন-উত্তরের ডেটা পাওয়া যায়নি।");
-        }
-      } catch(e) {
-        alert("ডেটা লোড করতে সমস্যা হয়েছে।");
-      }
-    }
-
-    async function loadDashboardAnalytics() {
-      if (!currentUser) {
-        document.getElementById('historyTableBody').innerHTML = `
-          <tr><td colspan="7" class="px-5 py-8 text-center text-slate-400 text-xs">ফলাফল দেখতে অনুগ্রহ করে লগইন করুন।</td></tr>
-        `;
-        return;
-      }
-
-      try {
-        const snapshot = await db.collection("exam_attempts")
-          .where("userId", "==", currentUser.uid)
-          .get();
-
-        const attempts = [];
-        snapshot.forEach(doc => {
-          const data = doc.data();
-          data.id = doc.id;
-          attempts.push(data);
+                // Sync Profile to Firestore Safely
+                await syncUserProfile(user);
+            } else {
+                currentUser = null;
+                document.getElementById('loggedOutState').classList.remove('hidden');
+                document.getElementById('loggedInState').classList.add('hidden');
+                document.getElementById('adminPanelBtn').classList.add('hidden');
+            }
         });
 
-        attempts.sort((a,b) => (b.created_at?.toMillis() || 0) - (a.created_at?.toMillis() || 0));
-
-        if (attempts.length > 0) {
-          document.getElementById('kpiTotalAttempts').innerText = attempts.length;
-          const total = attempts.reduce((acc, curr) => acc + parseFloat(curr.score || 0), 0);
-          document.getElementById('kpiAvgScore').innerText = (total / attempts.length).toFixed(2);
-          const max = Math.max(...attempts.map(d => parseFloat(d.score || 0)));
-          document.getElementById('kpiMaxScore').innerText = max.toFixed(2);
-          const totalWrong = attempts.reduce((acc, curr) => acc + (curr.wrong_count || 0), 0);
-          document.getElementById('kpiTotalWrongs').innerText = totalWrong;
-
-          document.getElementById('historyTableBody').innerHTML = attempts.map(d => `
-            <tr class="hover:bg-slate-50 transition">
-              <td class="px-5 py-3.5 text-xs text-slate-500">${d.date || '-'}</td>
-              <td class="px-5 py-3.5 font-bold text-slate-900">${d.examTitle || (d.unit || 'B_UNIT').replace('_', ' ') + ' টেস্ট'}</td>
-              <td class="px-5 py-3.5 font-extrabold text-indigo-700">${parseFloat(d.score).toFixed(2)}</td>
-              <td class="px-5 py-3.5 font-semibold text-emerald-600">${d.correct_count}</td>
-              <td class="px-5 py-3.5 font-semibold text-rose-500">${d.wrong_count}</td>
-              <td class="px-5 py-3.5 text-slate-400">${d.skipped_count}</td>
-              <td class="px-5 py-3.5 text-right">
-                <button onclick="viewPastAttemptReview('${d.id}')" class="px-3 py-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 rounded-lg text-xs font-bold transition">
-                  সমাধান দেখো
-                </button>
-              </td>
-            </tr>
-          `).join("");
-        } else {
-          document.getElementById('kpiTotalAttempts').innerText = "0";
-          document.getElementById('kpiAvgScore').innerText = "0.00";
-          document.getElementById('kpiMaxScore').innerText = "0.00";
-          document.getElementById('kpiTotalWrongs').innerText = "0";
-          document.getElementById('historyTableBody').innerHTML = `
-            <tr><td colspan="7" class="px-5 py-8 text-center text-slate-400 text-xs">এই অ্যাকাউন্টে এখনো কোনো পরীক্ষা সম্পন্ন হয়নি।</td></tr>
-          `;
-        }
-      } catch(e) {}
-    }
-
-    async function submitRechargeRequest() {
-      if (!currentUser) { 
-        handleGoogleSignIn();
-        return; 
-      }
-      const method = document.getElementById('recMethod').value;
-      const amount = parseFloat(document.getElementById('recAmount').value);
-      const trx_id = document.getElementById('recTrxId').value.trim();
-
-      if (!amount || amount < 10 || !trx_id) {
-        alert("দয়া করে সঠিক টাকার পরিমাণ (কমপক্ষে ১০ টাকা) এবং TrxID লিখুন।");
-        return;
-      }
-
-      const rec = {
-        userId: currentUser.uid,
-        userName: currentProfile?.full_name || currentUser.displayName || 'Student',
-        userEmail: currentUser.email || '',
-        phone: currentProfile?.phone || '',
-        amount: amount,
-        method: method,
-        trx_id: trx_id,
-        status: 'pending',
-        created_at: firebase.firestore.FieldValue.serverTimestamp()
-      };
-
-      try {
-        await db.collection("wallet_recharges").add(rec);
-        alert("আপনার রিচার্জ রিকোয়েস্ট সফলভাবে জমা হয়েছে! ওনার ভেরিফাই করে কিছুক্ষণের মধ্যে ব্যালেন্স যোগ করবেন।");
-        closeModal('rechargeModal');
-      } catch(e) {
-        alert("রিকোয়েস্ট পাঠাতে সমস্যা হয়েছে: " + e.message);
-      }
-    }
-
-    // ==========================================
-    // COMPLETE OWNER CONTROL & CRM ENGINE
-    // ==========================================
-    async function loadAdminQueue() {
-      try {
-        const recSnapshot = await db.collection("wallet_recharges").where("status", "==", "pending").get();
-        const recs = [];
-        recSnapshot.forEach(doc => {
-          const data = doc.data();
-          data.id = doc.id;
-          recs.push(data);
-        });
-
-        document.getElementById('adminPendingCount').innerText = recs.length;
-        const rechargeContainer = document.getElementById('adminRechargeList');
-        if (rechargeContainer) {
-          if (recs.length === 0) {
-            rechargeContainer.innerHTML = `<p class="text-xs text-slate-400 italic">কোনো পেন্ডিং রিচার্জ নেই।</p>`;
-          } else {
-            rechargeContainer.innerHTML = recs.map(r => `
-              <div class="flex justify-between items-center p-3 border rounded-xl bg-slate-50 text-xs">
-                <div>
-                  <strong>${r.userName || 'Student'}</strong> (${r.phone || r.userEmail})<br>
-                  ${r.method}: ৳${r.amount} | <span class="font-mono text-indigo-700 font-bold select-all">TrxID: ${r.trx_id}</span>
-                </div>
-                <button onclick="adminApproveRecharge('${r.id}', '${r.userId}', ${r.amount})" class="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-bold transition">
-                  অ্যাপ্রুভ (৳${r.amount})
-                </button>
-              </div>
-            `).join("");
-          }
+        // Google Sign In Function
+        async function handleGoogleSignIn() {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            provider.setCustomParameters({ prompt: 'select_account' });
+            try {
+                await auth.signInWithPopup(provider);
+                // সফল হলে onAuthStateChanged স্বয়ংক্রিয়ভাবে UI আপডেট করবে, পেজ রিলোডের প্রয়োজন নেই
+            } catch (error) {
+                if (error.code !== 'auth/popup-closed-by-user') {
+                    alert("লগইন ত্রুটি: " + error.message);
+                }
+            }
         }
 
-        const profileSnapshot = await db.collection("profiles").get();
-        const students = [];
-        profileSnapshot.forEach(doc => {
-          students.push(doc.data());
-        });
-        allLoadedStudents = students;
-        renderAdminStudentsTable(students);
-
-        const attemptsSnapshot = await db.collection("exam_attempts").limit(50).get();
-        const globalAttempts = [];
-        attemptsSnapshot.forEach(doc => {
-          globalAttempts.push(doc.data());
-        });
-        globalAttempts.sort((a,b) => (b.created_at?.toMillis() || 0) - (a.created_at?.toMillis() || 0));
-        renderAdminAttemptsTable(globalAttempts);
-
-        document.getElementById('adminTotalStudents').innerText = students.length;
-        const totalBal = students.reduce((sum, s) => sum + parseFloat(s.wallet_balance || 0), 0);
-        document.getElementById('adminTotalBalance').innerText = '৳' + totalBal.toFixed(2);
-        document.getElementById('adminTotalAttemptsCount').innerText = globalAttempts.length;
-
-      } catch(e) {}
-    }
-
-    function renderAdminStudentsTable(list) {
-      const tbody = document.getElementById('adminStudentsTableBody');
-      if (!tbody) return;
-      if (!list || list.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="5" class="px-4 py-6 text-center text-slate-400 text-xs">এখনো কোনো শিক্ষার্থী যুক্ত হয়নি।</td></tr>`;
-        return;
-      }
-      tbody.innerHTML = list.map(s => `
-        <tr class="hover:bg-slate-50 transition">
-          <td class="px-4 py-3 font-bold text-slate-900">${s.full_name || 'Student'}</td>
-          <td class="px-4 py-3 text-slate-600">${s.email || '-'}</td>
-          <td class="px-4 py-3 font-mono font-bold text-indigo-700 select-all">${s.phone || '-'}</td>
-          <td class="px-4 py-3 font-extrabold text-emerald-600">৳${parseFloat(s.wallet_balance || 0).toFixed(2)}</td>
-          <td class="px-4 py-3 text-slate-400 text-xs">${s.created_at ? new Date(s.created_at.toDate ? s.created_at.toDate() : s.created_at).toLocaleDateString('bn-BD') : '-'}</td>
-        </tr>
-      `).join("");
-    }
-
-    function renderAdminAttemptsTable(list) {
-      const tbody = document.getElementById('adminAllAttemptsTableBody');
-      if (!tbody) return;
-      if (!list || list.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="7" class="px-4 py-6 text-center text-slate-400 text-xs">এখনো কোনো শিক্ষার্থী পরীক্ষা জমা দেয়নি।</td></tr>`;
-        return;
-      }
-      tbody.innerHTML = list.map(a => `
-        <tr class="hover:bg-slate-50 transition">
-          <td class="px-4 py-3 text-xs text-slate-400">${a.timestamp || '-'}</td>
-          <td class="px-4 py-3 font-semibold text-slate-800">${a.studentName || 'Student'} (${a.studentPhone || a.studentEmail || '-'})</td>
-          <td class="px-4 py-3 font-bold text-slate-900">${a.examTitle || (a.unit || 'B_UNIT').replace('_', ' ') + ' টেস্ট'}</td>
-          <td class="px-4 py-3 font-extrabold text-indigo-700">${parseFloat(a.score || 0).toFixed(2)}</td>
-          <td class="px-4 py-3 text-emerald-600 font-semibold">${a.correct_count}</td>
-          <td class="px-4 py-3 text-rose-500 font-semibold">${a.wrong_count}</td>
-          <td class="px-4 py-3 text-slate-400">${a.skipped_count}</td>
-        </tr>
-      `).join("");
-    }
-
-    function filterAdminStudents() {
-      const term = document.getElementById('adminStudentSearch').value.toLowerCase();
-      const filtered = allLoadedStudents.filter(s => 
-        (s.full_name && s.full_name.toLowerCase().includes(term)) ||
-        (s.email && s.email.toLowerCase().includes(term)) ||
-        (s.phone && s.phone.includes(term))
-      );
-      renderAdminStudentsTable(filtered);
-    }
-
-    function exportStudentsCSV() {
-      if (!allLoadedStudents || allLoadedStudents.length === 0) {
-        alert("ডাউনলোড করার মতো কোনো শিক্ষার্থীর তথ্য নেই!");
-        return;
-      }
-      let csv = "Name,Email,Phone,Wallet_Balance\n";
-      allLoadedStudents.forEach(s => {
-        csv += `"${s.full_name || 'Student'}","${s.email || ''}","${s.phone || ''}",${s.wallet_balance || 0}\n`;
-      });
-      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.setAttribute("href", url);
-      link.setAttribute("download", `Dikkhanntor_Students_${new Date().toISOString().slice(0,10)}.csv`);
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    }
-
-    async function adminApproveRecharge(recId, studentUid, amount) {
-      try {
-        const userRef = db.collection("profiles").doc(studentUid);
-        const userDoc = await userRef.get();
-        if (userDoc.exists) {
-          const currentBal = parseFloat(userDoc.data().wallet_balance || 0);
-          await userRef.update({ wallet_balance: currentBal + parseFloat(amount) });
+        // Sync User Profile in Firestore
+        async function syncUserProfile(user) {
+            const userRef = db.collection('profiles').doc(user.uid);
+            try {
+                const doc = await userRef.get();
+                if (!doc.exists) {
+                    await userRef.set({
+                        uid: user.uid,
+                        name: user.displayName || 'Student',
+                        email: user.email,
+                        balance: 10, // ফ্রি বোনাস ১০ টাকা
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                    document.getElementById('userBalance').innerText = '10';
+                } else {
+                    const data = doc.data();
+                    document.getElementById('userBalance').innerText = data.balance !== undefined ? data.balance : 10;
+                }
+            } catch (err) {
+                console.error("Profile sync error:", err);
+            }
         }
 
-        await db.collection("wallet_recharges").doc(recId).update({ status: "approved" });
+        // Logout Function
+        function handleLogout() {
+            auth.signOut();
+        }
 
-        alert(`৳${amount} সফলভাবে শিক্ষার্থীর ওয়ালেটে যুক্ত হয়েছে!`);
-        loadAdminQueue();
-      } catch(e) {
-        alert("অনুমোদনে সমস্যা হয়েছে: " + e.message);
-      }
-    }
-  </script>
+        function scrollToExams() {
+            document.getElementById('examSection').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function openAdminPanel() {
+            alert("স্বাগতম ওনার! অ্যাডমিন প্যানেল লোড হচ্ছে...");
+        }
+
+        function startModelTest(unit) {
+            if (!currentUser) {
+                alert("পরীক্ষায় অংশ নিতে হলে প্রথমে গুগল দিয়ে লগইন করুন।");
+                handleGoogleSignIn();
+                return;
+            }
+            alert(unit + " ইউনিটের মডেল টেস্ট খুব শীঘ্রই শুরু হচ্ছে।");
+        }
+    </script>
 </body>
 </html>
