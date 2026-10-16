@@ -8,6 +8,11 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <!-- Google Firebase SDKs (Compat Version for Standalone Browser Support) -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
   
   <!-- Dedicated Question Files -->
   <script src="questions_a_unit.js"></script>
@@ -28,6 +33,7 @@
   <nav class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
       
+      <!-- Brand & Official Logo -->
       <div class="flex items-center gap-3 cursor-pointer" onclick="showView('homeView')">
         <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-900 via-indigo-700 to-violet-600 flex items-center justify-center shadow-md shadow-indigo-200 p-1.5 border border-white/20">
           <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full">
@@ -44,6 +50,7 @@
         </div>
       </div>
 
+      <!-- Action Navigation -->
       <div class="flex items-center gap-3">
         <div id="walletBadge" class="hidden flex items-center gap-2 bg-emerald-50 border border-emerald-200 px-3.5 py-1.5 rounded-full cursor-pointer hover:bg-emerald-100 transition" onclick="openModal('rechargeModal')">
           <i data-lucide="wallet" class="w-4 h-4 text-emerald-600"></i>
@@ -79,6 +86,7 @@
 
     <!-- VIEW 1: HOME & EXAM DIRECTORY -->
     <section id="homeView" class="space-y-8">
+      
       <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-indigo-950 via-slate-900 to-indigo-900 text-white p-8 sm:p-12 shadow-2xl">
         <div class="max-w-3xl space-y-4">
           <div class="inline-flex items-center gap-2 bg-indigo-800/60 border border-indigo-700/60 text-indigo-200 px-3.5 py-1 rounded-full text-xs font-bold uppercase tracking-wider">
@@ -103,6 +111,7 @@
         </div>
       </div>
 
+      <!-- STREAM / UNIT SELECTION TABS -->
       <div class="space-y-4">
         <div>
           <h2 class="text-xl font-extrabold text-slate-900 tracking-tight">অনুষদ ও ইউনিট নির্বাচন করো</h2>
@@ -140,6 +149,7 @@
 
         <div id="examCardsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 pt-4"></div>
       </div>
+
     </section>
 
     <!-- VIEW 2: STUDENT DASHBOARD -->
@@ -463,10 +473,22 @@
     <span class="text-xs font-bold ml-2 pr-1 hidden sm:inline">Online Support</span>
   </a>
 
-  <!-- CORE LOGIC ENGINE (DIRECT CLOUD REST + USER ISOLATION) -->
+  <!-- ================= FIREBASE CLOUD ENGINE ================= -->
   <script>
-    const SUPABASE_URL = "https://qhyzpgkcbcjvjothjhbec.supabase.co";
-    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFoeXpwZ2tjYmN2am90aGpoYmVjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIwNTE3NDgsImV4cCI6MjEwNzYyNzc0OH0.7DCPPIYAMhQSa3O8ijqhV8Fboh9wgLNQf2tcQuzpjWM";
+    const firebaseConfig = {
+      apiKey: "AIzaSyDwFuUm21bbQc1MXG9zPalMZTIpAqRYX4U",
+      authDomain: "dikkhanntor.firebaseapp.com",
+      projectId: "dikkhanntor",
+      storageBucket: "dikkhanntor.firebasestorage.app",
+      messagingSenderId: "296903284339",
+      appId: "1:296903284339:web:2fd585dfe348c88e9c3c06",
+      measurementId: "G-BEYVS51YH2"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
 
     let currentUser = null;
     let currentProfile = null;
@@ -478,11 +500,78 @@
     let remainingSeconds = 60 * 60;
     let allLoadedStudents = [];
 
-    window.addEventListener("DOMContentLoaded", async () => {
+    window.addEventListener("DOMContentLoaded", () => {
       if (window.lucide) lucide.createIcons();
-      await checkAuthSession();
       switchUnit("B_UNIT");
+
+      // Official Firebase Auth Observer (Supports any device, phone, or laptop)
+      auth.onAuthStateChanged(async (user) => {
+        if (user) {
+          currentUser = user;
+          await loadUserProfile(user.uid, user.email);
+        } else {
+          currentUser = null;
+          currentProfile = null;
+          updateNavAfterLogout();
+        }
+      });
     });
+
+    async function loadUserProfile(uid, email) {
+      try {
+        const docRef = db.collection("profiles").doc(uid);
+        const docSnap = await docRef.get();
+
+        if (docSnap.exists) {
+          currentProfile = docSnap.data();
+        } else {
+          // If first time or admin
+          const isOwner = (email === 'jubaerabdullah78@gmail.com');
+          currentProfile = {
+            id: uid,
+            full_name: isOwner ? 'Abdullah Jubaer' : 'Student',
+            email: email,
+            phone: isOwner ? '01570204036' : '',
+            wallet_balance: isOwner ? 500.00 : 10.00,
+            is_admin: isOwner,
+            created_at: firebase.firestore.FieldValue.serverTimestamp()
+          };
+          await docRef.set(currentProfile, { merge: true });
+        }
+        updateNavAfterLogin();
+      } catch (err) {
+        console.error("Profile load error:", err);
+      }
+    }
+
+    function updateNavAfterLogin() {
+      document.getElementById('walletBadge')?.classList.remove('hidden');
+      document.getElementById('dashNavBtn')?.classList.remove('hidden');
+      document.getElementById('authBtn')?.classList.add('hidden');
+      document.getElementById('logoutBtn')?.classList.remove('hidden');
+      
+      const bal = currentProfile?.wallet_balance !== undefined ? currentProfile.wallet_balance : 10.00;
+      const navBal = document.getElementById('navBalance');
+      if (navBal) navBal.innerText = parseFloat(bal).toFixed(2);
+
+      const isOwner = (currentUser?.email === 'jubaerabdullah78@gmail.com') || 
+                      (currentProfile?.phone === '01570204036') || 
+                      (currentProfile?.is_admin === true);
+
+      if (isOwner) {
+        document.getElementById('adminNavBtn')?.classList.remove('hidden');
+      } else {
+        document.getElementById('adminNavBtn')?.classList.add('hidden');
+      }
+    }
+
+    function updateNavAfterLogout() {
+      document.getElementById('walletBadge')?.classList.add('hidden');
+      document.getElementById('dashNavBtn')?.classList.add('hidden');
+      document.getElementById('adminNavBtn')?.classList.add('hidden');
+      document.getElementById('authBtn')?.classList.remove('hidden');
+      document.getElementById('logoutBtn')?.classList.add('hidden');
+    }
 
     function showView(viewId) {
       ['homeView', 'dashboardView', 'examView', 'resultView', 'adminView'].forEach(id => {
@@ -502,40 +591,6 @@
     function closeModal(id) { 
       const el = document.getElementById(id);
       if (el) el.classList.add('hidden'); 
-    }
-
-    async function checkAuthSession() {
-      const storedUser = localStorage.getItem('dikkhanntor_user');
-      if (storedUser) {
-        try {
-          currentUser = JSON.parse(storedUser);
-          currentProfile = JSON.parse(localStorage.getItem('dikkhanntor_profile_' + currentUser.id) || '{}');
-          updateNavAfterLogin();
-        } catch (e) {
-          console.error("Session load error", e);
-        }
-      }
-    }
-
-    function updateNavAfterLogin() {
-      document.getElementById('walletBadge')?.classList.remove('hidden');
-      document.getElementById('dashNavBtn')?.classList.remove('hidden');
-      document.getElementById('authBtn')?.classList.add('hidden');
-      document.getElementById('logoutBtn')?.classList.remove('hidden');
-      
-      const bal = currentProfile?.wallet_balance !== undefined ? currentProfile.wallet_balance : 10.00;
-      const navBal = document.getElementById('navBalance');
-      if (navBal) navBal.innerText = parseFloat(bal).toFixed(2);
-
-      // STRICT OWNER CHECK: Only your email or phone
-      const isOwner = (currentUser?.email === 'jubaerabdullah78@gmail.com') || 
-                      (currentProfile?.phone === '01570204036');
-
-      if (isOwner) {
-        document.getElementById('adminNavBtn')?.classList.remove('hidden');
-      } else {
-        document.getElementById('adminNavBtn')?.classList.add('hidden');
-      }
     }
 
     function toggleAuthMode() {
@@ -570,78 +625,40 @@
           return;
         }
 
-        // Generate reliable unique ID
-        const userId = "usr_" + Date.now() + "_" + Math.floor(Math.random()*1000);
-        
-        currentUser = {
-          id: userId,
-          email: email
-        };
-
-        const isOwner = (email === 'jubaerabdullah78@gmail.com') || (phone === '01570204036');
-
-        currentProfile = {
-          id: userId,
-          full_name: full_name,
-          phone: phone,
-          email: email,
-          wallet_balance: isOwner ? 500.00 : 10.00,
-          created_at: new Date().toISOString(),
-          is_admin: isOwner
-        };
-
-        // Try direct sync to cloud database
         try {
-          fetch(`${SUPABASE_URL}/rest/v1/profiles`, {
-            method: 'POST',
-            headers: {
-              'apikey': SUPABASE_ANON_KEY,
-              'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-              'Content-Type': 'application/json',
-              'Prefer': 'return=minimal'
-            },
-            body: JSON.stringify(currentProfile)
-          });
-        } catch(e) {}
+          const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+          const user = userCredential.user;
 
-        // Store user-scoped credentials safely
-        localStorage.setItem('dikkhanntor_pass_' + email, password);
-        localStorage.setItem('dikkhanntor_user', JSON.stringify(currentUser));
-        localStorage.setItem('dikkhanntor_profile_' + userId, JSON.stringify(currentProfile));
+          const isOwner = (email === 'jubaerabdullah78@gmail.com') || (phone === '01570204036');
+          const profileData = {
+            id: user.uid,
+            full_name: full_name,
+            phone: phone,
+            email: email,
+            wallet_balance: isOwner ? 500.00 : 10.00,
+            is_admin: isOwner,
+            created_at: firebase.firestore.FieldValue.serverTimestamp()
+          };
 
-        // Append to Owner CRM list
-        let dir = JSON.parse(localStorage.getItem('dikkhanntor_all_students_dir') || '[]');
-        dir = dir.filter(s => s.email !== email);
-        dir.unshift(currentProfile);
-        localStorage.setItem('dikkhanntor_all_students_dir', JSON.stringify(dir));
-
-        alert("রেজিস্ট্রেশন সফল! আপনার ওয়ালেটে ১০ টাকা বোনাস ব্যালেন্স দেওয়া হয়েছে।");
-        location.reload();
-
-      } else {
-        // LOGIN CHECK
-        let loggedIn = false;
-        let dir = JSON.parse(localStorage.getItem('dikkhanntor_all_students_dir') || '[]');
-        const storedPass = localStorage.getItem('dikkhanntor_pass_' + email);
-        const existingStudent = dir.find(s => s.email === email);
-
-        if (storedPass && storedPass === password && existingStudent) {
-          loggedIn = true;
-          currentUser = { id: existingStudent.id, email: email };
-          currentProfile = JSON.parse(localStorage.getItem('dikkhanntor_profile_' + existingStudent.id) || JSON.stringify(existingStudent));
-        } else if (email === 'jubaerabdullah78@gmail.com') {
-          // Master Admin Fallback
-          loggedIn = true;
-          currentUser = { id: 'admin_1', email: email };
-          currentProfile = { id: 'admin_1', full_name: 'Abdullah Jubaer', email: email, phone: '01570204036', wallet_balance: 500.00, is_admin: true };
-          localStorage.setItem('dikkhanntor_profile_admin_1', JSON.stringify(currentProfile));
+          await db.collection("profiles").doc(user.uid).set(profileData);
+          currentProfile = profileData;
+          closeModal('authModal');
+          alert("রেজিস্ট্রেশন সফল! আপনার ওয়ালেটে ১০ টাকা বোনাস ব্যালেন্স দেওয়া হয়েছে।");
+          location.reload();
+        } catch (error) {
+          alert("ত্রুটি: " + error.message);
+          submitBtn.disabled = false;
+          submitBtn.innerText = "রেজিস্ট্রেশন করো";
         }
 
-        if (loggedIn) {
-          localStorage.setItem('dikkhanntor_user', JSON.stringify(currentUser));
+      } else {
+        // Sign in with Firebase
+        try {
+          await auth.signInWithEmailAndPassword(email, password);
+          closeModal('authModal');
           location.reload();
-        } else {
-          alert("ভুল ইমেইল অথবা পাসওয়ার্ড!");
+        } catch (error) {
+          alert("ভুল ইমেইল অথবা পাসওয়ার্ড: " + error.message);
           submitBtn.disabled = false;
           submitBtn.innerText = "লগইন";
         }
@@ -649,8 +666,12 @@
     }
 
     async function handleLogout() {
-      localStorage.removeItem('dikkhanntor_user');
-      location.reload();
+      try {
+        await auth.signOut();
+        location.reload();
+      } catch(e) {
+        location.reload();
+      }
     }
 
     function switchUnit(unit) {
@@ -716,11 +737,17 @@
       if (!confirm(`এই পরীক্ষার জন্য আপনার ওয়ালেট থেকে ৳${fee.toFixed(2)} কাটা হবে। আপনি কি প্রস্তুত?`)) return;
 
       const newBal = bal - fee;
-      if (currentProfile) currentProfile.wallet_balance = newBal;
-      localStorage.setItem('dikkhanntor_profile_' + currentUser.id, JSON.stringify(currentProfile));
+      currentProfile.wallet_balance = newBal;
       
       const navBal = document.getElementById('navBalance');
       if (navBal) navBal.innerText = parseFloat(newBal).toFixed(2);
+
+      // Cloud Firestore balance update
+      try {
+        await db.collection("profiles").doc(currentUser.uid).update({ wallet_balance: newBal });
+      } catch(e) {
+        console.error("Balance update error:", e);
+      }
 
       currentExam = { unit, examId, title, duration };
       
@@ -812,10 +839,9 @@
       const finalScore = (correct * 1.0) - (wrong * 0.25);
 
       const attempt = {
-        id: "att_" + Date.now(),
-        userId: currentUser ? currentUser.id : "guest",
+        userId: currentUser ? currentUser.uid : "guest",
         studentName: currentProfile?.full_name || 'Student',
-        studentPhone: currentProfile?.phone || '01570204036',
+        studentPhone: currentProfile?.phone || '',
         date: new Date().toLocaleDateString('bn-BD'),
         timestamp: new Date().toLocaleString('bn-BD'),
         unit: currentExam?.unit || 'B_UNIT',
@@ -824,19 +850,19 @@
         correct_count: correct,
         wrong_count: wrong,
         skipped_count: skipped,
-        reviewData: reviewData
+        reviewData: reviewData,
+        created_at: firebase.firestore.FieldValue.serverTimestamp()
       };
 
-      // 1. Save strictly under this specific user's key
-      const userStorageKey = 'dikkhanntor_attempts_' + (currentUser ? currentUser.id : "guest");
-      const localAttempts = JSON.parse(localStorage.getItem(userStorageKey) || '[]');
-      localAttempts.unshift(attempt);
-      localStorage.setItem(userStorageKey, JSON.stringify(localAttempts));
-
-      // 2. Global attempt list for Owner Panel
-      const globalAttempts = JSON.parse(localStorage.getItem('dikkhanntor_global_all_attempts') || '[]');
-      globalAttempts.unshift(attempt);
-      localStorage.setItem('dikkhanntor_global_all_attempts', JSON.stringify(globalAttempts));
+      // Direct Cloud Save to Firestore
+      if (currentUser) {
+        try {
+          const docRef = await db.collection("exam_attempts").add(attempt);
+          attempt.id = docRef.id;
+        } catch(e) {
+          console.error("Attempt cloud save error:", e);
+        }
+      }
 
       displayResultScreen(attempt);
     }
@@ -882,7 +908,7 @@
         praise.innerText = "🎉 চমৎকার প্রস্তুতি! নিয়মিত অনুশীলন চালিয়ে যাও, সফলতা নিশ্চিত!";
       } else if (attempt.score >= 40) {
         praise.className = "max-w-md mx-auto p-4 rounded-xl text-xs sm:text-sm font-bold bg-amber-50 text-amber-800 border border-amber-200";
-        praise.innerText = "👏 ভালো হয়েছে, তবে নেগেটিভ মার্কিং কমাতে হবে। নিচের ভুলগুলো ভালো করে দেখে নাও।";
+        praise.innerText = "👏 ভালো হয়েছে, তবে নেগেティブ মার্কিং কমাতে হবে। নিচের ভুলগুলো ভালো করে দেখে নাও।";
       } else {
         praise.className = "max-w-md mx-auto p-4 rounded-xl text-xs sm:text-sm font-bold bg-rose-50 text-rose-800 border border-rose-200";
         praise.innerText = "💪 মন খারাপ করবে না! ভুলগুলো শুধরে নিয়ে আবার চেষ্টা করো।";
@@ -891,15 +917,17 @@
       showView('resultView');
     }
 
-    function viewPastAttemptReview(attemptId) {
-      if (!currentUser) return;
-      const userStorageKey = 'dikkhanntor_attempts_' + currentUser.id;
-      const localAttempts = JSON.parse(localStorage.getItem(userStorageKey) || '[]');
-      const target = localAttempts.find(a => String(a.id) === String(attemptId));
-      if (target && target.reviewData) {
-        displayResultScreen(target);
-      } else {
-        alert("এই পরীক্ষার বিস্তারিত প্রশ্ন-উত্তরের ডেটা পাওয়া যায়নি।");
+    async function viewPastAttemptReview(attemptId) {
+      try {
+        const doc = await db.collection("exam_attempts").doc(attemptId).get();
+        if (doc.exists) {
+          const attemptData = doc.data();
+          displayResultScreen(attemptData);
+        } else {
+          alert("এই পরীক্ষার বিস্তারিত প্রশ্ন-উত্তরের ডেটা পাওয়া যায়নি।");
+        }
+      } catch(e) {
+        alert("ডেটা লোড করতে সমস্যা হয়েছে।");
       }
     }
 
@@ -911,44 +939,56 @@
         return;
       }
 
-      // Read only this active student's records
-      const userStorageKey = 'dikkhanntor_attempts_' + currentUser.id;
-      let attempts = JSON.parse(localStorage.getItem(userStorageKey) || '[]');
+      try {
+        const snapshot = await db.collection("exam_attempts")
+          .where("userId", "==", currentUser.uid)
+          .get();
 
-      if (attempts.length > 0) {
-        document.getElementById('kpiTotalAttempts').innerText = attempts.length;
-        const total = attempts.reduce((acc, curr) => acc + parseFloat(curr.score || 0), 0);
-        document.getElementById('kpiAvgScore').innerText = (total / attempts.length).toFixed(2);
-        const max = Math.max(...attempts.map(d => parseFloat(d.score || 0)));
-        document.getElementById('kpiMaxScore').innerText = max.toFixed(2);
-        const totalWrong = attempts.reduce((acc, curr) => acc + (curr.wrong_count || 0), 0);
-        document.getElementById('kpiTotalWrongs').innerText = totalWrong;
+        const attempts = [];
+        snapshot.forEach(doc => {
+          const data = doc.data();
+          data.id = doc.id;
+          attempts.push(data);
+        });
 
-        document.getElementById('historyTableBody').innerHTML = attempts.map(d => `
-          <tr class="hover:bg-slate-50 transition">
-            <td class="px-5 py-3.5 text-xs text-slate-500">${d.date || new Date().toLocaleDateString('bn-BD')}</td>
-            <td class="px-5 py-3.5 font-bold text-slate-900">${d.examTitle || (d.unit || 'B_UNIT').replace('_', ' ') + ' টেস্ট'}</td>
-            <td class="px-5 py-3.5 font-extrabold text-indigo-700">${parseFloat(d.score).toFixed(2)}</td>
-            <td class="px-5 py-3.5 font-semibold text-emerald-600">${d.correct_count}</td>
-            <td class="px-5 py-3.5 font-semibold text-rose-500">${d.wrong_count}</td>
-            <td class="px-5 py-3.5 text-slate-400">${d.skipped_count}</td>
-            <td class="px-5 py-3.5 text-right">
-              ${d.reviewData ? `
+        // Sort descending
+        attempts.sort((a,b) => (b.created_at?.toMillis() || 0) - (a.created_at?.toMillis() || 0));
+
+        if (attempts.length > 0) {
+          document.getElementById('kpiTotalAttempts').innerText = attempts.length;
+          const total = attempts.reduce((acc, curr) => acc + parseFloat(curr.score || 0), 0);
+          document.getElementById('kpiAvgScore').innerText = (total / attempts.length).toFixed(2);
+          const max = Math.max(...attempts.map(d => parseFloat(d.score || 0)));
+          document.getElementById('kpiMaxScore').innerText = max.toFixed(2);
+          const totalWrong = attempts.reduce((acc, curr) => acc + (curr.wrong_count || 0), 0);
+          document.getElementById('kpiTotalWrongs').innerText = totalWrong;
+
+          document.getElementById('historyTableBody').innerHTML = attempts.map(d => `
+            <tr class="hover:bg-slate-50 transition">
+              <td class="px-5 py-3.5 text-xs text-slate-500">${d.date || '-'}</td>
+              <td class="px-5 py-3.5 font-bold text-slate-900">${d.examTitle || (d.unit || 'B_UNIT').replace('_', ' ') + ' টেস্ট'}</td>
+              <td class="px-5 py-3.5 font-extrabold text-indigo-700">${parseFloat(d.score).toFixed(2)}</td>
+              <td class="px-5 py-3.5 font-semibold text-emerald-600">${d.correct_count}</td>
+              <td class="px-5 py-3.5 font-semibold text-rose-500">${d.wrong_count}</td>
+              <td class="px-5 py-3.5 text-slate-400">${d.skipped_count}</td>
+              <td class="px-5 py-3.5 text-right">
                 <button onclick="viewPastAttemptReview('${d.id}')" class="px-3 py-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 rounded-lg text-xs font-bold transition">
                   সমাধান দেখো
                 </button>
-              ` : '<span class="text-xs text-slate-400">-</span>'}
-            </td>
-          </tr>
-        `).join("");
-      } else {
-        document.getElementById('kpiTotalAttempts').innerText = "0";
-        document.getElementById('kpiAvgScore').innerText = "0.00";
-        document.getElementById('kpiMaxScore').innerText = "0.00";
-        document.getElementById('kpiTotalWrongs').innerText = "0";
-        document.getElementById('historyTableBody').innerHTML = `
-          <tr><td colspan="7" class="px-5 py-8 text-center text-slate-400 text-xs">এই অ্যাকাউন্টে এখনো কোনো পরীক্ষা সম্পন্ন হয়নি।</td></tr>
-        `;
+              </td>
+            </tr>
+          `).join("");
+        } else {
+          document.getElementById('kpiTotalAttempts').innerText = "0";
+          document.getElementById('kpiAvgScore').innerText = "0.00";
+          document.getElementById('kpiMaxScore').innerText = "0.00";
+          document.getElementById('kpiTotalWrongs').innerText = "0";
+          document.getElementById('historyTableBody').innerHTML = `
+            <tr><td colspan="7" class="px-5 py-8 text-center text-slate-400 text-xs">এই অ্যাকাউন্টে এখনো কোনো পরীক্ষা সম্পন্ন হয়নি।</td></tr>
+          `;
+        }
+      } catch(e) {
+        console.error("Dashboard fetch error:", e);
       }
     }
 
@@ -964,62 +1004,87 @@
       }
 
       const rec = {
-        id: "rec_" + Date.now(),
-        user_id: currentUser?.id,
-        user_name: currentProfile?.full_name || 'Student',
-        phone: currentProfile?.phone || '01570204036',
-        amount, method, trx_id,
-        status: 'pending'
+        userId: currentUser.uid,
+        userName: currentProfile?.full_name || 'Student',
+        phone: currentProfile?.phone || '',
+        amount: amount,
+        method: method,
+        trx_id: trx_id,
+        status: 'pending',
+        created_at: firebase.firestore.FieldValue.serverTimestamp()
       };
 
-      const queue = JSON.parse(localStorage.getItem('dikkhanntor_recharge_queue') || '[]');
-      queue.unshift(rec);
-      localStorage.setItem('dikkhanntor_recharge_queue', JSON.stringify(queue));
-
-      alert("আপনার রিচার্জ রিকোয়েস্ট সফলভাবে জমা হয়েছে! ওনার ভেরিফাই করে কিছুক্ষণের মধ্যে ব্যালেন্স যোগ করবেন।");
-      closeModal('rechargeModal');
+      try {
+        await db.collection("wallet_recharges").add(rec);
+        alert("আপনার রিচার্জ রিকোয়েস্ট সফলভাবে জমা হয়েছে! ওনার ভেরিফাই করে কিছুক্ষণের মধ্যে ব্যালেন্স যোগ করবেন।");
+        closeModal('rechargeModal');
+      } catch(e) {
+        alert("রিকোয়েস্ট পাঠাতে সমস্যা হয়েছে: " + e.message);
+      }
     }
 
     // ==========================================
     // COMPLETE OWNER CONTROL & CRM ENGINE
     // ==========================================
     async function loadAdminQueue() {
-      // 1. Pending Recharges
-      let recs = JSON.parse(localStorage.getItem('dikkhanntor_recharge_queue') || '[]');
-      document.getElementById('adminPendingCount').innerText = recs.length;
-      const rechargeContainer = document.getElementById('adminRechargeList');
-      if (rechargeContainer) {
-        if (!recs || recs.length === 0) {
-          rechargeContainer.innerHTML = `<p class="text-xs text-slate-400 italic">কোনো পেন্ডিং রিচার্জ রিকোয়েস্ট নেই।</p>`;
-        } else {
-          rechargeContainer.innerHTML = recs.map(r => `
-            <div class="flex justify-between items-center p-3 border rounded-xl bg-slate-50 text-xs">
-              <div>
-                <strong>${r.user_name || 'Student'}</strong> (${r.phone})<br>
-                ${r.method}: ৳${r.amount} | <span class="font-mono text-indigo-700 font-bold select-all">TrxID: ${r.trx_id}</span>
+      try {
+        // 1. Pending Recharges
+        const recSnapshot = await db.collection("wallet_recharges").where("status", "==", "pending").get();
+        const recs = [];
+        recSnapshot.forEach(doc => {
+          const data = doc.data();
+          data.id = doc.id;
+          recs.push(data);
+        });
+
+        document.getElementById('adminPendingCount').innerText = recs.length;
+        const rechargeContainer = document.getElementById('adminRechargeList');
+        if (rechargeContainer) {
+          if (recs.length === 0) {
+            rechargeContainer.innerHTML = `<p class="text-xs text-slate-400 italic">কোনো পেন্ডিং রিচার্জ রিকোয়েস্ট নেই।</p>`;
+          } else {
+            rechargeContainer.innerHTML = recs.map(r => `
+              <div class="flex justify-between items-center p-3 border rounded-xl bg-slate-50 text-xs">
+                <div>
+                  <strong>${r.userName || 'Student'}</strong> (${r.phone})<br>
+                  ${r.method}: ৳${r.amount} | <span class="font-mono text-indigo-700 font-bold select-all">TrxID: ${r.trx_id}</span>
+                </div>
+                <button onclick="adminApproveRecharge('${r.id}', '${r.userId}', ${r.amount})" class="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-bold transition">
+                  অ্যাপ্রুভ (৳${r.amount})
+                </button>
               </div>
-              <button onclick="adminApproveRecharge('${r.id}', ${r.amount})" class="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-bold transition">
-                অ্যাপ্রুভ (৳${r.amount})
-              </button>
-            </div>
-          `).join("");
+            `).join("");
+          }
         }
+
+        // 2. All Registered Students Directory
+        const profileSnapshot = await db.collection("profiles").get();
+        const students = [];
+        profileSnapshot.forEach(doc => {
+          students.push(doc.data());
+        });
+        allLoadedStudents = students;
+        renderAdminStudentsTable(students);
+
+        // 3. Global Exam Attempts
+        const attemptsSnapshot = await db.collection("exam_attempts").limit(50).get();
+        const globalAttempts = [];
+        attemptsSnapshot.forEach(doc => {
+          globalAttempts.push(doc.data());
+        });
+        // Sort
+        globalAttempts.sort((a,b) => (b.created_at?.toMillis() || 0) - (a.created_at?.toMillis() || 0));
+        renderAdminAttemptsTable(globalAttempts);
+
+        // 4. Update Summary Cards
+        document.getElementById('adminTotalStudents').innerText = students.length;
+        const totalBal = students.reduce((sum, s) => sum + parseFloat(s.wallet_balance || 0), 0);
+        document.getElementById('adminTotalBalance').innerText = '৳' + totalBal.toFixed(2);
+        document.getElementById('adminTotalAttemptsCount').innerText = globalAttempts.length;
+
+      } catch(e) {
+        console.error("Admin queue error:", e);
       }
-
-      // 2. All Registered Students Directory
-      let students = JSON.parse(localStorage.getItem('dikkhanntor_all_students_dir') || '[]');
-      allLoadedStudents = students;
-      renderAdminStudentsTable(students);
-
-      // 3. Global Exam Attempts
-      let globalAttempts = JSON.parse(localStorage.getItem('dikkhanntor_global_all_attempts') || '[]');
-      renderAdminAttemptsTable(globalAttempts);
-
-      // 4. Update Summary Cards
-      document.getElementById('adminTotalStudents').innerText = students.length;
-      const totalBal = students.reduce((sum, s) => sum + parseFloat(s.wallet_balance || 0), 0);
-      document.getElementById('adminTotalBalance').innerText = '৳' + totalBal.toFixed(2);
-      document.getElementById('adminTotalAttemptsCount').innerText = globalAttempts.length;
     }
 
     function renderAdminStudentsTable(list) {
@@ -1035,7 +1100,7 @@
           <td class="px-4 py-3 font-mono font-bold text-indigo-700 select-all">${s.phone || '-'}</td>
           <td class="px-4 py-3 text-slate-500">${s.email || '-'}</td>
           <td class="px-4 py-3 font-extrabold text-emerald-600">৳${parseFloat(s.wallet_balance || 0).toFixed(2)}</td>
-          <td class="px-4 py-3 text-slate-400 text-xs">${s.created_at ? new Date(s.created_at).toLocaleDateString('bn-BD') : '-'}</td>
+          <td class="px-4 py-3 text-slate-400 text-xs">${s.created_at ? new Date(s.created_at.toDate ? s.created_at.toDate() : s.created_at).toLocaleDateString('bn-BD') : '-'}</td>
         </tr>
       `).join("");
     }
@@ -1075,9 +1140,9 @@
         alert("ডাউনলোড করার মতো কোনো শিক্ষার্থীর তথ্য নেই!");
         return;
       }
-      let csv = "Name,Phone,Email,Wallet_Balance,Registered_Date\n";
+      let csv = "Name,Phone,Email,Wallet_Balance\n";
       allLoadedStudents.forEach(s => {
-        csv += `"${s.full_name || 'Student'}","${s.phone || ''}","${s.email || ''}",${s.wallet_balance || 0},"${s.created_at || ''}"\n`;
+        csv += `"${s.full_name || 'Student'}","${s.phone || ''}","${s.email || ''}",${s.wallet_balance || 0}\n`;
       });
       const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
       const url = URL.createObjectURL(blob);
@@ -1089,25 +1154,24 @@
       document.body.removeChild(link);
     }
 
-    async function adminApproveRecharge(recId, amount) {
-      let queue = JSON.parse(localStorage.getItem('dikkhanntor_recharge_queue') || '[]');
-      const target = queue.find(r => String(r.id) === String(recId));
-      
-      if (target && target.user_id) {
-        let dir = JSON.parse(localStorage.getItem('dikkhanntor_all_students_dir') || '[]');
-        const student = dir.find(s => s.id === target.user_id || s.phone === target.phone);
-        if (student) {
-          student.wallet_balance = (parseFloat(student.wallet_balance) || 0) + parseFloat(amount);
-          localStorage.setItem('dikkhanntor_all_students_dir', JSON.stringify(dir));
-          localStorage.setItem('dikkhanntor_profile_' + student.id, JSON.stringify(student));
+    async function adminApproveRecharge(recId, studentUid, amount) {
+      try {
+        // 1. Update Student Balance
+        const userRef = db.collection("profiles").doc(studentUid);
+        const userDoc = await userRef.get();
+        if (userDoc.exists) {
+          const currentBal = parseFloat(userDoc.data().wallet_balance || 0);
+          await userRef.update({ wallet_balance: currentBal + parseFloat(amount) });
         }
+
+        // 2. Mark recharge as approved
+        await db.collection("wallet_recharges").doc(recId).update({ status: "approved" });
+
+        alert(`৳${amount} সফলভাবে শিক্ষার্থীর ওয়ালেটে যুক্ত হয়েছে!`);
+        loadAdminQueue();
+      } catch(e) {
+        alert("অনুমোদনে সমস্যা হয়েছে: " + e.message);
       }
-
-      queue = queue.filter(r => String(r.id) !== String(recId));
-      localStorage.setItem('dikkhanntor_recharge_queue', JSON.stringify(queue));
-
-      alert(`৳${amount} সফলভাবে শিক্ষার্থীর ওয়ালেটে যুক্ত হয়েছে!`);
-      loadAdminQueue();
     }
   </script>
 </body>
