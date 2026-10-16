@@ -978,7 +978,7 @@
         praise.innerText = "🎉 চমৎকার প্রস্তুতি! নিয়মিত অনুশীলন চালিয়ে যাও, সফলতা নিশ্চিত!";
       } else if (attempt.score >= 40) {
         praise.className = "max-w-md mx-auto p-4 rounded-xl text-xs sm:text-sm font-bold bg-amber-50 text-amber-800 border border-amber-200";
-        praise.innerText = "👏 ভালো হয়েছে, তবে নেগেটিভ মার্কিং কমাতে হবে। নিচের ভুলগুলো ভালো করে দেখে নাও।";
+        praise.innerText = "👏 ভালো হয়েছে, তবে নেগেティブ মার্কিং কমাতে হবে। নিচের ভুলগুলো ভালো করে দেখে নাও।";
       } else {
         praise.className = "max-w-md mx-auto p-4 rounded-xl text-xs sm:text-sm font-bold bg-rose-50 text-rose-800 border border-rose-200";
         praise.innerText = "💪 মন খারাপ করবে না! ভুলগুলো শুধরে নিয়ে আবার চেষ্টা করো।";
@@ -1159,4 +1159,95 @@
     function renderAdminStudentsTable(list) {
       const tbody = document.getElementById('adminStudentsTableBody');
       if (!tbody) return;
-      if (!list ||
+      if (!list || list.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" class="px-4 py-6 text-center text-slate-400 text-xs">এখনো কোনো শিক্ষার্থী যুক্ত হয়নি।</td></tr>`;
+        return;
+      }
+      tbody.innerHTML = list.map(s => `
+        <tr class="hover:bg-slate-50 transition">
+          <td class="px-4 py-3 font-bold text-slate-900">${s.full_name || 'Student'}</td>
+          <td class="px-4 py-3 font-mono font-bold text-indigo-700 select-all">${s.phone || '-'}</td>
+          <td class="px-4 py-3 text-slate-500">${s.email || '-'}</td>
+          <td class="px-4 py-3 font-extrabold text-emerald-600">৳${parseFloat(s.wallet_balance || 0).toFixed(2)}</td>
+          <td class="px-4 py-3 text-slate-400 text-xs">${s.created_at ? new Date(s.created_at).toLocaleDateString('bn-BD') : '-'}</td>
+        </tr>
+      `).join("");
+    }
+
+    function renderAdminAttemptsTable(list) {
+      const tbody = document.getElementById('adminAllAttemptsTableBody');
+      if (!tbody) return;
+      if (!list || list.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" class="px-4 py-6 text-center text-slate-400 text-xs">এখনো কোনো শিক্ষার্থী পরীক্ষা জমা দেয়নি।</td></tr>`;
+        return;
+      }
+      tbody.innerHTML = list.map(a => `
+        <tr class="hover:bg-slate-50 transition">
+          <td class="px-4 py-3 text-xs text-slate-400">${a.timestamp || (a.attempted_at ? new Date(a.attempted_at).toLocaleString('bn-BD') : '-')}</td>
+          <td class="px-4 py-3 font-semibold text-slate-800">${a.studentName || a.profiles?.full_name || a.studentPhone || 'Student'}</td>
+          <td class="px-4 py-3 font-bold text-slate-900">${a.examTitle || (a.unit || 'B_UNIT').replace('_', ' ') + ' টেস্ট'}</td>
+          <td class="px-4 py-3 font-extrabold text-indigo-700">${parseFloat(a.score || 0).toFixed(2)}</td>
+          <td class="px-4 py-3 text-emerald-600 font-semibold">${a.correct_count}</td>
+          <td class="px-4 py-3 text-rose-500 font-semibold">${a.wrong_count}</td>
+          <td class="px-4 py-3 text-slate-400">${a.skipped_count}</td>
+        </tr>
+      `).join("");
+    }
+
+    function filterAdminStudents() {
+      const term = document.getElementById('adminStudentSearch').value.toLowerCase();
+      const filtered = allLoadedStudents.filter(s => 
+        (s.full_name && s.full_name.toLowerCase().includes(term)) ||
+        (s.phone && s.phone.includes(term)) ||
+        (s.email && s.email.toLowerCase().includes(term))
+      );
+      renderAdminStudentsTable(filtered);
+    }
+
+    function exportStudentsCSV() {
+      if (!allLoadedStudents || allLoadedStudents.length === 0) {
+        alert("ডাউনলোড করার মতো কোনো শিক্ষার্থীর তথ্য নেই!");
+        return;
+      }
+      let csv = "Name,Phone,Email,Wallet_Balance,Registered_Date\n";
+      allLoadedStudents.forEach(s => {
+        csv += `"${s.full_name || 'Student'}","${s.phone || ''}","${s.email || ''}",${s.wallet_balance || 0},"${s.created_at || ''}"\n`;
+      });
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.setAttribute("href", url);
+      link.setAttribute("download", `Dikkhanntor_Students_${new Date().toISOString().slice(0,10)}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    async function adminApproveRecharge(recId, amount) {
+      let queue = JSON.parse(localStorage.getItem('dikkhanntor_recharge_queue') || '[]');
+      const target = queue.find(r => String(r.id) === String(recId));
+      
+      if (target && target.user_id) {
+        let dir = JSON.parse(localStorage.getItem('dikkhanntor_all_students_dir') || '[]');
+        const student = dir.find(s => s.id === target.user_id || s.phone === target.phone);
+        if (student) {
+          student.wallet_balance = (parseFloat(student.wallet_balance) || 0) + parseFloat(amount);
+          localStorage.setItem('dikkhanntor_all_students_dir', JSON.stringify(dir));
+        }
+      }
+
+      queue = queue.filter(r => String(r.id) !== String(recId));
+      localStorage.setItem('dikkhanntor_recharge_queue', JSON.stringify(queue));
+
+      if (sb) {
+        try {
+          await sb.from('wallet_recharges').update({ status: 'approved' }).eq('id', recId);
+        } catch(e) {}
+      }
+
+      alert(`৳${amount} সফলভাবে শিক্ষার্থীর ওয়ালেটে যুক্ত হয়েছে!`);
+      loadAdminQueue();
+    }
+  </script>
+</body>
+</html>
