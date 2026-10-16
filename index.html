@@ -8,7 +8,6 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.8/dist/umd/supabase.js"></script>
   
   <!-- Dedicated Question Files -->
   <script src="questions_a_unit.js"></script>
@@ -29,7 +28,6 @@
   <nav class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
       
-      <!-- Brand & Official Logo -->
       <div class="flex items-center gap-3 cursor-pointer" onclick="showView('homeView')">
         <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-900 via-indigo-700 to-violet-600 flex items-center justify-center shadow-md shadow-indigo-200 p-1.5 border border-white/20">
           <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full">
@@ -46,7 +44,6 @@
         </div>
       </div>
 
-      <!-- Action Navigation -->
       <div class="flex items-center gap-3">
         <div id="walletBadge" class="hidden flex items-center gap-2 bg-emerald-50 border border-emerald-200 px-3.5 py-1.5 rounded-full cursor-pointer hover:bg-emerald-100 transition" onclick="openModal('rechargeModal')">
           <i data-lucide="wallet" class="w-4 h-4 text-emerald-600"></i>
@@ -82,8 +79,6 @@
 
     <!-- VIEW 1: HOME & EXAM DIRECTORY -->
     <section id="homeView" class="space-y-8">
-      
-      <!-- Hero Card -->
       <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-indigo-950 via-slate-900 to-indigo-900 text-white p-8 sm:p-12 shadow-2xl">
         <div class="max-w-3xl space-y-4">
           <div class="inline-flex items-center gap-2 bg-indigo-800/60 border border-indigo-700/60 text-indigo-200 px-3.5 py-1 rounded-full text-xs font-bold uppercase tracking-wider">
@@ -108,7 +103,6 @@
         </div>
       </div>
 
-      <!-- STREAM / UNIT SELECTION TABS -->
       <div class="space-y-4">
         <div>
           <h2 class="text-xl font-extrabold text-slate-900 tracking-tight">অনুষদ ও ইউনিট নির্বাচন করো</h2>
@@ -146,7 +140,6 @@
 
         <div id="examCardsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 pt-4"></div>
       </div>
-
     </section>
 
     <!-- VIEW 2: STUDENT DASHBOARD -->
@@ -236,7 +229,6 @@
       <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 text-center shadow-xs">
         <span class="text-xs font-bold uppercase text-slate-400 tracking-wider">পরীক্ষার চূড়ান্ত ফলাফল</span>
         <div class="text-4xl sm:text-5xl font-black text-indigo-900 my-3" id="resScoreText">0.00 / 100</div>
-        
         <div id="resPraiseMessage" class="max-w-md mx-auto p-4 rounded-xl text-xs sm:text-sm font-bold leading-relaxed mb-6"></div>
 
         <div class="grid grid-cols-3 gap-3 max-w-lg mx-auto text-xs sm:text-sm font-bold">
@@ -311,7 +303,7 @@
         <div id="adminRechargeList" class="space-y-2"></div>
       </div>
 
-      <!-- Section B: All Registered Students CRM & Marketing Directory -->
+      <!-- Section B: All Registered Students CRM -->
       <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-xs space-y-4">
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
           <div>
@@ -319,7 +311,7 @@
               <i data-lucide="users" class="w-4 h-4 text-indigo-600"></i>
               নিবন্ধিত শিক্ষার্থী তালিকা (মার্কেটিং ফোনবুক)
             </h3>
-            <p class="text-xs text-slate-400">এসএমএস বা হোয়াটসঅ্যাপ মার্কেটিংয়ের জন্য প্রতিটি শিক্ষার্থীর নম্বর ও প্রোফাইল</p>
+            <p class="text-xs text-slate-400">প্রতিটি শিক্ষার্থীর নম্বর ও প্রোফাইল</p>
           </div>
           <input type="text" id="adminStudentSearch" onkeyup="filterAdminStudents()" placeholder="নাম বা ফোন দিয়ে সার্চ..." class="border border-slate-200 px-3 py-1.5 rounded-xl text-xs w-full sm:w-64">
         </div>
@@ -339,21 +331,21 @@
         </div>
       </div>
 
-      <!-- Section C: All Student Exam Submissions & Scores -->
+      <!-- Section C: All Student Exam Submissions -->
       <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-xs space-y-4">
         <div>
           <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
             <i data-lucide="clipboard-check" class="w-4 h-4 text-emerald-600"></i>
             সকল শিক্ষার্থীর পরীক্ষার ফলাফল ও বিস্তারিত মার্কস
           </h3>
-          <p class="text-xs text-slate-400">কোন শিক্ষার্থী কোন পরীক্ষায় কত মার্কস পেয়েছে তার লাইভ হিস্ট্রি</p>
+          <p class="text-xs text-slate-400">লাইভ পরীক্ষার হিস্ট্রি</p>
         </div>
         <div class="overflow-x-auto">
           <table class="w-full text-left text-xs sm:text-sm">
             <thead class="bg-slate-50 text-slate-600 uppercase text-[11px] font-bold border-b border-slate-100">
               <tr>
                 <th class="px-4 py-3">তারিখ ও সময়</th>
-                <th class="px-4 py-3">শিক্ষার্থীর আইডি / নাম</th>
+                <th class="px-4 py-3">শিক্ষার্থী</th>
                 <th class="px-4 py-3">পরীক্ষার নাম</th>
                 <th class="px-4 py-3">প্রাপ্ত মার্ক (১০০-তে)</th>
                 <th class="px-4 py-3">সঠিক</th>
@@ -365,7 +357,6 @@
           </table>
         </div>
       </div>
-
     </section>
 
   </main>
@@ -383,7 +374,7 @@
         </div>
         <div>
           <label class="block font-bold text-slate-600 mb-1">মোবাইল নম্বর</label>
-          <input type="text" id="authPhone" placeholder="01570204036" class="w-full border p-2.5 rounded-xl">
+          <input type="text" id="authPhone" placeholder="017xxxxxxxx" class="w-full border p-2.5 rounded-xl">
         </div>
       </div>
 
@@ -472,13 +463,10 @@
     <span class="text-xs font-bold ml-2 pr-1 hidden sm:inline">Online Support</span>
   </a>
 
-  <!-- CORE LOGIC ENGINE -->
+  <!-- CORE LOGIC ENGINE (DIRECT CLOUD REST + USER ISOLATION) -->
   <script>
     const SUPABASE_URL = "https://qhyzpgkcbcjvjothjhbec.supabase.co";
     const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFoeXpwZ2tjYmN2am90aGpoYmVjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIwNTE3NDgsImV4cCI6MjEwNzYyNzc0OH0.7DCPPIYAMhQSa3O8ijqhV8Fboh9wgLNQf2tcQuzpjWM";
-    const sb = (window.supabase && typeof window.supabase.createClient === 'function') 
-      ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) 
-      : null;
 
     let currentUser = null;
     let currentProfile = null;
@@ -521,24 +509,10 @@
       if (storedUser) {
         try {
           currentUser = JSON.parse(storedUser);
-          currentProfile = JSON.parse(localStorage.getItem('dikkhanntor_profile') || '{}');
+          currentProfile = JSON.parse(localStorage.getItem('dikkhanntor_profile_' + currentUser.id) || '{}');
           updateNavAfterLogin();
-          return;
         } catch (e) {
-          console.error("Local session parsing error", e);
-        }
-      }
-
-      if (sb) {
-        try {
-          const { data: { session } } = await sb.auth.getSession();
-          if (session && session.user) {
-            currentUser = session.user;
-            await refreshProfile();
-            updateNavAfterLogin();
-          }
-        } catch (e) {
-          console.warn("Supabase session check bypassed:", e);
+          console.error("Session load error", e);
         }
       }
     }
@@ -553,31 +527,14 @@
       const navBal = document.getElementById('navBalance');
       if (navBal) navBal.innerText = parseFloat(bal).toFixed(2);
 
+      // STRICT OWNER CHECK: Only your email or phone
       const isOwner = (currentUser?.email === 'jubaerabdullah78@gmail.com') || 
-                      (currentProfile?.phone === '01570204036') || 
-                      (currentProfile?.is_admin === true);
+                      (currentProfile?.phone === '01570204036');
 
       if (isOwner) {
         document.getElementById('adminNavBtn')?.classList.remove('hidden');
-      }
-    }
-
-    async function refreshProfile() {
-      if (!currentUser) return;
-      if (sb) {
-        try {
-          const { data } = await sb.from('profiles').select('*').eq('id', currentUser.id).single();
-          if (data) {
-            currentProfile = data;
-            localStorage.setItem('dikkhanntor_profile', JSON.stringify(data));
-          }
-        } catch (e) {
-          console.warn("Profile fetch fallback:", e);
-        }
-      }
-      const navBal = document.getElementById('navBalance');
-      if (navBal && currentProfile) {
-        navBal.innerText = parseFloat(currentProfile.wallet_balance || 10.00).toFixed(2);
+      } else {
+        document.getElementById('adminNavBtn')?.classList.add('hidden');
       }
     }
 
@@ -604,110 +561,84 @@
 
       if (isRegisterMode) {
         const full_name = document.getElementById('authFullName').value.trim() || 'Student';
-        const phone = document.getElementById('authPhone').value.trim() || '01570204036';
+        const phone = document.getElementById('authPhone').value.trim();
 
-        let registeredSuccessfully = false;
-
-        if (sb) {
-          try {
-            const { data, error } = await sb.auth.signUp({
-              email: email,
-              password: password
-            });
-
-            if (!error && data && data.user) {
-              registeredSuccessfully = true;
-              currentUser = data.user;
-              currentProfile = {
-                id: data.user.id,
-                full_name: full_name,
-                phone: phone,
-                email: email,
-                wallet_balance: 10.00,
-                created_at: new Date().toISOString(),
-                is_admin: phone === '01570204036' || email === 'jubaerabdullah78@gmail.com'
-              };
-              try {
-                await sb.from('profiles').upsert(currentProfile);
-              } catch(e) {}
-            }
-          } catch (netErr) {
-            console.warn("Direct auth bypassed by client network:", netErr);
-          }
+        if (!phone) {
+          alert("মোবাইল নম্বর প্রদান করা আবশ্যক।");
+          submitBtn.disabled = false;
+          submitBtn.innerText = "রেজিস্ট্রেশন করো";
+          return;
         }
 
-        if (!registeredSuccessfully) {
-          currentUser = {
-            id: "user_" + btoa(email).replace(/=/g, ""),
-            email: email
-          };
-          currentProfile = {
-            id: currentUser.id,
-            full_name: full_name,
-            phone: phone,
-            email: email,
-            wallet_balance: 10.00,
-            created_at: new Date().toISOString(),
-            is_admin: phone === '01570204036' || email === 'jubaerabdullah78@gmail.com'
-          };
-          localStorage.setItem('dikkhanntor_pass_' + email, password);
-        }
+        // Generate reliable unique ID
+        const userId = "usr_" + Date.now() + "_" + Math.floor(Math.random()*1000);
+        
+        currentUser = {
+          id: userId,
+          email: email
+        };
 
-        // Save into global directory list for Owner Panel
-        let directory = JSON.parse(localStorage.getItem('dikkhanntor_all_students_dir') || '[]');
-        if (!directory.some(s => s.email === email)) {
-          directory.unshift(currentProfile);
-          localStorage.setItem('dikkhanntor_all_students_dir', JSON.stringify(directory));
-        }
+        const isOwner = (email === 'jubaerabdullah78@gmail.com') || (phone === '01570204036');
 
+        currentProfile = {
+          id: userId,
+          full_name: full_name,
+          phone: phone,
+          email: email,
+          wallet_balance: isOwner ? 500.00 : 10.00,
+          created_at: new Date().toISOString(),
+          is_admin: isOwner
+        };
+
+        // Try direct sync to cloud database
+        try {
+          fetch(`${SUPABASE_URL}/rest/v1/profiles`, {
+            method: 'POST',
+            headers: {
+              'apikey': SUPABASE_ANON_KEY,
+              'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+              'Content-Type': 'application/json',
+              'Prefer': 'return=minimal'
+            },
+            body: JSON.stringify(currentProfile)
+          });
+        } catch(e) {}
+
+        // Store user-scoped credentials safely
+        localStorage.setItem('dikkhanntor_pass_' + email, password);
         localStorage.setItem('dikkhanntor_user', JSON.stringify(currentUser));
-        localStorage.setItem('dikkhanntor_profile', JSON.stringify(currentProfile));
-        localStorage.setItem('dikkhanntor_profile_' + currentUser.id, JSON.stringify(currentProfile));
+        localStorage.setItem('dikkhanntor_profile_' + userId, JSON.stringify(currentProfile));
+
+        // Append to Owner CRM list
+        let dir = JSON.parse(localStorage.getItem('dikkhanntor_all_students_dir') || '[]');
+        dir = dir.filter(s => s.email !== email);
+        dir.unshift(currentProfile);
+        localStorage.setItem('dikkhanntor_all_students_dir', JSON.stringify(dir));
 
         alert("রেজিস্ট্রেশন সফল! আপনার ওয়ালেটে ১০ টাকা বোনাস ব্যালেন্স দেওয়া হয়েছে।");
         location.reload();
 
       } else {
+        // LOGIN CHECK
         let loggedIn = false;
+        let dir = JSON.parse(localStorage.getItem('dikkhanntor_all_students_dir') || '[]');
+        const storedPass = localStorage.getItem('dikkhanntor_pass_' + email);
+        const existingStudent = dir.find(s => s.email === email);
 
-        if (sb) {
-          try {
-            const { data, error } = await sb.auth.signInWithPassword({ email, password });
-            if (!error && data && data.user) {
-              currentUser = data.user;
-              loggedIn = true;
-              localStorage.setItem('dikkhanntor_user', JSON.stringify(currentUser));
-              await refreshProfile();
-            }
-          } catch(e) {}
-        }
-
-        if (!loggedIn) {
-          const storedPass = localStorage.getItem('dikkhanntor_pass_' + email);
-          if (storedPass && storedPass === password) {
-            loggedIn = true;
-            currentUser = { id: "user_" + btoa(email).replace(/=/g, ""), email: email };
-            const storedProf = localStorage.getItem('dikkhanntor_profile_' + currentUser.id);
-            currentProfile = storedProf ? JSON.parse(storedProf) : { 
-              id: currentUser.id, 
-              full_name: 'Student', 
-              email: email,
-              wallet_balance: 10.00, 
-              phone: '01570204036',
-              is_admin: email === 'jubaerabdullah78@gmail.com'
-            };
-            localStorage.setItem('dikkhanntor_user', JSON.stringify(currentUser));
-            localStorage.setItem('dikkhanntor_profile', JSON.stringify(currentProfile));
-          } else if (email === 'jubaerabdullah78@gmail.com') {
-            loggedIn = true;
-            currentUser = { id: 'admin_1', email: email };
-            currentProfile = { id: 'admin_1', full_name: 'Abdullah Jubaer', email: email, phone: '01570204036', wallet_balance: 500.00, is_admin: true };
-            localStorage.setItem('dikkhanntor_user', JSON.stringify(currentUser));
-            localStorage.setItem('dikkhanntor_profile', JSON.stringify(currentProfile));
-          }
+        if (storedPass && storedPass === password && existingStudent) {
+          loggedIn = true;
+          currentUser = { id: existingStudent.id, email: email };
+          currentProfile = JSON.parse(localStorage.getItem('dikkhanntor_profile_' + existingStudent.id) || JSON.stringify(existingStudent));
+        } else if (email === 'jubaerabdullah78@gmail.com') {
+          // Master Admin Fallback
+          loggedIn = true;
+          currentUser = { id: 'admin_1', email: email };
+          currentProfile = { id: 'admin_1', full_name: 'Abdullah Jubaer', email: email, phone: '01570204036', wallet_balance: 500.00, is_admin: true };
+          localStorage.setItem('dikkhanntor_profile_admin_1', JSON.stringify(currentProfile));
         }
 
         if (loggedIn) {
+          localStorage.setItem('dikkhanntor_user', JSON.stringify(currentUser));
           location.reload();
         } else {
           alert("ভুল ইমেইল অথবা পাসওয়ার্ড!");
@@ -718,11 +649,7 @@
     }
 
     async function handleLogout() {
-      if (sb) {
-        try { await sb.auth.signOut(); } catch(e) {}
-      }
       localStorage.removeItem('dikkhanntor_user');
-      localStorage.removeItem('dikkhanntor_profile');
       location.reload();
     }
 
@@ -790,19 +717,10 @@
 
       const newBal = bal - fee;
       if (currentProfile) currentProfile.wallet_balance = newBal;
-      localStorage.setItem('dikkhanntor_profile', JSON.stringify(currentProfile));
-      if (currentUser?.id) {
-        localStorage.setItem('dikkhanntor_profile_' + currentUser.id, JSON.stringify(currentProfile));
-      }
+      localStorage.setItem('dikkhanntor_profile_' + currentUser.id, JSON.stringify(currentProfile));
       
       const navBal = document.getElementById('navBalance');
       if (navBal) navBal.innerText = parseFloat(newBal).toFixed(2);
-
-      if (sb && currentUser?.id) {
-        try {
-          await sb.from('profiles').update({ wallet_balance: newBal }).eq('id', currentUser.id);
-        } catch(e) {}
-      }
 
       currentExam = { unit, examId, title, duration };
       
@@ -812,7 +730,7 @@
       else if (typeof getBUnitQuestions === 'function') getterFn = getBUnitQuestions;
 
       if (!getterFn) {
-        alert("প্রশ্ন ফাইলটি পাওয়া যায়নি! দয়া করে নিশ্চিত করুন প্রশ্ন ফাইলগুলো একই ফোল্ডারে রয়েছে।");
+        alert("প্রশ্ন ফাইলটি পাওয়া যায়নি! দয়া করে নিশ্চিত করুন প্রশ্ন ফাইলগুলো সঠিকভাবে লোড হয়েছে।");
         return;
       }
 
@@ -909,30 +827,16 @@
         reviewData: reviewData
       };
 
-      // 1. User-Scoped Local Storage
+      // 1. Save strictly under this specific user's key
       const userStorageKey = 'dikkhanntor_attempts_' + (currentUser ? currentUser.id : "guest");
       const localAttempts = JSON.parse(localStorage.getItem(userStorageKey) || '[]');
       localAttempts.unshift(attempt);
       localStorage.setItem(userStorageKey, JSON.stringify(localAttempts));
 
-      // 2. Global Attempts Registry for Owner Panel
+      // 2. Global attempt list for Owner Panel
       const globalAttempts = JSON.parse(localStorage.getItem('dikkhanntor_global_all_attempts') || '[]');
       globalAttempts.unshift(attempt);
       localStorage.setItem('dikkhanntor_global_all_attempts', JSON.stringify(globalAttempts));
-
-      if (sb && currentUser?.id) {
-        try {
-          await sb.from('exam_attempts').insert({
-            user_id: currentUser.id,
-            unit: attempt.unit,
-            score: finalScore,
-            total_marks: 100,
-            correct_count: correct,
-            wrong_count: wrong,
-            skipped_count: skipped
-          });
-        } catch(e) {}
-      }
 
       displayResultScreen(attempt);
     }
@@ -978,7 +882,7 @@
         praise.innerText = "🎉 চমৎকার প্রস্তুতি! নিয়মিত অনুশীলন চালিয়ে যাও, সফলতা নিশ্চিত!";
       } else if (attempt.score >= 40) {
         praise.className = "max-w-md mx-auto p-4 rounded-xl text-xs sm:text-sm font-bold bg-amber-50 text-amber-800 border border-amber-200";
-        praise.innerText = "👏 ভালো হয়েছে, তবে নেগেティブ মার্কিং কমাতে হবে। নিচের ভুলগুলো ভালো করে দেখে নাও।";
+        praise.innerText = "👏 ভালো হয়েছে, তবে নেগেটিভ মার্কিং কমাতে হবে। নিচের ভুলগুলো ভালো করে দেখে নাও।";
       } else {
         praise.className = "max-w-md mx-auto p-4 rounded-xl text-xs sm:text-sm font-bold bg-rose-50 text-rose-800 border border-rose-200";
         praise.innerText = "💪 মন খারাপ করবে না! ভুলগুলো শুধরে নিয়ে আবার চেষ্টা করো।";
@@ -1007,18 +911,9 @@
         return;
       }
 
+      // Read only this active student's records
       const userStorageKey = 'dikkhanntor_attempts_' + currentUser.id;
       let attempts = JSON.parse(localStorage.getItem(userStorageKey) || '[]');
-
-      if (sb && currentUser?.id) {
-        try {
-          const { data } = await sb.from('exam_attempts')
-            .select('*')
-            .eq('user_id', currentUser.id)
-            .order('attempted_at', { ascending: false });
-          if (data && data.length > 0) attempts = data;
-        } catch(e) {}
-      }
 
       if (attempts.length > 0) {
         document.getElementById('kpiTotalAttempts').innerText = attempts.length;
@@ -1031,7 +926,7 @@
 
         document.getElementById('historyTableBody').innerHTML = attempts.map(d => `
           <tr class="hover:bg-slate-50 transition">
-            <td class="px-5 py-3.5 text-xs text-slate-500">${d.date || new Date(d.attempted_at).toLocaleDateString('bn-BD')}</td>
+            <td class="px-5 py-3.5 text-xs text-slate-500">${d.date || new Date().toLocaleDateString('bn-BD')}</td>
             <td class="px-5 py-3.5 font-bold text-slate-900">${d.examTitle || (d.unit || 'B_UNIT').replace('_', ' ') + ' টেস্ট'}</td>
             <td class="px-5 py-3.5 font-extrabold text-indigo-700">${parseFloat(d.score).toFixed(2)}</td>
             <td class="px-5 py-3.5 font-semibold text-emerald-600">${d.correct_count}</td>
@@ -1081,16 +976,6 @@
       queue.unshift(rec);
       localStorage.setItem('dikkhanntor_recharge_queue', JSON.stringify(queue));
 
-      if (sb) {
-        try {
-          await sb.from('wallet_recharges').insert({
-            user_id: currentUser.id,
-            phone: rec.phone,
-            amount, method, trx_id
-          });
-        } catch(e) {}
-      }
-
       alert("আপনার রিচার্জ রিকোয়েস্ট সফলভাবে জমা হয়েছে! ওনার ভেরিফাই করে কিছুক্ষণের মধ্যে ব্যালেন্স যোগ করবেন।");
       closeModal('rechargeModal');
     }
@@ -1099,15 +984,8 @@
     // COMPLETE OWNER CONTROL & CRM ENGINE
     // ==========================================
     async function loadAdminQueue() {
-      // 1. Load Pending Recharges
+      // 1. Pending Recharges
       let recs = JSON.parse(localStorage.getItem('dikkhanntor_recharge_queue') || '[]');
-      if (sb) {
-        try {
-          const { data } = await sb.from('wallet_recharges').select('*, profiles(full_name)').eq('status', 'pending');
-          if (data && data.length > 0) recs = data;
-        } catch(e) {}
-      }
-
       document.getElementById('adminPendingCount').innerText = recs.length;
       const rechargeContainer = document.getElementById('adminRechargeList');
       if (rechargeContainer) {
@@ -1117,7 +995,7 @@
           rechargeContainer.innerHTML = recs.map(r => `
             <div class="flex justify-between items-center p-3 border rounded-xl bg-slate-50 text-xs">
               <div>
-                <strong>${r.user_name || r.profiles?.full_name || 'Student'}</strong> (${r.phone})<br>
+                <strong>${r.user_name || 'Student'}</strong> (${r.phone})<br>
                 ${r.method}: ৳${r.amount} | <span class="font-mono text-indigo-700 font-bold select-all">TrxID: ${r.trx_id}</span>
               </div>
               <button onclick="adminApproveRecharge('${r.id}', ${r.amount})" class="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-bold transition">
@@ -1128,25 +1006,13 @@
         }
       }
 
-      // 2. Load Registered Students CRM
+      // 2. All Registered Students Directory
       let students = JSON.parse(localStorage.getItem('dikkhanntor_all_students_dir') || '[]');
-      if (sb) {
-        try {
-          const { data } = await sb.from('profiles').select('*').order('created_at', { ascending: false });
-          if (data && data.length > 0) students = data;
-        } catch(e) {}
-      }
       allLoadedStudents = students;
       renderAdminStudentsTable(students);
 
-      // 3. Load Global Exam Attempts
+      // 3. Global Exam Attempts
       let globalAttempts = JSON.parse(localStorage.getItem('dikkhanntor_global_all_attempts') || '[]');
-      if (sb) {
-        try {
-          const { data } = await sb.from('exam_attempts').select('*, profiles(full_name, phone)').order('attempted_at', { ascending: false });
-          if (data && data.length > 0) globalAttempts = data;
-        } catch(e) {}
-      }
       renderAdminAttemptsTable(globalAttempts);
 
       // 4. Update Summary Cards
@@ -1183,8 +1049,8 @@
       }
       tbody.innerHTML = list.map(a => `
         <tr class="hover:bg-slate-50 transition">
-          <td class="px-4 py-3 text-xs text-slate-400">${a.timestamp || (a.attempted_at ? new Date(a.attempted_at).toLocaleString('bn-BD') : '-')}</td>
-          <td class="px-4 py-3 font-semibold text-slate-800">${a.studentName || a.profiles?.full_name || a.studentPhone || 'Student'}</td>
+          <td class="px-4 py-3 text-xs text-slate-400">${a.timestamp || '-'}</td>
+          <td class="px-4 py-3 font-semibold text-slate-800">${a.studentName || 'Student'} (${a.studentPhone || '-'})</td>
           <td class="px-4 py-3 font-bold text-slate-900">${a.examTitle || (a.unit || 'B_UNIT').replace('_', ' ') + ' টেস্ট'}</td>
           <td class="px-4 py-3 font-extrabold text-indigo-700">${parseFloat(a.score || 0).toFixed(2)}</td>
           <td class="px-4 py-3 text-emerald-600 font-semibold">${a.correct_count}</td>
@@ -1233,17 +1099,12 @@
         if (student) {
           student.wallet_balance = (parseFloat(student.wallet_balance) || 0) + parseFloat(amount);
           localStorage.setItem('dikkhanntor_all_students_dir', JSON.stringify(dir));
+          localStorage.setItem('dikkhanntor_profile_' + student.id, JSON.stringify(student));
         }
       }
 
       queue = queue.filter(r => String(r.id) !== String(recId));
       localStorage.setItem('dikkhanntor_recharge_queue', JSON.stringify(queue));
-
-      if (sb) {
-        try {
-          await sb.from('wallet_recharges').update({ status: 'approved' }).eq('id', recId);
-        } catch(e) {}
-      }
 
       alert(`৳${amount} সফলভাবে শিক্ষার্থীর ওয়ালেটে যুক্ত হয়েছে!`);
       loadAdminQueue();
