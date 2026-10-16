@@ -9,7 +9,7 @@
   <script src="https://unpkg.com/lucide@latest"></script>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
-  <!-- Google Firebase SDKs -->
+  <!-- Google Firebase SDKs (Compat Version for Direct Browser Script Support) -->
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
@@ -275,7 +275,7 @@
             <i data-lucide="crown" class="w-6 h-6 text-amber-500"></i>
             দীক্ষান্তর Owner Control & Marketing Panel
           </h2>
-          <p class="text-xs text-slate-500">শিক্ষার্থীদের তথ্য, মার্কেটিং ফোন নম্বর তালিকা, পরীক্ষার ফলাফল এবং রিচার্জ অনুমোদন</p>
+          <p class="text-xs text-slate-500">শিক্ষার্থীদের তথ্য, মার্কেটিং তালিকা, পরীক্ষার ফলাফল এবং রিচার্জ অনুমোদন</p>
         </div>
         <div class="flex gap-2">
           <button onclick="exportStudentsCSV()" class="flex items-center gap-1.5 px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-xs transition">
@@ -328,7 +328,7 @@
               <i data-lucide="users" class="w-4 h-4 text-indigo-600"></i>
               নিবন্ধিত শিক্ষার্থী তালিকা (মার্কেটিং ফোনবুক)
             </h3>
-            <p class="text-xs text-slate-400">প্রতিটি শিক্ষার্থীর নম্বর ও প্রোফাইল</p>
+            <p class="text-xs text-slate-400">প্রতিটি শিক্ষার্থীর ইমেইল ও প্রোফাইল বিবরণী</p>
           </div>
           <input type="text" id="adminStudentSearch" onkeyup="filterAdminStudents()" placeholder="নাম বা ইমেইল দিয়ে সার্চ..." class="border border-slate-200 px-3 py-1.5 rounded-xl text-xs w-full sm:w-64">
         </div>
@@ -466,12 +466,24 @@
     let examTimerInterval = null;
     let remainingSeconds = 60 * 60;
     let allLoadedStudents = [];
+    let isRedirecting = false;
 
-    window.addEventListener("DOMContentLoaded", () => {
+    window.addEventListener("DOMContentLoaded", async () => {
       if (window.lucide) lucide.createIcons();
       switchUnit("B_UNIT");
 
-      // Firebase Realtime Auth Observer
+      // Handle return from Google Redirect Sign-In
+      try {
+        const result = await auth.getRedirectResult();
+        if (result && result.user) {
+          currentUser = result.user;
+          await syncUserProfile(result.user);
+        }
+      } catch (err) {
+        console.warn("Redirect processing error:", err);
+      }
+
+      // Realtime state listener
       auth.onAuthStateChanged(async (user) => {
         if (user) {
           currentUser = user;
@@ -484,17 +496,27 @@
       });
     });
 
-    // 1-Click Google Sign In (Works seamlessly across Android, iPhone, Windows, Mac)
+    // Clean Google Redirect Sign-In with debounce lock
     async function handleGoogleSignIn() {
+      if (isRedirecting) return;
+      isRedirecting = true;
+      const btn = document.getElementById('authBtn');
+      if (btn) {
+        btn.disabled = true;
+        btn.innerText = "লগইন হচ্ছে...";
+      }
+
       const provider = new firebase.auth.GoogleAuthProvider();
+      provider.setCustomParameters({ prompt: 'select_account' });
+
       try {
-        await auth.signInWithPopup(provider);
+        await auth.signInWithRedirect(provider);
       } catch (error) {
-        if (error.code === 'auth/popup-blocked') {
-          // If popup is blocked by browser, use redirect
-          await auth.signInWithRedirect(provider);
-        } else {
-          alert("লগইন ত্রুটি: " + error.message);
+        alert("লগইন ত্রুটি: " + error.message);
+        isRedirecting = false;
+        if (btn) {
+          btn.disabled = false;
+          btn.innerText = "গুগল দিয়ে লগইন";
         }
       }
     }
@@ -512,7 +534,6 @@
             currentProfile.is_admin = true;
           }
         } else {
-          // First time student signs in via Google -> gets ৳10 bonus
           currentProfile = {
             id: user.uid,
             full_name: user.displayName || 'Student',
@@ -543,7 +564,6 @@
       const navBal = document.getElementById('navBalance');
       if (navBal) navBal.innerText = parseFloat(bal).toFixed(2);
 
-      // STRICT OWNER VERIFICATION: Only jubaerabdullah78@gmail.com
       const isOwner = (currentUser?.email === 'jubaerabdullah78@gmail.com') || (currentProfile?.is_admin === true);
 
       if (isOwner) {
@@ -661,7 +681,6 @@
       const navBal = document.getElementById('navBalance');
       if (navBal) navBal.innerText = parseFloat(newBal).toFixed(2);
 
-      // Cloud Firestore balance deduct
       try {
         await db.collection("profiles").doc(currentUser.uid).update({ wallet_balance: newBal });
       } catch(e) {
@@ -774,7 +793,6 @@
         created_at: firebase.firestore.FieldValue.serverTimestamp()
       };
 
-      // Realtime Cloud Save to Firestore
       if (currentUser) {
         try {
           const docRef = await db.collection("exam_attempts").add(attempt);
@@ -828,7 +846,7 @@
         praise.innerText = "🎉 চমৎকার প্রস্তুতি! নিয়মিত অনুশীলন চালিয়ে যাও, সফলতা নিশ্চিত!";
       } else if (attempt.score >= 40) {
         praise.className = "max-w-md mx-auto p-4 rounded-xl text-xs sm:text-sm font-bold bg-amber-50 text-amber-800 border border-amber-200";
-        praise.innerText = "👏 ভালো হয়েছে, তবে নেগেティブ মার্কিং কমাতে হবে। নিচের ভুলগুলো ভালো করে দেখে নাও।";
+        praise.innerText = "👏 ভালো হয়েছে, তবে নেগেটিভ মার্কিং কমাতে হবে। নিচের ভুলগুলো ভালো করে দেখে নাও।";
       } else {
         praise.className = "max-w-md mx-auto p-4 rounded-xl text-xs sm:text-sm font-bold bg-rose-50 text-rose-800 border border-rose-200";
         praise.innerText = "💪 মন খারাপ করবে না! ভুলগুলো শুধরে নিয়ে আবার চেষ্টা করো।";
@@ -860,7 +878,6 @@
       }
 
       try {
-        // Realtime query from Firestore for active user only
         const snapshot = await db.collection("exam_attempts")
           .where("userId", "==", currentUser.uid)
           .get();
@@ -952,7 +969,6 @@
     // ==========================================
     async function loadAdminQueue() {
       try {
-        // 1. Pending Recharges
         const recSnapshot = await db.collection("wallet_recharges").where("status", "==", "pending").get();
         const recs = [];
         recSnapshot.forEach(doc => {
@@ -981,7 +997,6 @@
           }
         }
 
-        // 2. All Registered Students Directory (From Real Google Cloud)
         const profileSnapshot = await db.collection("profiles").get();
         const students = [];
         profileSnapshot.forEach(doc => {
@@ -990,7 +1005,6 @@
         allLoadedStudents = students;
         renderAdminStudentsTable(students);
 
-        // 3. Global Exam Attempts
         const attemptsSnapshot = await db.collection("exam_attempts").limit(50).get();
         const globalAttempts = [];
         attemptsSnapshot.forEach(doc => {
@@ -999,7 +1013,6 @@
         globalAttempts.sort((a,b) => (b.created_at?.toMillis() || 0) - (a.created_at?.toMillis() || 0));
         renderAdminAttemptsTable(globalAttempts);
 
-        // 4. Update Summary Cards
         document.getElementById('adminTotalStudents').innerText = students.length;
         const totalBal = students.reduce((sum, s) => sum + parseFloat(s.wallet_balance || 0), 0);
         document.getElementById('adminTotalBalance').innerText = '৳' + totalBal.toFixed(2);
