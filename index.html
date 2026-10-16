@@ -9,7 +9,7 @@
   <script src="https://unpkg.com/lucide@latest"></script>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
-  <!-- Google Firebase SDKs (Compat Version for Standalone Browser Support) -->
+  <!-- Google Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
@@ -69,8 +69,15 @@
           <span>Owner Panel</span>
         </button>
 
-        <button id="authBtn" onclick="openModal('authModal')" class="text-xs font-extrabold bg-indigo-900 hover:bg-indigo-800 text-white px-4 py-2 rounded-xl transition shadow-xs">
-          লগইন / সাইন-আপ
+        <!-- Direct Google Login Button -->
+        <button id="authBtn" onclick="handleGoogleSignIn()" class="flex items-center gap-2 text-xs font-extrabold bg-indigo-900 hover:bg-indigo-800 text-white px-4 py-2 rounded-xl transition shadow-xs">
+          <svg class="w-4 h-4" viewBox="0 0 24 24">
+            <path fill="#EA4335" d="M12 5c1.6 0 3 .6 4.1 1.7l3.1-3.1C17.3 1.8 14.8 1 12 1 7.5 1 3.7 3.6 1.9 7.3l3.7 2.9C6.5 7.4 9 5 12 5z"/>
+            <path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.7-.2-2.3H12v4.6h6.5c-.3 1.5-1.1 2.8-2.4 3.7l3.7 2.9c2.2-2 3.7-5 3.7-8.9z"/>
+            <path fill="#FBBC05" d="M5.6 14.8c-.2-.7-.4-1.5-.4-2.3s.2-1.6.4-2.3L1.9 7.3C.7 9.7 0 12 0 14.8s.7 5.1 1.9 7.5l3.7-2.9z"/>
+            <path fill="#34A853" d="M12 23.5c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3 0-5.5-2.4-6.4-5.2L1.9 16.5C3.7 20.2 7.5 23.5 12 23.5z"/>
+          </svg>
+          গুগল দিয়ে লগইন
         </button>
 
         <button id="logoutBtn" onclick="handleLogout()" class="hidden text-xs font-bold text-rose-600 hover:bg-rose-50 px-3 py-2 rounded-xl transition">
@@ -323,17 +330,17 @@
             </h3>
             <p class="text-xs text-slate-400">প্রতিটি শিক্ষার্থীর নম্বর ও প্রোফাইল</p>
           </div>
-          <input type="text" id="adminStudentSearch" onkeyup="filterAdminStudents()" placeholder="নাম বা ফোন দিয়ে সার্চ..." class="border border-slate-200 px-3 py-1.5 rounded-xl text-xs w-full sm:w-64">
+          <input type="text" id="adminStudentSearch" onkeyup="filterAdminStudents()" placeholder="নাম বা ইমেইল দিয়ে সার্চ..." class="border border-slate-200 px-3 py-1.5 rounded-xl text-xs w-full sm:w-64">
         </div>
         <div class="overflow-x-auto">
           <table class="w-full text-left text-xs sm:text-sm">
             <thead class="bg-slate-50 text-slate-600 uppercase text-[11px] font-bold border-b border-slate-100">
               <tr>
                 <th class="px-4 py-3">নাম</th>
-                <th class="px-4 py-3">মোবাইল নম্বর</th>
                 <th class="px-4 py-3">ইমেইল</th>
+                <th class="px-4 py-3">মোবাইল নম্বর</th>
                 <th class="px-4 py-3">ওয়ালেট ব্যালেন্স</th>
-                <th class="px-4 py-3">রেজিস্ট্রেশনের তারিখ</th>
+                <th class="px-4 py-3">যোগদানের তারিখ</th>
               </tr>
             </thead>
             <tbody id="adminStudentsTableBody" class="divide-y divide-slate-100 text-slate-700"></tbody>
@@ -370,44 +377,6 @@
     </section>
 
   </main>
-
-  <!-- AUTH MODAL -->
-  <div id="authModal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
-    <div class="bg-white max-w-sm w-full rounded-3xl p-6 shadow-2xl relative space-y-4 text-xs">
-      <button onclick="closeModal('authModal')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600">✕</button>
-      <h3 class="text-base font-extrabold text-slate-900" id="authTitle">শিক্ষার্থী লগইন</h3>
-
-      <div id="authRegFields" class="hidden space-y-2">
-        <div>
-          <label class="block font-bold text-slate-600 mb-1">পুরো নাম</label>
-          <input type="text" id="authFullName" placeholder="আব্দুল্লাহ যুবায়ের" class="w-full border p-2.5 rounded-xl">
-        </div>
-        <div>
-          <label class="block font-bold text-slate-600 mb-1">মোবাইল নম্বর</label>
-          <input type="text" id="authPhone" placeholder="017xxxxxxxx" class="w-full border p-2.5 rounded-xl">
-        </div>
-      </div>
-
-      <div>
-        <label class="block font-bold text-slate-600 mb-1">ইমেইল অ্যাড্রেস</label>
-        <input type="email" id="authEmail" placeholder="student@example.com" class="w-full border p-2.5 rounded-xl">
-      </div>
-      <div>
-        <label class="block font-bold text-slate-600 mb-1">পাসওয়ার্ড</label>
-        <input type="password" id="authPassword" placeholder="কমপক্ষে ৬ অক্ষর" class="w-full border p-2.5 rounded-xl">
-      </div>
-
-      <button onclick="handleAuthSubmit()" id="authSubmitBtn" class="w-full py-3 bg-indigo-900 hover:bg-indigo-800 text-white font-bold rounded-xl transition">
-        লগইন
-      </button>
-
-      <div class="text-center pt-2">
-        <button onclick="toggleAuthMode()" id="authToggleText" class="text-indigo-600 font-bold hover:underline">
-          নতুন শিক্ষার্থী? রেজিস্ট্রেশন করে ১০ টাকা বোনাস নাও
-        </button>
-      </div>
-    </div>
-  </div>
 
   <!-- RECHARGE MODAL -->
   <div id="rechargeModal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
@@ -473,7 +442,7 @@
     <span class="text-xs font-bold ml-2 pr-1 hidden sm:inline">Online Support</span>
   </a>
 
-  <!-- ================= FIREBASE CLOUD ENGINE ================= -->
+  <!-- ================= FIREBASE GOOGLE AUTH & CLOUD CORE ================= -->
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyDwFuUm21bbQc1MXG9zPalMZTIpAqRYX4U",
@@ -485,7 +454,6 @@
       measurementId: "G-BEYVS51YH2"
     };
 
-    // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db = firebase.firestore();
@@ -493,7 +461,6 @@
     let currentUser = null;
     let currentProfile = null;
     let activeUnit = "B_UNIT";
-    let isRegisterMode = false;
     let activeQuestions = [];
     let currentExam = null;
     let examTimerInterval = null;
@@ -504,11 +471,11 @@
       if (window.lucide) lucide.createIcons();
       switchUnit("B_UNIT");
 
-      // Official Firebase Auth Observer (Supports any device, phone, or laptop)
+      // Firebase Realtime Auth Observer
       auth.onAuthStateChanged(async (user) => {
         if (user) {
           currentUser = user;
-          await loadUserProfile(user.uid, user.email);
+          await syncUserProfile(user);
         } else {
           currentUser = null;
           currentProfile = null;
@@ -517,30 +484,52 @@
       });
     });
 
-    async function loadUserProfile(uid, email) {
+    // 1-Click Google Sign In (Works seamlessly across Android, iPhone, Windows, Mac)
+    async function handleGoogleSignIn() {
+      const provider = new firebase.auth.GoogleAuthProvider();
       try {
-        const docRef = db.collection("profiles").doc(uid);
-        const docSnap = await docRef.get();
+        await auth.signInWithPopup(provider);
+      } catch (error) {
+        if (error.code === 'auth/popup-blocked') {
+          // If popup is blocked by browser, use redirect
+          await auth.signInWithRedirect(provider);
+        } else {
+          alert("লগইন ত্রুটি: " + error.message);
+        }
+      }
+    }
+
+    async function syncUserProfile(user) {
+      try {
+        const userRef = db.collection("profiles").doc(user.uid);
+        const docSnap = await userRef.get();
+        const isOwner = (user.email === 'jubaerabdullah78@gmail.com');
 
         if (docSnap.exists) {
           currentProfile = docSnap.data();
+          if (isOwner && !currentProfile.is_admin) {
+            await userRef.update({ is_admin: true });
+            currentProfile.is_admin = true;
+          }
         } else {
-          // If first time or admin
-          const isOwner = (email === 'jubaerabdullah78@gmail.com');
+          // First time student signs in via Google -> gets ৳10 bonus
           currentProfile = {
-            id: uid,
-            full_name: isOwner ? 'Abdullah Jubaer' : 'Student',
-            email: email,
-            phone: isOwner ? '01570204036' : '',
+            id: user.uid,
+            full_name: user.displayName || 'Student',
+            email: user.email,
+            phone: user.phoneNumber || '',
+            photo_url: user.photoURL || '',
             wallet_balance: isOwner ? 500.00 : 10.00,
             is_admin: isOwner,
             created_at: firebase.firestore.FieldValue.serverTimestamp()
           };
-          await docRef.set(currentProfile, { merge: true });
+          await userRef.set(currentProfile);
+          confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+          alert(`স্বাগতম ${currentProfile.full_name}! আপনার ওয়ালেটে ১০ টাকা ওয়েলকাম বোনাস দেওয়া হয়েছে।`);
         }
         updateNavAfterLogin();
       } catch (err) {
-        console.error("Profile load error:", err);
+        console.error("Profile sync error:", err);
       }
     }
 
@@ -554,9 +543,8 @@
       const navBal = document.getElementById('navBalance');
       if (navBal) navBal.innerText = parseFloat(bal).toFixed(2);
 
-      const isOwner = (currentUser?.email === 'jubaerabdullah78@gmail.com') || 
-                      (currentProfile?.phone === '01570204036') || 
-                      (currentProfile?.is_admin === true);
+      // STRICT OWNER VERIFICATION: Only jubaerabdullah78@gmail.com
+      const isOwner = (currentUser?.email === 'jubaerabdullah78@gmail.com') || (currentProfile?.is_admin === true);
 
       if (isOwner) {
         document.getElementById('adminNavBtn')?.classList.remove('hidden');
@@ -571,6 +559,15 @@
       document.getElementById('adminNavBtn')?.classList.add('hidden');
       document.getElementById('authBtn')?.classList.remove('hidden');
       document.getElementById('logoutBtn')?.classList.add('hidden');
+    }
+
+    async function handleLogout() {
+      try {
+        await auth.signOut();
+        location.reload();
+      } catch(e) {
+        location.reload();
+      }
     }
 
     function showView(viewId) {
@@ -591,87 +588,6 @@
     function closeModal(id) { 
       const el = document.getElementById(id);
       if (el) el.classList.add('hidden'); 
-    }
-
-    function toggleAuthMode() {
-      isRegisterMode = !isRegisterMode;
-      document.getElementById('authRegFields').classList.toggle('hidden', !isRegisterMode);
-      document.getElementById('authTitle').innerText = isRegisterMode ? 'নতুন শিক্ষার্থী রেজিস্ট্রেশন' : 'শিক্ষার্থী লগইন';
-      document.getElementById('authSubmitBtn').innerText = isRegisterMode ? 'রেজিস্ট্রেশন করো' : 'লগইন';
-      document.getElementById('authToggleText').innerText = isRegisterMode ? 'অ্যাকাউন্ট আছে? লগইন করো' : 'নতুন শিক্ষার্থী? রেজিস্ট্রেশন করে ১০ টাকা বোনাস নাও';
-    }
-
-    async function handleAuthSubmit() {
-      const email = document.getElementById('authEmail').value.trim();
-      const password = document.getElementById('authPassword').value.trim();
-
-      if (!email || !password) {
-        alert("ইমেইল ও পাসওয়ার্ড প্রদান করুন।");
-        return;
-      }
-
-      const submitBtn = document.getElementById('authSubmitBtn');
-      submitBtn.disabled = true;
-      submitBtn.innerText = "অপেক্ষা করুন...";
-
-      if (isRegisterMode) {
-        const full_name = document.getElementById('authFullName').value.trim() || 'Student';
-        const phone = document.getElementById('authPhone').value.trim();
-
-        if (!phone) {
-          alert("মোবাইল নম্বর প্রদান করা আবশ্যক।");
-          submitBtn.disabled = false;
-          submitBtn.innerText = "রেজিস্ট্রেশন করো";
-          return;
-        }
-
-        try {
-          const userCredential = await auth.createUserWithEmailAndPassword(email, password);
-          const user = userCredential.user;
-
-          const isOwner = (email === 'jubaerabdullah78@gmail.com') || (phone === '01570204036');
-          const profileData = {
-            id: user.uid,
-            full_name: full_name,
-            phone: phone,
-            email: email,
-            wallet_balance: isOwner ? 500.00 : 10.00,
-            is_admin: isOwner,
-            created_at: firebase.firestore.FieldValue.serverTimestamp()
-          };
-
-          await db.collection("profiles").doc(user.uid).set(profileData);
-          currentProfile = profileData;
-          closeModal('authModal');
-          alert("রেজিস্ট্রেশন সফল! আপনার ওয়ালেটে ১০ টাকা বোনাস ব্যালেন্স দেওয়া হয়েছে।");
-          location.reload();
-        } catch (error) {
-          alert("ত্রুটি: " + error.message);
-          submitBtn.disabled = false;
-          submitBtn.innerText = "রেজিস্ট্রেশন করো";
-        }
-
-      } else {
-        // Sign in with Firebase
-        try {
-          await auth.signInWithEmailAndPassword(email, password);
-          closeModal('authModal');
-          location.reload();
-        } catch (error) {
-          alert("ভুল ইমেইল অথবা পাসওয়ার্ড: " + error.message);
-          submitBtn.disabled = false;
-          submitBtn.innerText = "লগইন";
-        }
-      }
-    }
-
-    async function handleLogout() {
-      try {
-        await auth.signOut();
-        location.reload();
-      } catch(e) {
-        location.reload();
-      }
     }
 
     function switchUnit(unit) {
@@ -726,7 +642,10 @@
     }
 
     async function payAndStartExam(unit, examId, fee, title, duration) {
-      if (!currentUser) { openModal('authModal'); return; }
+      if (!currentUser) { 
+        handleGoogleSignIn();
+        return; 
+      }
       const bal = currentProfile?.wallet_balance !== undefined ? currentProfile.wallet_balance : 10.00;
       if (bal < fee) {
         alert(`ওয়ালেটে পর্যাপ্ত ব্যালেন্স নেই! এই পরীক্ষার ফি ৳${fee.toFixed(2)}। দয়া করে রিচার্জ করুন।`);
@@ -742,7 +661,7 @@
       const navBal = document.getElementById('navBalance');
       if (navBal) navBal.innerText = parseFloat(newBal).toFixed(2);
 
-      // Cloud Firestore balance update
+      // Cloud Firestore balance deduct
       try {
         await db.collection("profiles").doc(currentUser.uid).update({ wallet_balance: newBal });
       } catch(e) {
@@ -840,7 +759,8 @@
 
       const attempt = {
         userId: currentUser ? currentUser.uid : "guest",
-        studentName: currentProfile?.full_name || 'Student',
+        studentName: currentProfile?.full_name || currentUser?.displayName || 'Student',
+        studentEmail: currentUser?.email || '',
         studentPhone: currentProfile?.phone || '',
         date: new Date().toLocaleDateString('bn-BD'),
         timestamp: new Date().toLocaleString('bn-BD'),
@@ -854,7 +774,7 @@
         created_at: firebase.firestore.FieldValue.serverTimestamp()
       };
 
-      // Direct Cloud Save to Firestore
+      // Realtime Cloud Save to Firestore
       if (currentUser) {
         try {
           const docRef = await db.collection("exam_attempts").add(attempt);
@@ -940,6 +860,7 @@
       }
 
       try {
+        // Realtime query from Firestore for active user only
         const snapshot = await db.collection("exam_attempts")
           .where("userId", "==", currentUser.uid)
           .get();
@@ -951,7 +872,6 @@
           attempts.push(data);
         });
 
-        // Sort descending
         attempts.sort((a,b) => (b.created_at?.toMillis() || 0) - (a.created_at?.toMillis() || 0));
 
         if (attempts.length > 0) {
@@ -993,7 +913,10 @@
     }
 
     async function submitRechargeRequest() {
-      if (!currentUser) { openModal('authModal'); return; }
+      if (!currentUser) { 
+        handleGoogleSignIn();
+        return; 
+      }
       const method = document.getElementById('recMethod').value;
       const amount = parseFloat(document.getElementById('recAmount').value);
       const trx_id = document.getElementById('recTrxId').value.trim();
@@ -1005,7 +928,8 @@
 
       const rec = {
         userId: currentUser.uid,
-        userName: currentProfile?.full_name || 'Student',
+        userName: currentProfile?.full_name || currentUser.displayName || 'Student',
+        userEmail: currentUser.email,
         phone: currentProfile?.phone || '',
         amount: amount,
         method: method,
@@ -1046,7 +970,7 @@
             rechargeContainer.innerHTML = recs.map(r => `
               <div class="flex justify-between items-center p-3 border rounded-xl bg-slate-50 text-xs">
                 <div>
-                  <strong>${r.userName || 'Student'}</strong> (${r.phone})<br>
+                  <strong>${r.userName || 'Student'}</strong> (${r.userEmail})<br>
                   ${r.method}: ৳${r.amount} | <span class="font-mono text-indigo-700 font-bold select-all">TrxID: ${r.trx_id}</span>
                 </div>
                 <button onclick="adminApproveRecharge('${r.id}', '${r.userId}', ${r.amount})" class="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-bold transition">
@@ -1057,7 +981,7 @@
           }
         }
 
-        // 2. All Registered Students Directory
+        // 2. All Registered Students Directory (From Real Google Cloud)
         const profileSnapshot = await db.collection("profiles").get();
         const students = [];
         profileSnapshot.forEach(doc => {
@@ -1072,7 +996,6 @@
         attemptsSnapshot.forEach(doc => {
           globalAttempts.push(doc.data());
         });
-        // Sort
         globalAttempts.sort((a,b) => (b.created_at?.toMillis() || 0) - (a.created_at?.toMillis() || 0));
         renderAdminAttemptsTable(globalAttempts);
 
@@ -1097,8 +1020,8 @@
       tbody.innerHTML = list.map(s => `
         <tr class="hover:bg-slate-50 transition">
           <td class="px-4 py-3 font-bold text-slate-900">${s.full_name || 'Student'}</td>
+          <td class="px-4 py-3 text-slate-600">${s.email || '-'}</td>
           <td class="px-4 py-3 font-mono font-bold text-indigo-700 select-all">${s.phone || '-'}</td>
-          <td class="px-4 py-3 text-slate-500">${s.email || '-'}</td>
           <td class="px-4 py-3 font-extrabold text-emerald-600">৳${parseFloat(s.wallet_balance || 0).toFixed(2)}</td>
           <td class="px-4 py-3 text-slate-400 text-xs">${s.created_at ? new Date(s.created_at.toDate ? s.created_at.toDate() : s.created_at).toLocaleDateString('bn-BD') : '-'}</td>
         </tr>
@@ -1115,7 +1038,7 @@
       tbody.innerHTML = list.map(a => `
         <tr class="hover:bg-slate-50 transition">
           <td class="px-4 py-3 text-xs text-slate-400">${a.timestamp || '-'}</td>
-          <td class="px-4 py-3 font-semibold text-slate-800">${a.studentName || 'Student'} (${a.studentPhone || '-'})</td>
+          <td class="px-4 py-3 font-semibold text-slate-800">${a.studentName || 'Student'} (${a.studentEmail || '-'})</td>
           <td class="px-4 py-3 font-bold text-slate-900">${a.examTitle || (a.unit || 'B_UNIT').replace('_', ' ') + ' টেস্ট'}</td>
           <td class="px-4 py-3 font-extrabold text-indigo-700">${parseFloat(a.score || 0).toFixed(2)}</td>
           <td class="px-4 py-3 text-emerald-600 font-semibold">${a.correct_count}</td>
@@ -1129,8 +1052,8 @@
       const term = document.getElementById('adminStudentSearch').value.toLowerCase();
       const filtered = allLoadedStudents.filter(s => 
         (s.full_name && s.full_name.toLowerCase().includes(term)) ||
-        (s.phone && s.phone.includes(term)) ||
-        (s.email && s.email.toLowerCase().includes(term))
+        (s.email && s.email.toLowerCase().includes(term)) ||
+        (s.phone && s.phone.includes(term))
       );
       renderAdminStudentsTable(filtered);
     }
@@ -1140,9 +1063,9 @@
         alert("ডাউনলোড করার মতো কোনো শিক্ষার্থীর তথ্য নেই!");
         return;
       }
-      let csv = "Name,Phone,Email,Wallet_Balance\n";
+      let csv = "Name,Email,Phone,Wallet_Balance\n";
       allLoadedStudents.forEach(s => {
-        csv += `"${s.full_name || 'Student'}","${s.phone || ''}","${s.email || ''}",${s.wallet_balance || 0}\n`;
+        csv += `"${s.full_name || 'Student'}","${s.email || ''}","${s.phone || ''}",${s.wallet_balance || 0}\n`;
       });
       const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
       const url = URL.createObjectURL(blob);
@@ -1156,7 +1079,6 @@
 
     async function adminApproveRecharge(recId, studentUid, amount) {
       try {
-        // 1. Update Student Balance
         const userRef = db.collection("profiles").doc(studentUid);
         const userDoc = await userRef.get();
         if (userDoc.exists) {
@@ -1164,7 +1086,6 @@
           await userRef.update({ wallet_balance: currentBal + parseFloat(amount) });
         }
 
-        // 2. Mark recharge as approved
         await db.collection("wallet_recharges").doc(recId).update({ status: "approved" });
 
         alert(`৳${amount} সফলভাবে শিক্ষার্থীর ওয়ালেটে যুক্ত হয়েছে!`);
