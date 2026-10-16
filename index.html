@@ -580,15 +580,23 @@
 
         if (!loggedIn) {
           const storedPass = localStorage.getItem('dikkhanntor_pass_' + email);
-          const storedProf = localStorage.getItem('dikkhanntor_profile');
           if (storedPass && storedPass === password) {
             loggedIn = true;
-            currentUser = JSON.parse(localStorage.getItem('dikkhanntor_user') || '{"email":"' + email + '"}');
-            currentProfile = storedProf ? JSON.parse(storedProf) : { wallet_balance: 10.00, phone: '01570204036' };
+            currentUser = { id: "user_" + btoa(email).replace(/=/g, ""), email: email };
+            const storedProf = localStorage.getItem('dikkhanntor_profile_' + currentUser.id);
+            currentProfile = storedProf ? JSON.parse(storedProf) : { 
+              id: currentUser.id, 
+              full_name: 'Student', 
+              wallet_balance: 10.00, 
+              phone: '01570204036',
+              is_admin: email === 'jubaerabdullah78@gmail.com'
+            };
+            localStorage.setItem('dikkhanntor_user', JSON.stringify(currentUser));
+            localStorage.setItem('dikkhanntor_profile', JSON.stringify(currentProfile));
           } else if (email === 'jubaerabdullah78@gmail.com') {
             loggedIn = true;
             currentUser = { id: 'admin_1', email: email };
-            currentProfile = { full_name: 'Abdullah Jubaer', phone: '01570204036', wallet_balance: 500.00, is_admin: true };
+            currentProfile = { id: 'admin_1', full_name: 'Abdullah Jubaer', phone: '01570204036', wallet_balance: 500.00, is_admin: true };
             localStorage.setItem('dikkhanntor_user', JSON.stringify(currentUser));
             localStorage.setItem('dikkhanntor_profile', JSON.stringify(currentProfile));
           }
@@ -678,6 +686,9 @@
       const newBal = bal - fee;
       if (currentProfile) currentProfile.wallet_balance = newBal;
       localStorage.setItem('dikkhanntor_profile', JSON.stringify(currentProfile));
+      if (currentUser?.id) {
+        localStorage.setItem('dikkhanntor_profile_' + currentUser.id, JSON.stringify(currentProfile));
+      }
       
       const navBal = document.getElementById('navBalance');
       if (navBal) navBal.innerText = parseFloat(newBal).toFixed(2);
@@ -779,6 +790,7 @@
 
       const attempt = {
         id: "att_" + Date.now(),
+        userId: currentUser ? currentUser.id : "guest",
         date: new Date().toLocaleDateString('bn-BD'),
         unit: currentExam?.unit || 'B_UNIT',
         examTitle: currentExam?.title || 'মডেল টেস্ট',
@@ -789,9 +801,11 @@
         reviewData: reviewData
       };
 
-      const localAttempts = JSON.parse(localStorage.getItem('dikkhanntor_attempts') || '[]');
+      // User-Scoped Storage
+      const userStorageKey = 'dikkhanntor_attempts_' + (currentUser ? currentUser.id : "guest");
+      const localAttempts = JSON.parse(localStorage.getItem(userStorageKey) || '[]');
       localAttempts.unshift(attempt);
-      localStorage.setItem('dikkhanntor_attempts', JSON.stringify(localAttempts));
+      localStorage.setItem(userStorageKey, JSON.stringify(localAttempts));
 
       if (sb && currentUser?.id) {
         try {
@@ -861,7 +875,9 @@
     }
 
     function viewPastAttemptReview(attemptId) {
-      const localAttempts = JSON.parse(localStorage.getItem('dikkhanntor_attempts') || '[]');
+      if (!currentUser) return;
+      const userStorageKey = 'dikkhanntor_attempts_' + currentUser.id;
+      const localAttempts = JSON.parse(localStorage.getItem(userStorageKey) || '[]');
       const target = localAttempts.find(a => String(a.id) === String(attemptId));
       if (target && target.reviewData) {
         displayResultScreen(target);
@@ -871,7 +887,27 @@
     }
 
     async function loadDashboardAnalytics() {
-      let attempts = JSON.parse(localStorage.getItem('dikkhanntor_attempts') || '[]');
+      if (!currentUser) {
+        document.getElementById('historyTableBody').innerHTML = `
+          <tr><td colspan="7" class="px-5 py-8 text-center text-slate-400 text-xs">ফলাফল দেখতে অনুগ্রহ করে লগইন করুন।</td></tr>
+        `;
+        return;
+      }
+
+      const userStorageKey = 'dikkhanntor_attempts_' + currentUser.id;
+      let attempts = JSON.parse(localStorage.getItem(userStorageKey) || '[]');
+
+      if (sb && currentUser?.id) {
+        try {
+          const { data } = await sb.from('exam_attempts')
+            .select('*')
+            .eq('user_id', currentUser.id)
+            .order('attempted_at', { ascending: false });
+          if (data && data.length > 0) attempts = data;
+        } catch(e) {
+          console.warn("Supabase attempts load error:", e);
+        }
+      }
 
       if (attempts.length > 0) {
         document.getElementById('kpiTotalAttempts').innerText = attempts.length;
@@ -884,7 +920,7 @@
 
         document.getElementById('historyTableBody').innerHTML = attempts.map(d => `
           <tr class="hover:bg-slate-50 transition">
-            <td class="px-5 py-3.5 text-xs text-slate-500">${d.date || new Date().toLocaleDateString('bn-BD')}</td>
+            <td class="px-5 py-3.5 text-xs text-slate-500">${d.date || new Date(d.attempted_at).toLocaleDateString('bn-BD')}</td>
             <td class="px-5 py-3.5 font-bold text-slate-900">${d.examTitle || (d.unit || 'B_UNIT').replace('_', ' ') + ' টেস্ট'}</td>
             <td class="px-5 py-3.5 font-extrabold text-indigo-700">${parseFloat(d.score).toFixed(2)}</td>
             <td class="px-5 py-3.5 font-semibold text-emerald-600">${d.correct_count}</td>
@@ -900,8 +936,12 @@
           </tr>
         `).join("");
       } else {
+        document.getElementById('kpiTotalAttempts').innerText = "0";
+        document.getElementById('kpiAvgScore').innerText = "0.00";
+        document.getElementById('kpiMaxScore').innerText = "0.00";
+        document.getElementById('kpiTotalWrongs').innerText = "0";
         document.getElementById('historyTableBody').innerHTML = `
-          <tr><td colspan="7" class="px-5 py-8 text-center text-slate-400 text-xs">এখনো কোনো পরীক্ষা সম্পন্ন হয়নি।</td></tr>
+          <tr><td colspan="7" class="px-5 py-8 text-center text-slate-400 text-xs">এই অ্যাকাউন্টে এখনো কোনো পরীক্ষা সম্পন্ন হয়নি।</td></tr>
         `;
       }
     }
@@ -978,6 +1018,9 @@
       if (currentProfile) {
         currentProfile.wallet_balance = (parseFloat(currentProfile.wallet_balance) || 0) + parseFloat(amount);
         localStorage.setItem('dikkhanntor_profile', JSON.stringify(currentProfile));
+        if (currentUser?.id) {
+          localStorage.setItem('dikkhanntor_profile_' + currentUser.id, JSON.stringify(currentProfile));
+        }
       }
 
       let queue = JSON.parse(localStorage.getItem('dikkhanntor_recharge_queue') || '[]');
