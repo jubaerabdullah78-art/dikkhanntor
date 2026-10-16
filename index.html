@@ -960,8 +960,12 @@
       }
     }
 
+    // ==========================================
+    // COMPLETE OWNER CONTROL & CRM ENGINE
+    // ==========================================
     async function loadAdminQueue() {
       try {
+        // 1. Pending Recharges
         const recSnapshot = await db.collection("wallet_recharges").where("status", "==", "pending").get();
         const recs = [];
         recSnapshot.forEach(doc => {
@@ -977,19 +981,25 @@
             rechargeContainer.innerHTML = `<p class="text-xs text-slate-400 italic">কোনো পেন্ডিং রিচার্জ নেই।</p>`;
           } else {
             rechargeContainer.innerHTML = recs.map(r => `
-              <div class="flex justify-between items-center p-3 border rounded-xl bg-slate-50 text-xs">
+              <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center p-3 border rounded-xl bg-slate-50 text-xs gap-2">
                 <div>
                   <strong>${r.userName || 'Student'}</strong> (${r.userEmail})<br>
                   ${r.method}: ৳${r.amount} | <span class="font-mono text-indigo-700 font-bold select-all">TrxID: ${r.trx_id}</span>
                 </div>
-                <button onclick="adminApproveRecharge('${r.id}', '${r.userId}', ${r.amount})" class="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-bold transition">
-                  অ্যাপ্রুভ (৳${r.amount})
-                </button>
+                <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
+                  <button onclick="adminApproveRecharge('${r.id}', '${r.userId}', ${r.amount})" class="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-bold transition">
+                    অ্যাপ্রুভ (৳${r.amount})
+                  </button>
+                  <button onclick="adminRejectRecharge('${r.id}')" class="px-3 py-1.5 bg-rose-600 hover:bg-rose-700 text-white rounded-lg font-bold transition">
+                    রিজেক্ট ✕
+                  </button>
+                </div>
               </div>
             `).join("");
           }
         }
 
+        // 2. All Registered Students Directory (From Real Google Cloud)
         const profileSnapshot = await db.collection("profiles").get();
         const students = [];
         profileSnapshot.forEach(doc => {
@@ -998,6 +1008,7 @@
         allLoadedStudents = students;
         renderAdminStudentsTable(students);
 
+        // 3. Global Exam Attempts
         const attemptsSnapshot = await db.collection("exam_attempts").limit(50).get();
         const globalAttempts = [];
         attemptsSnapshot.forEach(doc => {
@@ -1006,6 +1017,7 @@
         globalAttempts.sort((a,b) => (b.created_at?.toMillis() || 0) - (a.created_at?.toMillis() || 0));
         renderAdminAttemptsTable(globalAttempts);
 
+        // 4. Update Summary Cards
         document.getElementById('adminTotalStudents').innerText = students.length;
         const totalBal = students.reduce((sum, s) => sum + parseFloat(s.wallet_balance || 0), 0);
         document.getElementById('adminTotalBalance').innerText = '৳' + totalBal.toFixed(2);
@@ -1098,6 +1110,19 @@
         loadAdminQueue();
       } catch(e) {
         alert("অনুমোদনে সমস্যা হয়েছে: " + e.message);
+      }
+    }
+
+    async function adminRejectRecharge(recId) {
+      if (!confirm("আপনি কি নিশ্চিত যে এই ভুয়া রিচার্জ রিকোয়েস্টটি বাতিল (Reject) করতে চান?")) return;
+      try {
+        await db.collection("wallet_recharges").doc(recId).update({ 
+          status: "rejected",
+          rejected_at: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        loadAdminQueue();
+      } catch(e) {
+        alert("বাতিল করতে সমস্যা হয়েছে: " + e.message);
       }
     }
   </script>
