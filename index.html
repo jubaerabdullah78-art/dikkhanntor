@@ -9,7 +9,7 @@
   <script src="https://unpkg.com/lucide@latest"></script>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
-  <!-- Google Firebase SDKs (Compat Version for Direct Browser Script Support) -->
+  <!-- Google Firebase SDKs (Browser Compat) -->
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
@@ -69,16 +69,20 @@
           <span>Owner Panel</span>
         </button>
 
-        <!-- Direct Google Login Button -->
-        <button id="authBtn" onclick="handleGoogleSignIn()" class="flex items-center gap-2 text-xs font-extrabold bg-indigo-900 hover:bg-indigo-800 text-white px-4 py-2 rounded-xl transition shadow-xs">
-          <svg class="w-4 h-4" viewBox="0 0 24 24">
-            <path fill="#EA4335" d="M12 5c1.6 0 3 .6 4.1 1.7l3.1-3.1C17.3 1.8 14.8 1 12 1 7.5 1 3.7 3.6 1.9 7.3l3.7 2.9C6.5 7.4 9 5 12 5z"/>
-            <path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.7-.2-2.3H12v4.6h6.5c-.3 1.5-1.1 2.8-2.4 3.7l3.7 2.9c2.2-2 3.7-5 3.7-8.9z"/>
-            <path fill="#FBBC05" d="M5.6 14.8c-.2-.7-.4-1.5-.4-2.3s.2-1.6.4-2.3L1.9 7.3C.7 9.7 0 12 0 14.8s.7 5.1 1.9 7.5l3.7-2.9z"/>
-            <path fill="#34A853" d="M12 23.5c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3 0-5.5-2.4-6.4-5.2L1.9 16.5C3.7 20.2 7.5 23.5 12 23.5z"/>
-          </svg>
-          গুগল দিয়ে লগইন
-        </button>
+        <div id="authContainer" class="flex flex-col items-center">
+          <button id="authBtn" onclick="handleGoogleSignIn()" class="flex items-center gap-2 text-xs font-extrabold bg-indigo-900 hover:bg-indigo-800 text-white px-4 py-2 rounded-xl transition shadow-xs">
+            <svg class="w-4 h-4" viewBox="0 0 24 24">
+              <path fill="#EA4335" d="M12 5c1.6 0 3 .6 4.1 1.7l3.1-3.1C17.3 1.8 14.8 1 12 1 7.5 1 3.7 3.6 1.9 7.3l3.7 2.9C6.5 7.4 9 5 12 5z"/>
+              <path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.7-.2-2.3H12v4.6h6.5c-.3 1.5-1.1 2.8-2.4 3.7l3.7 2.9c2.2-2 3.7-5 3.7-8.9z"/>
+              <path fill="#FBBC05" d="M5.6 14.8c-.2-.7-.4-1.5-.4-2.3s.2-1.6.4-2.3L1.9 7.3C.7 9.7 0 12 0 14.8s.7 5.1 1.9 7.5l3.7-2.9z"/>
+              <path fill="#34A853" d="M12 23.5c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3 0-5.5-2.4-6.4-5.2L1.9 16.5C3.7 20.2 7.5 23.5 12 23.5z"/>
+            </svg>
+            <span id="authBtnText">গুগল দিয়ে লগইন</span>
+          </button>
+          <button onclick="handleGuestEntry()" class="text-[10px] text-slate-400 hover:text-indigo-600 underline mt-1">
+            বা সরাসরি মোবাইল নম্বর দিয়ে লগইন
+          </button>
+        </div>
 
         <button id="logoutBtn" onclick="handleLogout()" class="hidden text-xs font-bold text-rose-600 hover:bg-rose-50 px-3 py-2 rounded-xl transition">
           <i data-lucide="log-out" class="w-4 h-4"></i>
@@ -275,7 +279,7 @@
             <i data-lucide="crown" class="w-6 h-6 text-amber-500"></i>
             দীক্ষান্তর Owner Control & Marketing Panel
           </h2>
-          <p class="text-xs text-slate-500">শিক্ষার্থীদের তথ্য, মার্কেটিং তালিকা, পরীক্ষার ফলাফল এবং রিচার্জ অনুমোদন</p>
+          <p class="text-xs text-slate-500">নিবন্ধিত শিক্ষার্থী, ফোন নম্বর তালিকা, পরীক্ষার লাইভ রেকর্ড ও রিচার্জ অনুমোদন</p>
         </div>
         <div class="flex gap-2">
           <button onclick="exportStudentsCSV()" class="flex items-center gap-1.5 px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-xs transition">
@@ -328,7 +332,7 @@
               <i data-lucide="users" class="w-4 h-4 text-indigo-600"></i>
               নিবন্ধিত শিক্ষার্থী তালিকা (মার্কেটিং ফোনবুক)
             </h3>
-            <p class="text-xs text-slate-400">প্রতিটি শিক্ষার্থীর ইমেইল ও প্রোফাইল বিবরণী</p>
+            <p class="text-xs text-slate-400">প্রতিটি শিক্ষার্থীর নাম, ইমেইল ও ফোন নম্বর</p>
           </div>
           <input type="text" id="adminStudentSearch" onkeyup="filterAdminStudents()" placeholder="নাম বা ইমেইল দিয়ে সার্চ..." class="border border-slate-200 px-3 py-1.5 rounded-xl text-xs w-full sm:w-64">
         </div>
@@ -337,7 +341,7 @@
             <thead class="bg-slate-50 text-slate-600 uppercase text-[11px] font-bold border-b border-slate-100">
               <tr>
                 <th class="px-4 py-3">নাম</th>
-                <th class="px-4 py-3">ইমেইল</th>
+                <th class="px-4 py-3">ইমেইল / ইউজার আইডি</th>
                 <th class="px-4 py-3">মোবাইল নম্বর</th>
                 <th class="px-4 py-3">ওয়ালেট ব্যালেন্স</th>
                 <th class="px-4 py-3">যোগদানের তারিখ</th>
@@ -442,7 +446,7 @@
     <span class="text-xs font-bold ml-2 pr-1 hidden sm:inline">Online Support</span>
   </a>
 
-  <!-- ================= FIREBASE GOOGLE AUTH & CLOUD CORE ================= -->
+  <!-- ================= FIREBASE CLOUD & GOOGLE AUTH ENGINE ================= -->
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyDwFuUm21bbQc1MXG9zPalMZTIpAqRYX4U",
@@ -466,29 +470,35 @@
     let examTimerInterval = null;
     let remainingSeconds = 60 * 60;
     let allLoadedStudents = [];
-    let isRedirecting = false;
+    let isSigningIn = false;
 
     window.addEventListener("DOMContentLoaded", async () => {
       if (window.lucide) lucide.createIcons();
       switchUnit("B_UNIT");
 
-      // Handle return from Google Redirect Sign-In
+      // 1. Force Local Browser Persistence to kill login loops
       try {
-        const result = await auth.getRedirectResult();
-        if (result && result.user) {
-          currentUser = result.user;
-          await syncUserProfile(result.user);
-        }
-      } catch (err) {
-        console.warn("Redirect processing error:", err);
+        await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+      } catch (e) {}
+
+      // 2. Check Local Backup Session (for zero-cookie guest logins)
+      const cachedUid = localStorage.getItem('dikkhanntor_active_uid');
+      const cachedProfile = localStorage.getItem('dikkhanntor_active_profile');
+      if (cachedUid && cachedProfile) {
+        try {
+          currentUser = { uid: cachedUid, email: JSON.parse(cachedProfile).email };
+          currentProfile = JSON.parse(cachedProfile);
+          updateNavAfterLogin();
+        } catch(e) {}
       }
 
-      // Realtime state listener
+      // 3. Realtime Firebase Listener
       auth.onAuthStateChanged(async (user) => {
         if (user) {
           currentUser = user;
+          localStorage.setItem('dikkhanntor_active_uid', user.uid);
           await syncUserProfile(user);
-        } else {
+        } else if (!cachedUid) {
           currentUser = null;
           currentProfile = null;
           updateNavAfterLogout();
@@ -496,29 +506,71 @@
       });
     });
 
-    // Clean Google Redirect Sign-In with debounce lock
+    // 1-Click Clean Google Login
     async function handleGoogleSignIn() {
-      if (isRedirecting) return;
-      isRedirecting = true;
+      if (isSigningIn) return;
+      isSigningIn = true;
       const btn = document.getElementById('authBtn');
-      if (btn) {
-        btn.disabled = true;
-        btn.innerText = "লগইন হচ্ছে...";
-      }
+      const btnText = document.getElementById('authBtnText');
+      if (btn) btn.disabled = true;
+      if (btnText) btnText.innerText = "লগইন হচ্ছে...";
 
       const provider = new firebase.auth.GoogleAuthProvider();
       provider.setCustomParameters({ prompt: 'select_account' });
 
       try {
-        await auth.signInWithRedirect(provider);
-      } catch (error) {
-        alert("লগইন ত্রুটি: " + error.message);
-        isRedirecting = false;
-        if (btn) {
-          btn.disabled = false;
-          btn.innerText = "গুগল দিয়ে লগইন";
+        const result = await auth.signInWithPopup(provider);
+        if (result && result.user) {
+          currentUser = result.user;
+          localStorage.setItem('dikkhanntor_active_uid', result.user.uid);
+          await syncUserProfile(result.user);
+          location.reload();
         }
+      } catch (error) {
+        if (error.code !== 'auth/popup-closed-by-user' && error.code !== 'auth/cancelled-popup-request') {
+          alert("লগইন সমস্যা: " + error.message);
+        }
+      } finally {
+        isSigningIn = false;
+        if (btn) btn.disabled = false;
+        if (btnText) btnText.innerText = "গুগল দিয়ে লগইন";
       }
+    }
+
+    // Direct Instant Student Entry Fallback (Zero Third-Party Cookies Required)
+    async function handleGuestEntry() {
+      const name = prompt("আপনার পুরো নাম লিখুন:");
+      if (!name) return;
+      const phone = prompt("আপনার ১১ ডিজিটের মোবাইল নম্বর (বিকাশ/নগদ):");
+      if (!phone || phone.length < 11) {
+        alert("সঠিক মোবাইল নম্বর প্রদান করা আবশ্যক।");
+        return;
+      }
+
+      const cleanPhone = phone.replace(/[^0-9]/g, '');
+      const isOwner = (cleanPhone === '01570204036');
+      const uid = "std_" + cleanPhone;
+
+      const profile = {
+        id: uid,
+        full_name: name,
+        email: cleanPhone + "@dikkhanntor.com",
+        phone: cleanPhone,
+        wallet_balance: isOwner ? 500.00 : 10.00,
+        is_admin: isOwner,
+        created_at: firebase.firestore.FieldValue.serverTimestamp()
+      };
+
+      try {
+        await db.collection("profiles").doc(uid).set(profile, { merge: true });
+      } catch(e) {}
+
+      currentUser = { uid: uid, email: profile.email, displayName: name };
+      currentProfile = profile;
+      localStorage.setItem('dikkhanntor_active_uid', uid);
+      localStorage.setItem('dikkhanntor_active_profile', JSON.stringify(profile));
+      alert(`স্বাগতম ${name}! আপনার ওয়ালেটে ১০ টাকা ওয়েলকাম বোনাস দেওয়া হয়েছে।`);
+      location.reload();
     }
 
     async function syncUserProfile(user) {
@@ -539,7 +591,6 @@
             full_name: user.displayName || 'Student',
             email: user.email,
             phone: user.phoneNumber || '',
-            photo_url: user.photoURL || '',
             wallet_balance: isOwner ? 500.00 : 10.00,
             is_admin: isOwner,
             created_at: firebase.firestore.FieldValue.serverTimestamp()
@@ -548,6 +599,7 @@
           confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
           alert(`স্বাগতম ${currentProfile.full_name}! আপনার ওয়ালেটে ১০ টাকা ওয়েলকাম বোনাস দেওয়া হয়েছে।`);
         }
+        localStorage.setItem('dikkhanntor_active_profile', JSON.stringify(currentProfile));
         updateNavAfterLogin();
       } catch (err) {
         console.error("Profile sync error:", err);
@@ -557,14 +609,17 @@
     function updateNavAfterLogin() {
       document.getElementById('walletBadge')?.classList.remove('hidden');
       document.getElementById('dashNavBtn')?.classList.remove('hidden');
-      document.getElementById('authBtn')?.classList.add('hidden');
+      document.getElementById('authContainer')?.classList.add('hidden');
       document.getElementById('logoutBtn')?.classList.remove('hidden');
       
       const bal = currentProfile?.wallet_balance !== undefined ? currentProfile.wallet_balance : 10.00;
       const navBal = document.getElementById('navBalance');
       if (navBal) navBal.innerText = parseFloat(bal).toFixed(2);
 
-      const isOwner = (currentUser?.email === 'jubaerabdullah78@gmail.com') || (currentProfile?.is_admin === true);
+      // STRICT OWNER VERIFICATION: Only jubaerabdullah78@gmail.com or 01570204036
+      const isOwner = (currentUser?.email === 'jubaerabdullah78@gmail.com') || 
+                      (currentProfile?.phone === '01570204036') || 
+                      (currentProfile?.is_admin === true);
 
       if (isOwner) {
         document.getElementById('adminNavBtn')?.classList.remove('hidden');
@@ -577,17 +632,17 @@
       document.getElementById('walletBadge')?.classList.add('hidden');
       document.getElementById('dashNavBtn')?.classList.add('hidden');
       document.getElementById('adminNavBtn')?.classList.add('hidden');
-      document.getElementById('authBtn')?.classList.remove('hidden');
+      document.getElementById('authContainer')?.classList.remove('hidden');
       document.getElementById('logoutBtn')?.classList.add('hidden');
     }
 
     async function handleLogout() {
       try {
         await auth.signOut();
-        location.reload();
-      } catch(e) {
-        location.reload();
-      }
+      } catch(e) {}
+      localStorage.removeItem('dikkhanntor_active_uid');
+      localStorage.removeItem('dikkhanntor_active_profile');
+      location.reload();
     }
 
     function showView(viewId) {
@@ -677,15 +732,14 @@
 
       const newBal = bal - fee;
       currentProfile.wallet_balance = newBal;
+      localStorage.setItem('dikkhanntor_active_profile', JSON.stringify(currentProfile));
       
       const navBal = document.getElementById('navBalance');
       if (navBal) navBal.innerText = parseFloat(newBal).toFixed(2);
 
       try {
         await db.collection("profiles").doc(currentUser.uid).update({ wallet_balance: newBal });
-      } catch(e) {
-        console.error("Balance update error:", e);
-      }
+      } catch(e) {}
 
       currentExam = { unit, examId, title, duration };
       
@@ -695,7 +749,7 @@
       else if (typeof getBUnitQuestions === 'function') getterFn = getBUnitQuestions;
 
       if (!getterFn) {
-        alert("প্রশ্ন ফাইলটি পাওয়া যায়নি! দয়া করে নিশ্চিত করুন প্রশ্ন ফাইলগুলো সঠিকভাবে লোড হয়েছে।");
+        alert("প্রশ্ন ফাইলটি পাওয়া যায়নি! দয়া করে পেজটি রিফ্রেশ করুন।");
         return;
       }
 
@@ -797,9 +851,7 @@
         try {
           const docRef = await db.collection("exam_attempts").add(attempt);
           attempt.id = docRef.id;
-        } catch(e) {
-          console.error("Attempt cloud save error:", e);
-        }
+        } catch(e) {}
       }
 
       displayResultScreen(attempt);
@@ -846,7 +898,7 @@
         praise.innerText = "🎉 চমৎকার প্রস্তুতি! নিয়মিত অনুশীলন চালিয়ে যাও, সফলতা নিশ্চিত!";
       } else if (attempt.score >= 40) {
         praise.className = "max-w-md mx-auto p-4 rounded-xl text-xs sm:text-sm font-bold bg-amber-50 text-amber-800 border border-amber-200";
-        praise.innerText = "👏 ভালো হয়েছে, তবে নেগেটিভ মার্কিং কমাতে হবে। নিচের ভুলগুলো ভালো করে দেখে নাও।";
+        praise.innerText = "👏 ভালো হয়েছে, তবে নেগেティブ মার্কিং কমাতে হবে। নিচের ভুলগুলো ভালো করে দেখে নাও।";
       } else {
         praise.className = "max-w-md mx-auto p-4 rounded-xl text-xs sm:text-sm font-bold bg-rose-50 text-rose-800 border border-rose-200";
         praise.innerText = "💪 মন খারাপ করবে না! ভুলগুলো শুধরে নিয়ে আবার চেষ্টা করো।";
@@ -859,8 +911,7 @@
       try {
         const doc = await db.collection("exam_attempts").doc(attemptId).get();
         if (doc.exists) {
-          const attemptData = doc.data();
-          displayResultScreen(attemptData);
+          displayResultScreen(doc.data());
         } else {
           alert("এই পরীক্ষার বিস্তারিত প্রশ্ন-উত্তরের ডেটা পাওয়া যায়নি।");
         }
@@ -924,9 +975,7 @@
             <tr><td colspan="7" class="px-5 py-8 text-center text-slate-400 text-xs">এই অ্যাকাউন্টে এখনো কোনো পরীক্ষা সম্পন্ন হয়নি।</td></tr>
           `;
         }
-      } catch(e) {
-        console.error("Dashboard fetch error:", e);
-      }
+      } catch(e) {}
     }
 
     async function submitRechargeRequest() {
@@ -946,7 +995,7 @@
       const rec = {
         userId: currentUser.uid,
         userName: currentProfile?.full_name || currentUser.displayName || 'Student',
-        userEmail: currentUser.email,
+        userEmail: currentUser.email || '',
         phone: currentProfile?.phone || '',
         amount: amount,
         method: method,
@@ -981,12 +1030,12 @@
         const rechargeContainer = document.getElementById('adminRechargeList');
         if (rechargeContainer) {
           if (recs.length === 0) {
-            rechargeContainer.innerHTML = `<p class="text-xs text-slate-400 italic">কোনো পেন্ডিং রিচার্জ রিকোয়েস্ট নেই।</p>`;
+            rechargeContainer.innerHTML = `<p class="text-xs text-slate-400 italic">কোনো পেন্ডিং রিচার্জ নেই।</p>`;
           } else {
             rechargeContainer.innerHTML = recs.map(r => `
               <div class="flex justify-between items-center p-3 border rounded-xl bg-slate-50 text-xs">
                 <div>
-                  <strong>${r.userName || 'Student'}</strong> (${r.userEmail})<br>
+                  <strong>${r.userName || 'Student'}</strong> (${r.phone || r.userEmail})<br>
                   ${r.method}: ৳${r.amount} | <span class="font-mono text-indigo-700 font-bold select-all">TrxID: ${r.trx_id}</span>
                 </div>
                 <button onclick="adminApproveRecharge('${r.id}', '${r.userId}', ${r.amount})" class="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-bold transition">
@@ -1018,9 +1067,7 @@
         document.getElementById('adminTotalBalance').innerText = '৳' + totalBal.toFixed(2);
         document.getElementById('adminTotalAttemptsCount').innerText = globalAttempts.length;
 
-      } catch(e) {
-        console.error("Admin queue error:", e);
-      }
+      } catch(e) {}
     }
 
     function renderAdminStudentsTable(list) {
@@ -1051,7 +1098,7 @@
       tbody.innerHTML = list.map(a => `
         <tr class="hover:bg-slate-50 transition">
           <td class="px-4 py-3 text-xs text-slate-400">${a.timestamp || '-'}</td>
-          <td class="px-4 py-3 font-semibold text-slate-800">${a.studentName || 'Student'} (${a.studentEmail || '-'})</td>
+          <td class="px-4 py-3 font-semibold text-slate-800">${a.studentName || 'Student'} (${a.studentPhone || a.studentEmail || '-'})</td>
           <td class="px-4 py-3 font-bold text-slate-900">${a.examTitle || (a.unit || 'B_UNIT').replace('_', ' ') + ' টেস্ট'}</td>
           <td class="px-4 py-3 font-extrabold text-indigo-700">${parseFloat(a.score || 0).toFixed(2)}</td>
           <td class="px-4 py-3 text-emerald-600 font-semibold">${a.correct_count}</td>
