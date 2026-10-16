@@ -258,23 +258,114 @@
       </div>
     </section>
 
-    <!-- VIEW 5: OWNER ADMIN HUB -->
+    <!-- VIEW 5: COMPLETE OWNER ADMIN CRM & CONTROL PANEL -->
     <section id="adminView" class="hidden space-y-8">
-      <div class="flex justify-between items-center border-b pb-4">
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b pb-4 gap-3">
         <div>
-          <h2 class="text-2xl font-black text-slate-900">দীক্ষান্তর Owner Control Panel</h2>
-          <p class="text-xs text-slate-500">পেন্ডিং bKash/Nagad রিচার্জ অনুমোদন ও ম্যানেজমেন্ট</p>
+          <h2 class="text-2xl font-black text-slate-900 flex items-center gap-2">
+            <i data-lucide="crown" class="w-6 h-6 text-amber-500"></i>
+            দীক্ষান্তর Owner Control & Marketing Panel
+          </h2>
+          <p class="text-xs text-slate-500">শিক্ষার্থীদের তথ্য, মার্কেটিং ফোন নম্বর তালিকা, পরীক্ষার ফলাফল এবং রিচার্জ অনুমোদন</p>
         </div>
-        <button onclick="showView('homeView')" class="text-xs font-bold bg-slate-200 hover:bg-slate-300 text-slate-800 px-3 py-2 rounded-xl">← ব্যাক</button>
+        <div class="flex gap-2">
+          <button onclick="exportStudentsCSV()" class="flex items-center gap-1.5 px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-xs transition">
+            <i data-lucide="download" class="w-4 h-4"></i>
+            মার্কেটিং তালিকা ডাউনলোড (CSV)
+          </button>
+          <button onclick="showView('homeView')" class="px-3.5 py-2 text-xs font-bold bg-slate-200 hover:bg-slate-300 text-slate-800 rounded-xl transition">
+            ← হোম
+          </button>
+        </div>
       </div>
 
+      <!-- Owner Metrics Cards -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
+          <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">মোট শিক্ষার্থী</span>
+          <div class="text-2xl sm:text-3xl font-extrabold text-indigo-700 mt-2" id="adminTotalStudents">0</div>
+        </div>
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
+          <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">মোট শিক্ষার্থী ব্যালেন্স</span>
+          <div class="text-2xl sm:text-3xl font-extrabold text-emerald-600 mt-2" id="adminTotalBalance">৳0.00</div>
+        </div>
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
+          <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">মোট অনুষ্ঠিত পরীক্ষা</span>
+          <div class="text-2xl sm:text-3xl font-extrabold text-amber-500 mt-2" id="adminTotalAttemptsCount">0</div>
+        </div>
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
+          <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">পেন্ডিং রিচার্জ</span>
+          <div class="text-2xl sm:text-3xl font-extrabold text-rose-500 mt-2" id="adminPendingCount">0</div>
+        </div>
+      </div>
+
+      <!-- Section A: Pending Wallet Recharges -->
       <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-xs space-y-4">
         <div class="flex justify-between items-center">
-          <h3 class="text-base font-bold text-slate-900">পেন্ডিং ওয়ালেট রিচার্জ রিকোয়েস্ট</h3>
+          <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
+            <i data-lucide="wallet" class="w-4 h-4 text-emerald-600"></i>
+            পেন্ডিং ওয়ালেট রিচার্জ রিকোয়েস্ট (bKash / Nagad)
+          </h3>
           <button onclick="loadAdminQueue()" class="text-xs text-indigo-600 font-bold hover:underline">রিফ্রেশ</button>
         </div>
         <div id="adminRechargeList" class="space-y-2"></div>
       </div>
+
+      <!-- Section B: All Registered Students CRM & Marketing Directory -->
+      <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-xs space-y-4">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+          <div>
+            <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
+              <i data-lucide="users" class="w-4 h-4 text-indigo-600"></i>
+              নিবন্ধিত শিক্ষার্থী তালিকা (মার্কেটিং ফোনবুক)
+            </h3>
+            <p class="text-xs text-slate-400">এসএমএস বা হোয়াটসঅ্যাপ মার্কেটিংয়ের জন্য প্রতিটি শিক্ষার্থীর নম্বর ও প্রোফাইল</p>
+          </div>
+          <input type="text" id="adminStudentSearch" onkeyup="filterAdminStudents()" placeholder="নাম বা ফোন দিয়ে সার্চ..." class="border border-slate-200 px-3 py-1.5 rounded-xl text-xs w-full sm:w-64">
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs sm:text-sm">
+            <thead class="bg-slate-50 text-slate-600 uppercase text-[11px] font-bold border-b border-slate-100">
+              <tr>
+                <th class="px-4 py-3">নাম</th>
+                <th class="px-4 py-3">মোবাইল নম্বর</th>
+                <th class="px-4 py-3">ইমেইল</th>
+                <th class="px-4 py-3">ওয়ালেট ব্যালেন্স</th>
+                <th class="px-4 py-3">রেজিস্ট্রেশনের তারিখ</th>
+              </tr>
+            </thead>
+            <tbody id="adminStudentsTableBody" class="divide-y divide-slate-100 text-slate-700"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Section C: All Student Exam Submissions & Scores -->
+      <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-xs space-y-4">
+        <div>
+          <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
+            <i data-lucide="clipboard-check" class="w-4 h-4 text-emerald-600"></i>
+            সকল শিক্ষার্থীর পরীক্ষার ফলাফল ও বিস্তারিত মার্কস
+          </h3>
+          <p class="text-xs text-slate-400">কোন শিক্ষার্থী কোন পরীক্ষায় কত মার্কস পেয়েছে তার লাইভ হিস্ট্রি</p>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs sm:text-sm">
+            <thead class="bg-slate-50 text-slate-600 uppercase text-[11px] font-bold border-b border-slate-100">
+              <tr>
+                <th class="px-4 py-3">তারিখ ও সময়</th>
+                <th class="px-4 py-3">শিক্ষার্থীর আইডি / নাম</th>
+                <th class="px-4 py-3">পরীক্ষার নাম</th>
+                <th class="px-4 py-3">প্রাপ্ত মার্ক (১০০-তে)</th>
+                <th class="px-4 py-3">সঠিক</th>
+                <th class="px-4 py-3">ভুল (-০.২৫)</th>
+                <th class="px-4 py-3">ছেড়ে দেওয়া</th>
+              </tr>
+            </thead>
+            <tbody id="adminAllAttemptsTableBody" class="divide-y divide-slate-100 text-slate-700"></tbody>
+          </table>
+        </div>
+      </div>
+
     </section>
 
   </main>
@@ -397,6 +488,7 @@
     let currentExam = null;
     let examTimerInterval = null;
     let remainingSeconds = 60 * 60;
+    let allLoadedStudents = [];
 
     window.addEventListener("DOMContentLoaded", async () => {
       if (window.lucide) lucide.createIcons();
@@ -530,7 +622,9 @@
                 id: data.user.id,
                 full_name: full_name,
                 phone: phone,
+                email: email,
                 wallet_balance: 10.00,
+                created_at: new Date().toISOString(),
                 is_admin: phone === '01570204036' || email === 'jubaerabdullah78@gmail.com'
               };
               try {
@@ -544,21 +638,31 @@
 
         if (!registeredSuccessfully) {
           currentUser = {
-            id: "user_" + Date.now(),
+            id: "user_" + btoa(email).replace(/=/g, ""),
             email: email
           };
           currentProfile = {
             id: currentUser.id,
             full_name: full_name,
             phone: phone,
+            email: email,
             wallet_balance: 10.00,
+            created_at: new Date().toISOString(),
             is_admin: phone === '01570204036' || email === 'jubaerabdullah78@gmail.com'
           };
           localStorage.setItem('dikkhanntor_pass_' + email, password);
         }
 
+        // Save into global directory list for Owner Panel
+        let directory = JSON.parse(localStorage.getItem('dikkhanntor_all_students_dir') || '[]');
+        if (!directory.some(s => s.email === email)) {
+          directory.unshift(currentProfile);
+          localStorage.setItem('dikkhanntor_all_students_dir', JSON.stringify(directory));
+        }
+
         localStorage.setItem('dikkhanntor_user', JSON.stringify(currentUser));
         localStorage.setItem('dikkhanntor_profile', JSON.stringify(currentProfile));
+        localStorage.setItem('dikkhanntor_profile_' + currentUser.id, JSON.stringify(currentProfile));
 
         alert("রেজিস্ট্রেশন সফল! আপনার ওয়ালেটে ১০ টাকা বোনাস ব্যালেন্স দেওয়া হয়েছে।");
         location.reload();
@@ -587,6 +691,7 @@
             currentProfile = storedProf ? JSON.parse(storedProf) : { 
               id: currentUser.id, 
               full_name: 'Student', 
+              email: email,
               wallet_balance: 10.00, 
               phone: '01570204036',
               is_admin: email === 'jubaerabdullah78@gmail.com'
@@ -596,7 +701,7 @@
           } else if (email === 'jubaerabdullah78@gmail.com') {
             loggedIn = true;
             currentUser = { id: 'admin_1', email: email };
-            currentProfile = { id: 'admin_1', full_name: 'Abdullah Jubaer', phone: '01570204036', wallet_balance: 500.00, is_admin: true };
+            currentProfile = { id: 'admin_1', full_name: 'Abdullah Jubaer', email: email, phone: '01570204036', wallet_balance: 500.00, is_admin: true };
             localStorage.setItem('dikkhanntor_user', JSON.stringify(currentUser));
             localStorage.setItem('dikkhanntor_profile', JSON.stringify(currentProfile));
           }
@@ -791,7 +896,10 @@
       const attempt = {
         id: "att_" + Date.now(),
         userId: currentUser ? currentUser.id : "guest",
+        studentName: currentProfile?.full_name || 'Student',
+        studentPhone: currentProfile?.phone || '01570204036',
         date: new Date().toLocaleDateString('bn-BD'),
+        timestamp: new Date().toLocaleString('bn-BD'),
         unit: currentExam?.unit || 'B_UNIT',
         examTitle: currentExam?.title || 'মডেল টেস্ট',
         score: finalScore,
@@ -801,11 +909,16 @@
         reviewData: reviewData
       };
 
-      // User-Scoped Storage
+      // 1. User-Scoped Local Storage
       const userStorageKey = 'dikkhanntor_attempts_' + (currentUser ? currentUser.id : "guest");
       const localAttempts = JSON.parse(localStorage.getItem(userStorageKey) || '[]');
       localAttempts.unshift(attempt);
       localStorage.setItem(userStorageKey, JSON.stringify(localAttempts));
+
+      // 2. Global Attempts Registry for Owner Panel
+      const globalAttempts = JSON.parse(localStorage.getItem('dikkhanntor_global_all_attempts') || '[]');
+      globalAttempts.unshift(attempt);
+      localStorage.setItem('dikkhanntor_global_all_attempts', JSON.stringify(globalAttempts));
 
       if (sb && currentUser?.id) {
         try {
@@ -865,7 +978,7 @@
         praise.innerText = "🎉 চমৎকার প্রস্তুতি! নিয়মিত অনুশীলন চালিয়ে যাও, সফলতা নিশ্চিত!";
       } else if (attempt.score >= 40) {
         praise.className = "max-w-md mx-auto p-4 rounded-xl text-xs sm:text-sm font-bold bg-amber-50 text-amber-800 border border-amber-200";
-        praise.innerText = "👏 ভালো হয়েছে, তবে নেগেティブ মার্কিং কমাতে হবে। নিচের ভুলগুলো ভালো করে দেখে নাও।";
+        praise.innerText = "👏 ভালো হয়েছে, তবে নেগেটিভ মার্কিং কমাতে হবে। নিচের ভুলগুলো ভালো করে দেখে নাও।";
       } else {
         praise.className = "max-w-md mx-auto p-4 rounded-xl text-xs sm:text-sm font-bold bg-rose-50 text-rose-800 border border-rose-200";
         praise.innerText = "💪 মন খারাপ করবে না! ভুলগুলো শুধরে নিয়ে আবার চেষ্টা করো।";
@@ -904,9 +1017,7 @@
             .eq('user_id', currentUser.id)
             .order('attempted_at', { ascending: false });
           if (data && data.length > 0) attempts = data;
-        } catch(e) {
-          console.warn("Supabase attempts load error:", e);
-        }
+        } catch(e) {}
       }
 
       if (attempts.length > 0) {
@@ -984,9 +1095,12 @@
       closeModal('rechargeModal');
     }
 
+    // ==========================================
+    // COMPLETE OWNER CONTROL & CRM ENGINE
+    // ==========================================
     async function loadAdminQueue() {
+      // 1. Load Pending Recharges
       let recs = JSON.parse(localStorage.getItem('dikkhanntor_recharge_queue') || '[]');
-
       if (sb) {
         try {
           const { data } = await sb.from('wallet_recharges').select('*, profiles(full_name)').eq('status', 'pending');
@@ -994,51 +1108,55 @@
         } catch(e) {}
       }
 
-      const container = document.getElementById('adminRechargeList');
-      if (!container) return;
-
-      if (!recs || recs.length === 0) {
-        container.innerHTML = `<p class="text-xs text-slate-400 italic">কোনো পেন্ডিং রিচার্জ নেই।</p>`;
-      } else {
-        container.innerHTML = recs.map(r => `
-          <div class="flex justify-between items-center p-3 border rounded-xl bg-slate-50 text-xs">
-            <div>
-              <strong>${r.user_name || r.profiles?.full_name || 'Student'}</strong> (${r.phone})<br>
-              ${r.method}: ৳${r.amount} | <span class="font-mono text-indigo-700 font-bold select-all">TrxID: ${r.trx_id}</span>
+      document.getElementById('adminPendingCount').innerText = recs.length;
+      const rechargeContainer = document.getElementById('adminRechargeList');
+      if (rechargeContainer) {
+        if (!recs || recs.length === 0) {
+          rechargeContainer.innerHTML = `<p class="text-xs text-slate-400 italic">কোনো পেন্ডিং রিচার্জ রিকোয়েস্ট নেই।</p>`;
+        } else {
+          rechargeContainer.innerHTML = recs.map(r => `
+            <div class="flex justify-between items-center p-3 border rounded-xl bg-slate-50 text-xs">
+              <div>
+                <strong>${r.user_name || r.profiles?.full_name || 'Student'}</strong> (${r.phone})<br>
+                ${r.method}: ৳${r.amount} | <span class="font-mono text-indigo-700 font-bold select-all">TrxID: ${r.trx_id}</span>
+              </div>
+              <button onclick="adminApproveRecharge('${r.id}', ${r.amount})" class="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-bold transition">
+                অ্যাপ্রুভ (৳${r.amount})
+              </button>
             </div>
-            <button onclick="adminApproveRecharge('${r.id}', ${r.amount})" class="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-bold transition">
-              অ্যাপ্রুভ (৳${r.amount})
-            </button>
-          </div>
-        `).join("");
-      }
-    }
-
-    async function adminApproveRecharge(recId, amount) {
-      if (currentProfile) {
-        currentProfile.wallet_balance = (parseFloat(currentProfile.wallet_balance) || 0) + parseFloat(amount);
-        localStorage.setItem('dikkhanntor_profile', JSON.stringify(currentProfile));
-        if (currentUser?.id) {
-          localStorage.setItem('dikkhanntor_profile_' + currentUser.id, JSON.stringify(currentProfile));
+          `).join("");
         }
       }
 
-      let queue = JSON.parse(localStorage.getItem('dikkhanntor_recharge_queue') || '[]');
-      queue = queue.filter(r => String(r.id) !== String(recId));
-      localStorage.setItem('dikkhanntor_recharge_queue', JSON.stringify(queue));
-
-      const navBal = document.getElementById('navBalance');
-      if (navBal && currentProfile) navBal.innerText = parseFloat(currentProfile.wallet_balance).toFixed(2);
-
+      // 2. Load Registered Students CRM
+      let students = JSON.parse(localStorage.getItem('dikkhanntor_all_students_dir') || '[]');
       if (sb) {
         try {
-          await sb.from('wallet_recharges').update({ status: 'approved' }).eq('id', recId);
+          const { data } = await sb.from('profiles').select('*').order('created_at', { ascending: false });
+          if (data && data.length > 0) students = data;
         } catch(e) {}
       }
+      allLoadedStudents = students;
+      renderAdminStudentsTable(students);
 
-      alert(`৳${amount} সফলভাবে ওয়ালেটে যুক্ত হয়েছে!`);
-      loadAdminQueue();
+      // 3. Load Global Exam Attempts
+      let globalAttempts = JSON.parse(localStorage.getItem('dikkhanntor_global_all_attempts') || '[]');
+      if (sb) {
+        try {
+          const { data } = await sb.from('exam_attempts').select('*, profiles(full_name, phone)').order('attempted_at', { ascending: false });
+          if (data && data.length > 0) globalAttempts = data;
+        } catch(e) {}
+      }
+      renderAdminAttemptsTable(globalAttempts);
+
+      // 4. Update Summary Cards
+      document.getElementById('adminTotalStudents').innerText = students.length;
+      const totalBal = students.reduce((sum, s) => sum + parseFloat(s.wallet_balance || 0), 0);
+      document.getElementById('adminTotalBalance').innerText = '৳' + totalBal.toFixed(2);
+      document.getElementById('adminTotalAttemptsCount').innerText = globalAttempts.length;
     }
-  </script>
-</body>
-</html>
+
+    function renderAdminStudentsTable(list) {
+      const tbody = document.getElementById('adminStudentsTableBody');
+      if (!tbody) return;
+      if (!list ||
