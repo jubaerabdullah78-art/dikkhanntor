@@ -488,7 +488,7 @@
       });
     });
 
-    // Reliable Google Sign In with popup and fallback redirect for mobile/browsers
+    // FIXED GOOGLE SIGN IN WITHOUT REFRESH LOOP
     async function handleGoogleSignIn() {
       if (isSigningIn) return;
       isSigningIn = true;
@@ -505,14 +505,11 @@
         if (result && result.user) {
           currentUser = result.user;
           await syncUserProfile(result.user);
+          updateNavAfterLogin();
         }
       } catch (error) {
         if (error.code !== 'auth/popup-closed-by-user' && error.code !== 'auth/cancelled-popup-request') {
-          try {
-            await auth.signInWithRedirect(provider);
-          } catch (redirectErr) {
-            alert("লগইন ত্রুটি: " + redirectErr.message);
-          }
+          alert("লগইন ত্রুটি: " + error.message);
         }
       } finally {
         isSigningIn = false;
