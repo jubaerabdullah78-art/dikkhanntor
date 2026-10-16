@@ -825,4 +825,144 @@
         praise.className = "max-w-md mx-auto p-4 rounded-xl text-xs sm:text-sm font-bold bg-emerald-50 text-emerald-800 border border-emerald-200";
         praise.innerText = "🎉 চমৎকার প্রস্তুতি! নিয়মিত অনুশীলন চালিয়ে যাও, সফলতা নিশ্চিত!";
       } else if (finalScore >= 40) {
-        praise.className = "max-w-md mx-auto p-4 rounded-xl text-xs sm:text-sm font-bold bg-amber-50 text-amber-800 border border-amber-
+        praise.className = "max-w-md mx-auto p-4 rounded-xl text-xs sm:text-sm font-bold bg-amber-50 text-amber-800 border border-amber-200";
+        praise.innerText = "👏 ভালো হয়েছে, তবে নেগেティブ মার্কিং কমাতে হবে। নিচের ভুলগুলো ভালো করে দেখে নাও।";
+      } else {
+        praise.className = "max-w-md mx-auto p-4 rounded-xl text-xs sm:text-sm font-bold bg-rose-50 text-rose-800 border border-rose-200";
+        praise.innerText = "💪 মন খারাপ করবে না! ভুলগুলো শুধরে নিয়ে আবার চেষ্টা করো।";
+      }
+
+      showView('resultView');
+    }
+
+    async function loadDashboardAnalytics() {
+      let attempts = JSON.parse(localStorage.getItem('dikkhanntor_attempts') || '[]');
+
+      if (sb && currentUser?.id) {
+        try {
+          const { data } = await sb.from('exam_attempts').select('*').eq('user_id', currentUser.id).order('attempted_at', { ascending: false });
+          if (data && data.length > 0) attempts = data;
+        } catch(e) {}
+      }
+
+      if (attempts.length > 0) {
+        document.getElementById('kpiTotalAttempts').innerText = attempts.length;
+        const total = attempts.reduce((acc, curr) => acc + parseFloat(curr.score || 0), 0);
+        document.getElementById('kpiAvgScore').innerText = (total / attempts.length).toFixed(2);
+        const max = Math.max(...attempts.map(d => parseFloat(d.score || 0)));
+        document.getElementById('kpiMaxScore').innerText = max.toFixed(2);
+        const totalWrong = attempts.reduce((acc, curr) => acc + (curr.wrong_count || 0), 0);
+        document.getElementById('kpiTotalWrongs').innerText = totalWrong;
+
+        document.getElementById('historyTableBody').innerHTML = attempts.map(d => `
+          <tr class="hover:bg-slate-50 transition">
+            <td class="px-5 py-3.5 text-xs text-slate-500">${d.date || new Date(d.attempted_at).toLocaleDateString('bn-BD')}</td>
+            <td class="px-5 py-3.5 font-bold text-slate-900">${(d.unit || 'B_UNIT').replace('_', ' ')} টেস্ট</td>
+            <td class="px-5 py-3.5 font-extrabold text-indigo-700">${parseFloat(d.score).toFixed(2)}</td>
+            <td class="px-5 py-3.5 font-semibold text-emerald-600">${d.correct_count}</td>
+            <td class="px-5 py-3.5 font-semibold text-rose-500">${d.wrong_count}</td>
+            <td class="px-5 py-3.5 text-slate-400">${d.skipped_count}</td>
+          </tr>
+        `).join("");
+      } else {
+        document.getElementById('historyTableBody').innerHTML = `
+          <tr><td colspan="6" class="px-5 py-8 text-center text-slate-400 text-xs">এখনো কোনো পরীক্ষা সম্পন্ন হয়নি।</td></tr>
+        `;
+      }
+    }
+
+    async function submitRechargeRequest() {
+      if (!currentUser) { openModal('authModal'); return; }
+      const method = document.getElementById('recMethod').value;
+      const amount = parseFloat(document.getElementById('recAmount').value);
+      const trx_id = document.getElementById('recTrxId').value.trim();
+
+      if (!amount || amount < 10 || !trx_id) {
+        alert("দয়া করে সঠিক টাকার পরিমাণ (কমপক্ষে ১০ টাকা) এবং TrxID লিখুন।");
+        return;
+      }
+
+      const rec = {
+        id: Date.now(),
+        user_id: currentUser?.id,
+        user_name: currentProfile?.full_name || 'Student',
+        phone: currentProfile?.phone || '01570204036',
+        amount, method, trx_id,
+        status: 'pending'
+      };
+
+      // Store in Owner Queue
+      const queue = JSON.parse(localStorage.getItem('dikkhanntor_recharge_queue') || '[]');
+      queue.unshift(rec);
+      localStorage.setItem('dikkhanntor_recharge_queue', JSON.stringify(queue));
+
+      if (sb) {
+        try {
+          await sb.from('wallet_recharges').insert({
+            user_id: currentUser.id,
+            phone: rec.phone,
+            amount, method, trx_id
+          });
+        } catch(e) {}
+      }
+
+      alert("আপনার রিচার্জ রিকোয়েস্ট সফলভাবে জমা হয়েছে! ওনার ভেরিফাই করে কিছুক্ষণের মধ্যে ব্যালেন্স যোগ করবেন।");
+      closeModal('rechargeModal');
+    }
+
+    async function loadAdminQueue() {
+      let recs = JSON.parse(localStorage.getItem('dikkhanntor_recharge_queue') || '[]');
+
+      if (sb) {
+        try {
+          const { data } = await sb.from('wallet_recharges').select('*, profiles(full_name)').eq('status', 'pending');
+          if (data && data.length > 0) recs = data;
+        } catch(e) {}
+      }
+
+      const container = document.getElementById('adminRechargeList');
+      if (!container) return;
+
+      if (!recs || recs.length === 0) {
+        container.innerHTML = `<p class="text-xs text-slate-400 italic">কোনো পেন্ডিং রিচার্জ নেই।</p>`;
+      } else {
+        container.innerHTML = recs.map(r => `
+          <div class="flex justify-between items-center p-3 border rounded-xl bg-slate-50 text-xs">
+            <div>
+              <strong>${r.user_name || r.profiles?.full_name || 'Student'}</strong> (${r.phone})<br>
+              ${r.method}: ৳${r.amount} | <span class="font-mono text-indigo-700 font-bold select-all">TrxID: ${r.trx_id}</span>
+            </div>
+            <button onclick="adminApproveRecharge('${r.id}', ${r.amount})" class="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-bold transition">
+              অ্যাপ্রুভ (৳${r.amount})
+            </button>
+          </div>
+        `).join("");
+      }
+    }
+
+    async function adminApproveRecharge(recId, amount) {
+      if (currentProfile) {
+        currentProfile.wallet_balance = (parseFloat(currentProfile.wallet_balance) || 0) + parseFloat(amount);
+        localStorage.setItem('dikkhanntor_profile', JSON.stringify(currentProfile));
+      }
+
+      // Update queue
+      let queue = JSON.parse(localStorage.getItem('dikkhanntor_recharge_queue') || '[]');
+      queue = queue.filter(r => String(r.id) !== String(recId));
+      localStorage.setItem('dikkhanntor_recharge_queue', JSON.stringify(queue));
+
+      const navBal = document.getElementById('navBalance');
+      if (navBal && currentProfile) navBal.innerText = parseFloat(currentProfile.wallet_balance).toFixed(2);
+
+      if (sb) {
+        try {
+          await sb.from('wallet_recharges').update({ status: 'approved' }).eq('id', recId);
+        } catch(e) {}
+      }
+
+      alert(`৳${amount} সফলভাবে ওয়ালেটে যুক্ত হয়েছে!`);
+      loadAdminQueue();
+    }
+  </script>
+</body>
+</html>
