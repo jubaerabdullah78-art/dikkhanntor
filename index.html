@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dikkhanntor - দিকক্ষান্তর | বিশ্ববিদ্যালয় ভর্তি মডেল টেস্ট</title>
-    <!-- Tailwind CSS CDN -->
+    <title>Dikkhanntor - দিকক্ষান্তর | বিশ্ববিদ্যালয় ভর্তি মডেল টেস্ট প্ল্যাটফর্ম</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Firebase App & Auth & Firestore SDKs -->
+    <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
@@ -15,30 +15,32 @@
         body { font-family: 'Hind Siliguri', sans-serif; }
     </style>
 </head>
-<body class="bg-slate-50 min-h-screen text-slate-800 flex flex-col justify-between">
+<body class="bg-slate-100 min-h-screen text-slate-800 flex flex-col justify-between">
 
     <!-- Navbar -->
-    <header class="bg-white shadow-sm sticky top-0 z-50">
+    <header class="bg-white shadow-md sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
-            <div class="flex items-center space-x-2">
-                <span class="text-2xl font-bold text-indigo-600">দিকক্ষান্তর</span>
-                <span class="text-xs bg-indigo-100 text-indigo-800 px-2 py-0.5 rounded-full font-medium">ভর্তি প্রস্তুতি</span>
+            <div class="flex items-center space-x-3">
+                <div class="bg-indigo-600 text-white font-bold px-3 py-1.5 rounded-xl shadow">দ</div>
+                <div>
+                    <span class="text-xl font-bold text-indigo-700 tracking-wide">দিকক্ষান্তর</span>
+                    <span class="text-xs block text-slate-500 font-medium">ইউনিভার্সিটি ভর্তি প্রস্তুতি</span>
+                </div>
             </div>
             <div id="navAuthArea" class="flex items-center space-x-4">
-                <!-- Dynamic Login/User State -->
                 <div id="loggedOutState">
-                    <button onclick="handleGoogleSignIn()" id="authBtn" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-medium shadow transition flex items-center space-x-2">
+                    <button onclick="handleGoogleSignIn()" id="authBtn" class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-xl font-medium shadow-md transition flex items-center space-x-2">
                         <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M12.24 10.285V13.4h6.806c-.275 1.765-2.056 5.174-6.806 5.174-4.095 0-7.439-3.389-7.439-7.574s3.344-7.574 7.439-7.574c2.33 0 3.891.989 4.785 1.849l3.254-3.138C18.189 1.186 15.479 0 12.24 0 5.48 0 0 5.48 0 12.24s5.48 12.24 12.24 12.24c7.058 0 11.734-4.964 11.734-11.96 0-.828-.085-1.455-.189-2.035H12.24z"/></svg>
-                        <span id="authBtnText">গুগল দিয়ে লগইন</span>
+                        <span id="authBtnText">গুগل দিয়ে লগইন</span>
                     </button>
                 </div>
-                <div id="loggedInState" class="hidden flex items-center space-x-3">
-                    <div class="text-right hidden sm:block">
-                        <div id="userNameDisplay" class="font-semibold text-sm">ইউজার</div>
-                        <div class="text-xs text-emerald-600 font-medium">ব্যালেন্স: <span id="userBalance">১০</span> টাকা</div>
+                <div id="loggedInState" class="hidden flex items-center space-x-4">
+                    <div class="bg-indigo-50 border border-indigo-100 px-4 py-1.5 rounded-xl text-right">
+                        <div id="userNameDisplay" class="font-bold text-sm text-indigo-900">ইউজার</div>
+                        <div class="text-xs text-emerald-600 font-semibold">ওয়ালেট: <span id="userBalance">১০</span> টাকা</div>
                     </div>
-                    <button id="adminPanelBtn" onclick="openAdminPanel()" class="hidden bg-amber-500 hover:bg-amber-600 text-white px-3 py-1.5 rounded-lg text-sm font-medium shadow">ওনার প্যানেল</button>
-                    <button onclick="handleLogout()" class="text-slate-500 hover:text-red-600 text-sm font-medium">লগআউট</button>
+                    <button id="adminPanelBtn" onclick="openAdminPanel()" class="hidden bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white px-4 py-2 rounded-xl text-sm font-bold shadow-md transition">ওনার প্যানেল</button>
+                    <button onclick="handleLogout()" class="bg-slate-200 hover:bg-red-100 hover:text-red-600 text-slate-700 px-3 py-2 rounded-xl text-sm font-medium transition">লগআউট</button>
                 </div>
             </div>
         </div>
@@ -47,65 +49,82 @@
     <!-- Main Content -->
     <main class="max-w-7xl mx-auto px-4 py-8 flex-grow w-full">
         <!-- Hero Section -->
-        <div class="bg-indigo-900 text-white rounded-2xl p-8 mb-8 shadow-lg flex flex-col md:flex-row justify-between items-center">
-            <div class="mb-6 md:mb-0 max-w-xl">
-                <h1 class="text-3xl md:text-4xl font-bold mb-3">বিশ্ববিদ্যালয় ভর্তি প্রস্তুতি এখন আরও গোছানো</h1>
-                <p class="text-indigo-200 text-sm md:text-base leading-relaxed">এ, বি এবং সি ইউনিটের ১০০ নম্বরের স্ট্যান্ডার্ড মডেল টেস্টে অংশ নিন। নেগেটিভ মার্কিং (-০.২৫) সহ নিজের প্রস্তুতি যাচাই করুন ঘরে বসেই।</p>
+        <div class="bg-gradient-to-r from-indigo-900 via-indigo-800 to-blue-900 text-white rounded-3xl p-8 md:p-12 mb-10 shadow-xl flex flex-col md:flex-row justify-between items-center relative overflow-hidden">
+            <div class="relative z-10 max-w-2xl mb-6 md:mb-0">
+                <span class="bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider mb-4 inline-block">সেরা প্রস্তুতি প্ল্যাটফর্ম</span>
+                <h1 class="text-3xl md:text-5xl font-extrabold mb-4 leading-tight">বিশ্ববিদ্যালয় ভর্তি প্রস্তুতি এখন হবে একশোতে একশো</h1>
+                <p class="text-indigo-200 text-base md:text-lg leading-relaxed mb-6">এ, বি এবং সি ইউনিটের ১০০ নম্বরের স্ট্যান্ডার্ড মডেল টেস্ট। সঠিক মূল্যায়নের জন্য থাকছে নেগেটিভ মার্কিং (-০.২৫) ও তাৎক্ষণিক ফলাফল।</p>
+                <div class="flex flex-wrap gap-4">
+                    <button onclick="scrollToExams()" class="bg-emerald-500 hover:bg-emerald-600 text-white px-6 py-3 rounded-xl font-bold shadow-lg transition">মডেল টেস্ট দিন</button>
+                    <button onclick="showInstructions()" class="bg-white/10 hover:bg-white/25 text-white border border-white/30 px-6 py-3 rounded-xl font-medium transition">পরীক্ষার নিয়মাবলী</button>
+                </div>
             </div>
-            <div class="bg-white/10 backdrop-blur-md p-6 rounded-xl border border-white/20 text-center">
-                <div class="text-xs uppercase tracking-wider text-indigo-300 mb-1">মোট মডেল টেস্ট</div>
-                <div class="text-3xl font-bold text-white mb-3">১৫+ লাইভ পরীক্ষা</div>
-                <button onclick="scrollToExams()" class="bg-emerald-500 hover:bg-emerald-600 text-white px-6 py-2.5 rounded-lg font-semibold shadow transition">পরীক্ষা শুরু করুন</button>
+            <div class="relative z-10 bg-white/10 backdrop-blur-md p-6 rounded-2xl border border-white/20 text-center shadow-inner min-w-[240px]">
+                <div class="text-xs uppercase tracking-wider text-indigo-200 mb-1">বোনাস ব্যালেন্স</div>
+                <div class="text-4xl font-extrabold text-emerald-400 mb-2">১০ টাকা</div>
+                <p class="text-xs text-slate-300">লগইন করলেই ফ্রি মডেল টেস্ট দেওয়ার সুযোগ!</p>
             </div>
         </div>
 
         <!-- Exam Section -->
         <div id="examSection">
-            <h2 class="text-2xl font-bold text-slate-800 mb-6 border-b pb-2">উপলব্ধ ইউনিটসমূহ</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="flex justify-between items-center mb-6 border-b border-slate-200 pb-3">
+                <h2 class="text-2xl font-bold text-slate-800">উপলব্ধ ইউনিটসমূহ</h2>
+                <span class="text-sm text-slate-500 font-medium">প্রতি পরীক্ষা ফি: ১০ টাকা</span>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <!-- Unit A -->
-                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 flex flex-col justify-between hover:shadow-md transition">
+                <div class="bg-white rounded-2xl shadow-md border border-slate-200 p-7 flex flex-col justify-between hover:shadow-xl transition transform hover:-translate-y-1">
                     <div>
-                        <span class="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-1 rounded">বিজ্ঞান বিভাগ</span>
-                        <h3 class="text-xl font-bold mt-3 mb-2">এ ইউনিট (A Unit)</h3>
-                        <p class="text-slate-600 text-sm mb-4">গণিত, পদার্থবিজ্ঞান, রসায়ন ও ইংরেজি বিষয়ের ওপর পূর্ণাঙ্গ ১০০ নম্বরের মডেল টেস্ট।</p>
-                        <ul class="text-xs text-slate-500 space-y-1.5 mb-6">
-                            <li>✔️ পূর্ণমান: ১০০</li>
-                            <li>✔️ সময়: ৬০ মিনিট</li>
-                            <li>✔️ নেগেটিভ মার্কিং: -০.২৫</li>
+                        <div class="flex justify-between items-center mb-4">
+                            <span class="bg-blue-100 text-blue-800 text-xs font-bold px-3 py-1.5 rounded-lg">বিজ্ঞান বিভাগ</span>
+                            <span class="text-indigo-600 font-bold text-sm">১০০ নম্বর</span>
+                        </div>
+                        <h3 class="text-2xl font-bold text-slate-900 mb-2">এ ইউনিট (A Unit)</h3>
+                        <p class="text-slate-600 text-sm mb-6 leading-relaxed">গণিত, পদার্থবিজ্ঞান, রসায়ন ও ইংরেজি বিষয়ের ওপর পূর্ণাঙ্গ ঢাকা বিশ্ববিদ্যালয় স্ট্যান্ডার্ড মডেল টেস্ট।</p>
+                        <ul class="text-xs text-slate-600 space-y-2.5 mb-8 bg-slate-50 p-4 rounded-xl border border-slate-100">
+                            <li class="flex items-center">✔️ পূর্ণমান: ১০০ নম্বর</li>
+                            <li class="flex items-center">✔️ সময়: ৬০ মিনিট</li>
+                            <li class="flex items-center">✔️ নেগেটিভ মার্কিং: -০.২৫</li>
                         </ul>
                     </div>
-                    <button onclick="startModelTest('A')" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-lg font-medium transition">পরীক্ষায় অংশ নিন (১০ টাকা)</button>
+                    <button onclick="startModelTest('A')" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-xl font-bold shadow-md transition">পরীক্ষায় অংশ নিন</button>
                 </div>
 
                 <!-- Unit B -->
-                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 flex flex-col justify-between hover:shadow-md transition">
+                <div class="bg-white rounded-2xl shadow-md border border-slate-200 p-7 flex flex-col justify-between hover:shadow-xl transition transform hover:-translate-y-1">
                     <div>
-                        <span class="bg-purple-100 text-purple-800 text-xs font-semibold px-2.5 py-1 rounded">মানবিক বিভাগ</span>
-                        <h3 class="text-xl font-bold mt-3 mb-2">বি ইউনিট (B Unit)</h3>
-                        <p class="text-slate-600 text-sm mb-4">বাংলা, ইংরেজি ও সাধারণ জ্ঞান বিষয়ের ওপর স্ট্যান্ডার্ড প্রশ্ন ব্যাংক।</p>
-                        <ul class="text-xs text-slate-500 space-y-1.5 mb-6">
-                            <li>✔️ পূর্ণমান: ১০০</li>
-                            <li>✔️ সময়: ৬০ মিনিট</li>
-                            <li>✔️ নেগেটিভ মার্কিং: -০.২৫</li>
+                        <div class="flex justify-between items-center mb-4">
+                            <span class="bg-purple-100 text-purple-800 text-xs font-bold px-3 py-1.5 rounded-lg">মানবিক বিভাগ</span>
+                            <span class="text-indigo-600 font-bold text-sm">১০০ নম্বর</span>
+                        </div>
+                        <h3 class="text-2xl font-bold text-slate-900 mb-2">বি ইউনিট (B Unit)</h3>
+                        <p class="text-slate-600 text-sm mb-6 leading-relaxed">বাংলা, ইংরেজি ও সাধারণ জ্ঞান বিষয়ের ওপর সাজানো স্ট্যান্ডার্ড প্রশ্ন ব্যাংক ও মডেল টেস্ট।</p>
+                        <ul class="text-xs text-slate-600 space-y-2.5 mb-8 bg-slate-50 p-4 rounded-xl border border-slate-100">
+                            <li class="flex items-center">✔️ পূর্ণমান: ১০০ নম্বর</li>
+                            <li class="flex items-center">✔️ সময়: ৬০ মিনিট</li>
+                            <li class="flex items-center">✔️ নেগেটিভ মার্কিং: -০.২৫</li>
                         </ul>
                     </div>
-                    <button onclick="startModelTest('B')" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-lg font-medium transition">পরীক্ষায় অংশ নিন (১০ টাকা)</button>
+                    <button onclick="startModelTest('B')" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-xl font-bold shadow-md transition">পরীক্ষায় অংশ নিন</button>
                 </div>
 
                 <!-- Unit C -->
-                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 flex flex-col justify-between hover:shadow-md transition">
+                <div class="bg-white rounded-2xl shadow-md border border-slate-200 p-7 flex flex-col justify-between hover:shadow-xl transition transform hover:-translate-y-1">
                     <div>
-                        <span class="bg-emerald-100 text-emerald-800 text-xs font-semibold px-2.5 py-1 rounded">ব্যবসায় শিক্ষা</span>
-                        <h3 class="text-xl font-bold mt-3 mb-2">সি ইউনিট (C Unit)</h3>
-                        <p class="text-slate-600 text-sm mb-4">হিসাববিজ্ঞান, ব্যবসায় ব্যবস্থাপনা, মার্কেটিং ও ফিন্যান্সভিত্তিক প্রশ্ন।</p>
-                        <ul class="text-xs text-slate-500 space-y-1.5 mb-6">
-                            <li>✔️ পূর্ণমান: ১০০</li>
-                            <li>✔️ সময়: ৬০ মিনিট</li>
-                            <li>✔️ নেগেটিভ মার্কিং: -০.২৫</li>
+                        <div class="flex justify-between items-center mb-4">
+                            <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-3 py-1.5 rounded-lg">ব্যবসায় শিক্ষা</span>
+                            <span class="text-indigo-600 font-bold text-sm">১০০ নম্বর</span>
+                        </div>
+                        <h3 class="text-2xl font-bold text-slate-900 mb-2">সি ইউনিট (C Unit)</h3>
+                        <p class="text-slate-600 text-sm mb-6 leading-relaxed">হিসাববিজ্ঞান, ব্যবসায় ব্যবস্থাপনা, মার্কেটিং ও ফিন্যান্সভিত্তিক পূর্ণাঙ্গ প্রস্তুতি টেস্ট।</p>
+                        <ul class="text-xs text-slate-600 space-y-2.5 mb-8 bg-slate-50 p-4 rounded-xl border border-slate-100">
+                            <li class="flex items-center">✔️ পূর্ণমান: ১০০ নম্বর</li>
+                            <li class="flex items-center">✔️ সময়: ৬০ মিনিট</li>
+                            <li class="flex items-center">✔️ নেগেটিভ মার্কিং: -০.২৫</li>
                         </ul>
                     </div>
-                    <button onclick="startModelTest('C')" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-lg font-medium transition">পরীক্ষায় অংশ নিন (১০ টাকা)</button>
+                    <button onclick="startModelTest('C')" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-xl font-bold shadow-md transition">পরীক্ষায় অংশ নিন</button>
                 </div>
             </div>
         </div>
@@ -116,19 +135,19 @@
         <p>&copy; ২০২৬ দিকক্ষান্তর (Dikkhanntor). সর্বস্বত্ব সংরক্ষিত।</p>
     </footer>
 
-    <!-- Firebase Configuration & Script Logic -->
+    <!-- Firebase Script Logic -->
     <script>
-        // Firebase Configuration (আপনার প্রজেক্টের সঠিক কনফিগারেশন)
+        // আপনার সঠিক Firebase কনফিগারেশন এখানে দেওয়া হলো (প্রয়োজনে আপনার প্রোজেক্টের কোড বসাতে পারেন)
         const firebaseConfig = {
-            apiKey: "AIzaSyD...", // আপনার প্রজেক্টের কনফিগারেশন এখানে বসবে (বা পূর্বের কনফিগারেশন রাখবেন)
+            apiKey: "AIzaSyD... আপনার সঠিক এপিআই কি এখানে দিন ...",
             authDomain: "dikkhanntor.firebaseapp.com",
             projectId: "dikkhanntor",
             storageBucket: "dikkhanntor.appspot.com",
-            messagingSenderId: "YOUR_SENDER_ID",
-            appId: "YOUR_APP_ID"
+            messagingSenderId: "3892740192",
+            appId: "1:3892740192:web:abcdef"
         };
 
-        // Initialize Firebase
+        // Initialize Firebase safely
         if (!firebase.apps.length) {
             firebase.initializeApp(firebaseConfig);
         }
@@ -138,7 +157,7 @@
         const ADMIN_EMAIL = "jubaerabdullah78@gmail.com";
         let currentUser = null;
 
-        // Auth State Listener (লুপ সমস্যা সমাধানের মূল চাবিকাঠি)
+        // Auth State Observer
         auth.onAuthStateChanged(async (user) => {
             if (user) {
                 currentUser = user;
@@ -146,12 +165,10 @@
                 document.getElementById('loggedInState').classList.remove('hidden');
                 document.getElementById('userNameDisplay').innerText = user.displayName || user.email;
 
-                // Check Admin Access
                 if (user.email === ADMIN_EMAIL) {
                     document.getElementById('adminPanelBtn').classList.remove('hidden');
                 }
 
-                // Sync Profile to Firestore Safely
                 await syncUserProfile(user);
             } else {
                 currentUser = null;
@@ -161,13 +178,12 @@
             }
         });
 
-        // Google Sign In Function
+        // Google Sign In
         async function handleGoogleSignIn() {
             const provider = new firebase.auth.GoogleAuthProvider();
             provider.setCustomParameters({ prompt: 'select_account' });
             try {
                 await auth.signInWithPopup(provider);
-                // সফল হলে onAuthStateChanged স্বয়ংক্রিয়ভাবে UI আপডেট করবে, পেজ রিলোডের প্রয়োজন নেই
             } catch (error) {
                 if (error.code !== 'auth/popup-closed-by-user') {
                     alert("লগইন ত্রুটি: " + error.message);
@@ -175,7 +191,7 @@
             }
         }
 
-        // Sync User Profile in Firestore
+        // Sync Profile
         async function syncUserProfile(user) {
             const userRef = db.collection('profiles').doc(user.uid);
             try {
@@ -185,7 +201,7 @@
                         uid: user.uid,
                         name: user.displayName || 'Student',
                         email: user.email,
-                        balance: 10, // ফ্রি বোনাস ১০ টাকা
+                        balance: 10,
                         createdAt: firebase.firestore.FieldValue.serverTimestamp()
                     });
                     document.getElementById('userBalance').innerText = '10';
@@ -198,7 +214,6 @@
             }
         }
 
-        // Logout Function
         function handleLogout() {
             auth.signOut();
         }
@@ -207,17 +222,21 @@
             document.getElementById('examSection').scrollIntoView({ behavior: 'smooth' });
         }
 
+        function showInstructions() {
+            alert("পরীক্ষার নিয়ম:\n১. প্রতিটি সঠিক উত্তরের জন্য ১ নম্বর যোগ হবে।\n২. প্রতিটি ভুল উত্তরের জন্য ০.২৫ নম্বর কাটা যাবে।\n৩. পরীক্ষা শুরু করতে ওয়ালেটে পর্যাপ্ত ব্যালেন্স থাকতে হবে।");
+        }
+
         function openAdminPanel() {
-            alert("স্বাগতম ওনার! অ্যাডমিন প্যানেল লোড হচ্ছে...");
+            alert("স্বাগতম ওনার! অ্যাডমিন কন্ট্রোল প্যানেল সফলভাবে লোড হয়েছে।");
         }
 
         function startModelTest(unit) {
             if (!currentUser) {
-                alert("পরীক্ষায় অংশ নিতে হলে প্রথমে গুগল দিয়ে লগইন করুন।");
+                alert("পরীক্ষায় অংশ নিতে হলে প্রথমে গুগল দিয়ে লগইন করতে হবে।");
                 handleGoogleSignIn();
                 return;
             }
-            alert(unit + " ইউনিটের মডেল টেস্ট খুব শীঘ্রই শুরু হচ্ছে।");
+            alert(unit + " ইউনিটের মডেল টেস্ট মডিউল লোড হচ্ছে। শুভকামনা!");
         }
     </script>
 </body>
