@@ -333,7 +333,7 @@
             </h3>
             <p class="text-xs text-slate-400">প্রতিটি শিক্ষার্থীর নাম, ইমেইল ও ফোন নম্বর</p>
           </div>
-          <input type="text" id="adminStudentSearch" onkeyup="filterAdminStudents()" placeholder="নাম বা ইমেইল দিয়ে সার্চ..." class="border border-slate-200 px-3 py-1.5 rounded-xl text-xs w-full sm:w-64">
+          <input type="text" id="adminStudentSearch" onkeyup="filterAdminStudents()" placeholder="নাম, ইমেইল বা ফোন নম্বর দিয়ে সার্চ..." class="border border-slate-200 px-3 py-1.5 rounded-xl text-xs w-full sm:w-64">
         </div>
         <div class="overflow-x-auto">
           <table class="w-full text-left text-xs sm:text-sm">
@@ -381,9 +381,31 @@
 
   </main>
 
+  <!-- PHONE NUMBER COLLECTION MODAL -->
+  <div id="phoneModal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white max-w-sm w-full rounded-3xl p-6 sm:p-8 shadow-2xl relative space-y-4 text-xs animate-in fade-in zoom-in-95 duration-200">
+      <div class="w-12 h-12 rounded-2xl bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-600 mx-auto">
+        <i data-lucide="phone-call" class="w-6 h-6"></i>
+      </div>
+      <div class="text-center space-y-1">
+        <h3 class="text-base font-extrabold text-slate-900">তোমার মোবাইল নম্বর যুক্ত করো</h3>
+        <p class="text-slate-500 text-[11px] leading-relaxed">পরীক্ষার ফলাফল আপডেট এবং রিচার্জ সাপোর্ট পেতে তোমার সচল মোবাইল নম্বরটি দাও।</p>
+      </div>
+      <div class="space-y-3 pt-2">
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">মোবাইল নম্বর (১১ ডিজিট)</label>
+          <input type="tel" id="studentPhoneInput" placeholder="e.g. 017XXXXXXXX" maxlength="11" class="w-full border border-slate-300 focus:border-indigo-600 focus:outline-none p-3 rounded-xl font-mono text-sm text-center tracking-wider">
+        </div>
+        <button onclick="saveStudentPhone()" id="savePhoneBtn" class="w-full py-3 bg-indigo-900 hover:bg-indigo-800 text-white font-extrabold rounded-xl transition shadow-md">
+          সেভ করো ও এগিয়ে যাও
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- RECHARGE MODAL -->
   <div id="rechargeModal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
-    <div class="bg-white max-w-md w-full rounded-3xl p-6 sm:p-8 shadow-2xl relative space-y-5 text-xs animate-in fade-in zoom-in-95 duration-200">
+    <div class="bg-white max-w-md w-full rounded-3xl p-6 sm:p-8 shadow-2xl relative space-y-4 text-xs animate-in fade-in zoom-in-95 duration-200">
       <button onclick="closeModal('rechargeModal')" class="absolute top-5 right-5 text-slate-400 hover:text-slate-600">✕</button>
 
       <div>
@@ -412,20 +434,26 @@
           <span class="font-bold text-orange-600">Nagad Personal:</span>
           <span class="font-mono font-extrabold bg-white px-2 py-0.5 rounded border border-slate-200 select-all">01570204036</span>
         </div>
-        <p class="text-[11px] text-slate-400 pt-1 leading-normal">* সেন্ড মানি সফল হলে নিচের বক্সে TrxID ও টাকার পরিমাণ লিখে সাবমিট করো।</p>
+        <p class="text-[11px] text-slate-400 pt-1 leading-normal">* সেন্ড মানি সফল হলে নিচের বক্সে তথ্যগুলো দিয়ে সাবমিট করো।</p>
       </div>
 
-      <div class="space-y-3">
-        <div>
-          <label class="block font-bold text-slate-600 mb-1">পেমেন্ট মেথড</label>
-          <select id="recMethod" class="w-full border p-2.5 rounded-xl">
-            <option value="bKash">bKash Personal</option>
-            <option value="Nagad">Nagad Personal</option>
-          </select>
+      <div class="space-y-2.5">
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block font-bold text-slate-600 mb-1">পেমেন্ট মেথড</label>
+            <select id="recMethod" class="w-full border p-2.5 rounded-xl">
+              <option value="bKash">bKash Personal</option>
+              <option value="Nagad">Nagad Personal</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-bold text-slate-600 mb-1">টাকার পরিমাণ (BDT)</label>
+            <input type="number" id="recAmount" placeholder="৫০" class="w-full border p-2.5 rounded-xl">
+          </div>
         </div>
         <div>
-          <label class="block font-bold text-slate-600 mb-1">টাকার পরিমাণ (BDT)</label>
-          <input type="number" id="recAmount" placeholder="৫০ (১২টি টেস্টের অফার)" class="w-full border p-2.5 rounded-xl">
+          <label class="block font-bold text-slate-600 mb-1">তোমার মোবাইল নম্বর (যে নম্বর থেকে পাঠিয়েছো)</label>
+          <input type="tel" id="recPhone" placeholder="017XXXXXXXX" maxlength="11" class="w-full border p-2.5 rounded-xl font-mono">
         </div>
         <div>
           <label class="block font-bold text-slate-600 mb-1">TrxID (ট্রানজেকশন আইডি)</label>
@@ -547,8 +575,43 @@
           alert(`স্বাগতম ${currentProfile.full_name}! আপনার ওয়ালেটে ১০ টাকা ওয়েলকাম বোনাস দেওয়া হয়েছে।`);
         }
         updateNavAfterLogin();
+
+        // Check if student has provided phone number; if not, ask for it
+        if (!currentProfile.phone || currentProfile.phone.trim() === "") {
+          openModal('phoneModal');
+          if (window.lucide) lucide.createIcons();
+        } else {
+          const recPhoneInput = document.getElementById('recPhone');
+          if (recPhoneInput) recPhoneInput.value = currentProfile.phone;
+        }
       } catch (err) {
         console.error("Profile sync error:", err);
+      }
+    }
+
+    async function saveStudentPhone() {
+      if (!currentUser) return;
+      const phoneInput = document.getElementById('studentPhoneInput');
+      const phoneVal = phoneInput ? phoneInput.value.trim() : "";
+
+      if (!/^01[3-9]\d{8}$/.test(phoneVal)) {
+        alert("দয়া করে একটি সঠিক ১১ ডিজিটের মোবাইল নম্বর দিন (যেমন: 017XXXXXXXX)।");
+        return;
+      }
+
+      const btn = document.getElementById('savePhoneBtn');
+      if (btn) { btn.innerText = "সেভ হচ্ছে... ⏳"; btn.disabled = true; }
+
+      try {
+        await db.collection("profiles").doc(currentUser.uid).update({ phone: phoneVal });
+        if (currentProfile) currentProfile.phone = phoneVal;
+        const recPhoneInput = document.getElementById('recPhone');
+        if (recPhoneInput) recPhoneInput.value = phoneVal;
+        closeModal('phoneModal');
+      } catch (e) {
+        alert("নম্বর সেভ করতে সমস্যা হয়েছে: " + e.message);
+      } finally {
+        if (btn) { btn.innerText = "সেভ করো ও এগিয়ে যাও"; btn.disabled = false; }
       }
     }
 
@@ -664,6 +727,11 @@
         handleGoogleSignIn();
         return; 
       }
+      if (!currentProfile?.phone || currentProfile.phone.trim() === "") {
+        openModal('phoneModal');
+        return;
+      }
+
       const bal = currentProfile?.wallet_balance !== undefined ? currentProfile.wallet_balance : 10.00;
       if (bal < fee) {
         alert(`ওয়ালেটে পর্যাপ্ত ব্যালেন্স নেই! এই পরীক্ষার ফি ৳${fee.toFixed(2)}। দয়া করে রিচার্জ করুন।`);
@@ -934,10 +1002,11 @@
       }
       const method = document.getElementById('recMethod').value;
       const amount = parseFloat(document.getElementById('recAmount').value);
+      const phone = document.getElementById('recPhone').value.trim();
       const trx_id = document.getElementById('recTrxId').value.trim();
 
-      if (!amount || amount < 10 || !trx_id) {
-        alert("দয়া করে সঠিক টাকার পরিমাণ (কমপক্ষে ১০ টাকা) এবং TrxID লিখুন।");
+      if (!amount || amount < 10 || !trx_id || !phone) {
+        alert("দয়া করে সঠিক টাকার পরিমাণ (কমপক্ষে ১০ টাকা), মোবাইল নম্বর এবং TrxID লিখুন।");
         return;
       }
 
@@ -945,7 +1014,7 @@
         userId: currentUser.uid,
         userName: currentProfile?.full_name || currentUser.displayName || 'Student',
         userEmail: currentUser.email,
-        phone: currentProfile?.phone || '',
+        phone: phone,
         amount: amount,
         method: method,
         trx_id: trx_id,
@@ -955,6 +1024,10 @@
 
       try {
         await db.collection("wallet_recharges").add(rec);
+        // Save phone number to student's profile as well
+        await db.collection("profiles").doc(currentUser.uid).update({ phone: phone });
+        if (currentProfile) currentProfile.phone = phone;
+
         alert("আপনার রিচার্জ রিকোয়েস্ট সফলভাবে জমা হয়েছে! ওনার ভেরিফাই করে কিছুক্ষণের মধ্যে ব্যালেন্স যোগ করবেন।");
         closeModal('rechargeModal');
       } catch(e) {
@@ -992,7 +1065,7 @@
             rechargeContainer.innerHTML = recs.map(r => `
               <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center p-3 border rounded-xl bg-slate-50 text-xs gap-2">
                 <div>
-                  <strong>${r.userName || 'Student'}</strong> (${r.userEmail})<br>
+                  <strong>${r.userName || 'Student'}</strong> (${r.userEmail}) | 📞 <span class="font-mono font-bold text-slate-700">${r.phone || '-'}</span><br>
                   ${r.method}: ৳${r.amount} | <span class="font-mono text-indigo-700 font-bold select-all">TrxID: ${r.trx_id}</span>
                 </div>
                 <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
@@ -1039,7 +1112,7 @@
         <tr class="hover:bg-slate-50 transition">
           <td class="px-4 py-3 font-bold text-slate-900">${s.full_name || 'Student'}</td>
           <td class="px-4 py-3 text-slate-600">${s.email || '-'}</td>
-          <td class="px-4 py-3 font-mono font-bold text-indigo-700 select-all">${s.phone || '-'}</td>
+          <td class="px-4 py-3 font-mono font-bold text-indigo-700 select-all">${s.phone || 'দেওয়া হয়নি'}</td>
           <td class="px-4 py-3 font-extrabold text-emerald-600">৳${parseFloat(s.wallet_balance || 0).toFixed(2)}</td>
           <td class="px-4 py-3 text-slate-400 text-xs">${s.created_at ? new Date(s.created_at.toDate ? s.created_at.toDate() : s.created_at).toLocaleDateString('bn-BD') : '-'}</td>
         </tr>
@@ -1056,7 +1129,7 @@
       tbody.innerHTML = list.map(a => `
         <tr class="hover:bg-slate-50 transition">
           <td class="px-4 py-3 text-xs text-slate-400">${a.timestamp || '-'}</td>
-          <td class="px-4 py-3 font-semibold text-slate-800">${a.studentName || 'Student'} (${a.studentEmail || '-'})</td>
+          <td class="px-4 py-3 font-semibold text-slate-800">${a.studentName || 'Student'} (${a.studentPhone || a.studentEmail || '-'})</td>
           <td class="px-4 py-3 font-bold text-slate-900">${a.examTitle || (a.unit || 'B_UNIT').replace('_', ' ') + ' টেস্ট'}</td>
           <td class="px-4 py-3 font-extrabold text-indigo-700">${parseFloat(a.score || 0).toFixed(2)}</td>
           <td class="px-4 py-3 text-emerald-600 font-semibold">${a.correct_count}</td>
