@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>দীক্ষান্তর | বিশ্ববিদ্যালয় ভর্তি মডেল টেস্ট ও ক্যারিয়ার হাব</title>
   
+  <!-- Google Search Console Verification -->
   <meta name="google-site-verification" content="CfdKs5-XUvD4jqtGks5xWzDi9rV9tFKQBeSPeZCgfwo" />
   
   <script src="https://cdn.tailwindcss.com"></script>
@@ -490,14 +491,13 @@
       });
     });
 
-    // FIXED GOOGLE SIGN IN WITHOUT REFRESH LOOP
     async function handleGoogleSignIn() {
       if (isSigningIn) return;
       isSigningIn = true;
       const btn = document.getElementById('authBtn');
       const btnText = document.getElementById('authBtnText');
       if (btn) btn.disabled = true;
-      if (btnText) btnText.innerText = "লগইন হচ্ছে...";
+      if (btnText) btnText.innerText = "লগইন হচ্ছে... ⏳";
 
       const provider = new firebase.auth.GoogleAuthProvider();
       provider.setCustomParameters({ prompt: 'select_account' });
@@ -963,17 +963,24 @@
     }
 
     // ==========================================
-    // COMPLETE OWNER CONTROL & CRM ENGINE
+    // OPTIMIZED FAST ADMIN ENGINE
     // ==========================================
     async function loadAdminQueue() {
+      document.getElementById('adminTotalStudents').innerText = "⏳";
+      document.getElementById('adminTotalBalance').innerText = "⏳";
+      document.getElementById('adminTotalAttemptsCount').innerText = "⏳";
+      document.getElementById('adminPendingCount').innerText = "⏳";
+
       try {
-        // 1. Pending Recharges
-        const recSnapshot = await db.collection("wallet_recharges").where("status", "==", "pending").get();
+        const [recSnapshot, profileSnapshot, attemptsSnapshot] = await Promise.all([
+          db.collection("wallet_recharges").where("status", "==", "pending").get(),
+          db.collection("profiles").get(),
+          db.collection("exam_attempts").limit(50).get()
+        ]);
+
         const recs = [];
         recSnapshot.forEach(doc => {
-          const data = doc.data();
-          data.id = doc.id;
-          recs.push(data);
+          const data = doc.data(); data.id = doc.id; recs.push(data);
         });
 
         document.getElementById('adminPendingCount').innerText = recs.length;
@@ -989,10 +996,10 @@
                   ${r.method}: ৳${r.amount} | <span class="font-mono text-indigo-700 font-bold select-all">TrxID: ${r.trx_id}</span>
                 </div>
                 <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
-                  <button onclick="adminApproveRecharge('${r.id}', '${r.userId}', ${r.amount})" class="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-bold transition">
+                  <button id="btn_approve_${r.id}" onclick="adminApproveRecharge('${r.id}', '${r.userId}', ${r.amount})" class="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-bold transition">
                     অ্যাপ্রুভ (৳${r.amount})
                   </button>
-                  <button onclick="adminRejectRecharge('${r.id}')" class="px-3 py-1.5 bg-rose-600 hover:bg-rose-700 text-white rounded-lg font-bold transition">
+                  <button id="btn_reject_${r.id}" onclick="adminRejectRecharge('${r.id}')" class="px-3 py-1.5 bg-rose-600 hover:bg-rose-700 text-white rounded-lg font-bold transition">
                     রিজেক্ট ✕
                   </button>
                 </div>
@@ -1001,25 +1008,16 @@
           }
         }
 
-        // 2. All Registered Students Directory (From Real Google Cloud)
-        const profileSnapshot = await db.collection("profiles").get();
         const students = [];
-        profileSnapshot.forEach(doc => {
-          students.push(doc.data());
-        });
+        profileSnapshot.forEach(doc => students.push(doc.data()));
         allLoadedStudents = students;
         renderAdminStudentsTable(students);
 
-        // 3. Global Exam Attempts
-        const attemptsSnapshot = await db.collection("exam_attempts").limit(50).get();
         const globalAttempts = [];
-        attemptsSnapshot.forEach(doc => {
-          globalAttempts.push(doc.data());
-        });
+        attemptsSnapshot.forEach(doc => globalAttempts.push(doc.data()));
         globalAttempts.sort((a,b) => (b.created_at?.toMillis() || 0) - (a.created_at?.toMillis() || 0));
         renderAdminAttemptsTable(globalAttempts);
 
-        // 4. Update Summary Cards
         document.getElementById('adminTotalStudents').innerText = students.length;
         const totalBal = students.reduce((sum, s) => sum + parseFloat(s.wallet_balance || 0), 0);
         document.getElementById('adminTotalBalance').innerText = '৳' + totalBal.toFixed(2);
@@ -1098,6 +1096,11 @@
     }
 
     async function adminApproveRecharge(recId, studentUid, amount) {
+      const btn = document.getElementById(`btn_approve_${recId}`);
+      const rejectBtn = document.getElementById(`btn_reject_${recId}`);
+      if(btn) { btn.innerText = "অ্যাপ্রুভ হচ্ছে... ⏳"; btn.disabled = true; }
+      if(rejectBtn) { rejectBtn.disabled = true; }
+
       try {
         const userRef = db.collection("profiles").doc(studentUid);
         const userDoc = await userRef.get();
@@ -1105,18 +1108,24 @@
           const currentBal = parseFloat(userDoc.data().wallet_balance || 0);
           await userRef.update({ wallet_balance: currentBal + parseFloat(amount) });
         }
-
         await db.collection("wallet_recharges").doc(recId).update({ status: "approved" });
-
         alert(`৳${amount} সফলভাবে শিক্ষার্থীর ওয়ালেটে যুক্ত হয়েছে!`);
         loadAdminQueue();
       } catch(e) {
         alert("অনুমোদনে সমস্যা হয়েছে: " + e.message);
+        if(btn) { btn.innerText = `অ্যাপ্রুভ (৳${amount})`; btn.disabled = false; }
+        if(rejectBtn) { rejectBtn.disabled = false; }
       }
     }
 
     async function adminRejectRecharge(recId) {
       if (!confirm("আপনি কি নিশ্চিত যে এই ভুয়া রিচার্জ রিকোয়েস্টটি বাতিল (Reject) করতে চান?")) return;
+      
+      const rejectBtn = document.getElementById(`btn_reject_${recId}`);
+      const approveBtn = document.getElementById(`btn_approve_${recId}`);
+      if(rejectBtn) { rejectBtn.innerText = "বাতিল হচ্ছে... ⏳"; rejectBtn.disabled = true; }
+      if(approveBtn) { approveBtn.disabled = true; }
+
       try {
         await db.collection("wallet_recharges").doc(recId).update({ 
           status: "rejected",
@@ -1125,6 +1134,8 @@
         loadAdminQueue();
       } catch(e) {
         alert("বাতিল করতে সমস্যা হয়েছে: " + e.message);
+        if(rejectBtn) { rejectBtn.innerText = "রিজেক্ট ✕"; rejectBtn.disabled = false; }
+        if(approveBtn) { approveBtn.disabled = false; }
       }
     }
   </script>
