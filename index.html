@@ -101,13 +101,13 @@
         <div class="max-w-3xl space-y-4">
           <div class="inline-flex items-center gap-2 bg-indigo-800/60 border border-indigo-700/60 text-indigo-200 px-3.5 py-1 rounded-full text-xs font-bold uppercase tracking-wider">
             <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            বিজ্ঞান • মানবিক • ব্যবসায় শিক্ষা ১০০ নম্বরের পূর্ণাঙ্গ টেস্ট
+            এমসিকিউ ও লিখিত (Written) পূর্ণাঙ্গ ভর্তি প্রস্তুতি
           </div>
           <h1 class="text-3xl sm:text-5xl font-black tracking-tight leading-tight">
             স্বপ্নের বিশ্ববিদ্যালয়ে চান্স নিশ্চিত করতে হোক <span class="bg-gradient-to-r from-amber-400 via-orange-300 to-amber-200 bg-clip-text text-transparent">দীক্ষান্তর-এর সাথে প্রস্তুতি</span>
           </h1>
           <p class="text-slate-300 text-xs sm:text-sm leading-relaxed max-w-2xl">
-            ঢাকা বিশ্ববিদ্যালয় (DU), জবি, জাবি, চবি এবং গুচ্ছের বিগত বছরের স্ট্যান্ডার্ড প্রশ্নে ১০০টি এমসিকিউ টেস্ট। প্রতিটি ভুল উত্তরের জন্য -০.২৫ নেগেটিভ মার্কিং। পরীক্ষা শেষে সম্পূর্ণ নির্ভুল উত্তর সমাধানসহ দেখে নাও।
+            ঢাকা বিশ্ববিদ্যালয় (DU), জবি, জাবি, চবি এবং গুচ্ছের বিগত বছরের স্ট্যান্ডার্ড প্রশ্নে এমসিকিউ এবং লিখিত (Written) মডেল টেস্ট। লিখিত পরীক্ষার খাতার ছবি তুলে আপলোড করলেই অভিজ্ঞ মেন্টরদের মাধ্যমে খাতা মূল্যায়ন ও নম্বর প্রদান!
           </p>
 
           <div class="pt-2 flex flex-wrap items-center gap-3">
@@ -125,16 +125,16 @@
       <div class="space-y-4">
         <div>
           <h2 class="text-xl font-extrabold text-slate-900 tracking-tight">অনুষদ ও ইউনিট নির্বাচন করো</h2>
-          <p class="text-xs text-slate-500 font-medium">তোমার বিভাগ অনুযায়ী ইউনিট বেছে নিয়ে ২০টি পূর্ণাঙ্গ মডেল টেস্ট শুরু করো</p>
+          <p class="text-xs text-slate-500 font-medium">তোমার বিভাগ অনুযায়ী ইউনিট অথবা লিখিত পরীক্ষা বেছে নাও</p>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3" id="unitTabs">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3" id="unitTabs">
           <button onclick="switchUnit('B_UNIT')" id="tab_B_UNIT" class="p-4 rounded-2xl border-2 border-indigo-600 bg-indigo-50/60 text-left transition shadow-xs">
             <div class="flex justify-between items-center mb-1">
-              <span class="text-xs font-extrabold uppercase text-indigo-700 bg-indigo-100 px-2.5 py-0.5 rounded-full">মানবিক শাখা</span>
+              <span class="text-xs font-extrabold uppercase text-indigo-700 bg-indigo-100 px-2.5 py-0.5 rounded-full">মানবিক শাখা (৪০টি টেস্ট)</span>
               <i data-lucide="book-open" class="w-4 h-4 text-indigo-600"></i>
             </div>
-            <div class="font-black text-slate-900 text-base">B-Unit / কলা ও সামাজিক বিজ্ঞান</div>
+            <div class="font-black text-slate-900 text-base">B-Unit / কলা ও সামাজিক</div>
             <div class="text-[11px] text-slate-500 mt-0.5">বাংলা, English ও সাধারণ জ্ঞান (১০০ প্রশ্ন)</div>
           </button>
 
@@ -144,7 +144,7 @@
               <i data-lucide="atom" class="w-4 h-4 text-emerald-600"></i>
             </div>
             <div class="font-black text-slate-900 text-base">A-Unit / বিজ্ঞান অনুষদ</div>
-            <div class="text-[11px] text-slate-500 mt-0.5">পদার্থ, রসায়ন, জীববিজ্ঞান ও গণিত (১০০ প্রশ্ন)</div>
+            <div class="text-[11px] text-slate-500 mt-0.5">পদার্থ, রসায়ন, জীববিজ্ঞান ও গণিত</div>
           </button>
 
           <button onclick="switchUnit('C_UNIT')" id="tab_C_UNIT" class="p-4 rounded-2xl border-2 border-slate-200 bg-white text-left transition hover:border-slate-300">
@@ -152,8 +152,17 @@
               <span class="text-xs font-extrabold uppercase text-amber-700 bg-amber-50 px-2.5 py-0.5 rounded-full">ব্যবসায় শিক্ষা</span>
               <i data-lucide="briefcase" class="w-4 h-4 text-amber-600"></i>
             </div>
-            <div class="font-black text-slate-900 text-base">C-Unit / ব্যবসায় শিক্ষা অনুষদ</div>
-            <div class="text-[11px] text-slate-500 mt-0.5">হিসাববিজ্ঞান, ব্যবস্থাপনা, ফিন্যান্স, বাংলা ও ইংরেজি</div>
+            <div class="font-black text-slate-900 text-base">C-Unit / ব্যবসায় শিক্ষা</div>
+            <div class="text-[11px] text-slate-500 mt-0.5">হিসাববিজ্ঞান, ব্যবস্থাপনা, বাংলা ও ইংরেজি</div>
+          </button>
+
+          <button onclick="switchUnit('WRITTEN')" id="tab_WRITTEN" class="p-4 rounded-2xl border-2 border-slate-200 bg-white text-left transition hover:border-slate-300">
+            <div class="flex justify-between items-center mb-1">
+              <span class="text-xs font-extrabold uppercase text-purple-700 bg-purple-100 px-2.5 py-0.5 rounded-full">লিখিত মূল্যায়ন ✨</span>
+              <i data-lucide="pen-tool" class="w-4 h-4 text-purple-600"></i>
+            </div>
+            <div class="font-black text-slate-900 text-base">লিখিত পরীক্ষা (Written)</div>
+            <div class="text-[11px] text-slate-500 mt-0.5">খাতায় লিখে ছবি তুলে সরাসরি মূল্যায়ন</div>
           </button>
         </div>
 
@@ -167,7 +176,7 @@
       <div class="flex justify-between items-center border-b border-slate-200 pb-5">
         <div>
           <h2 class="text-2xl font-extrabold text-slate-900">শিক্ষার্থী প্রগ্রেস ড্যাশবোর্ড</h2>
-          <p class="text-xs text-slate-500 mt-0.5">তোমার অতীতের সকল পরীক্ষার হিস্ট্রি, প্রাপ্ত মার্ক এবং ভুল বিশ্লেষণ</p>
+          <p class="text-xs text-slate-500 mt-0.5">তোমার অতীতের সকল এমসিকিউ ও লিখিত পরীক্ষার হিস্ট্রি এবং প্রাপ্ত নম্বর</p>
         </div>
         <button onclick="showView('homeView')" class="px-3.5 py-2 text-xs font-bold bg-slate-200 hover:bg-slate-300 text-slate-800 rounded-xl transition">
           ← পরীক্ষায় ফিরে যাও
@@ -176,7 +185,7 @@
 
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
-          <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">মোট অংশগ্রহণ</span>
+          <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">মোট এমসিকিউ পরীক্ষা</span>
           <div class="text-2xl sm:text-3xl font-extrabold text-indigo-700 mt-2" id="kpiTotalAttempts">0</div>
         </div>
         <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
@@ -193,9 +202,10 @@
         </div>
       </div>
 
+      <!-- MCQ History -->
       <div class="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
         <div class="p-4 sm:p-5 border-b border-slate-100 flex items-center justify-between">
-          <h3 class="font-extrabold text-slate-900 text-sm sm:text-base">পরীক্ষার ফলাফল হিস্ট্রি</h3>
+          <h3 class="font-extrabold text-slate-900 text-sm sm:text-base">এমসিকিউ (MCQ) পরীক্ষার ফলাফল হিস্ট্রি</h3>
           <span class="text-xs text-slate-400">সর্বশেষ ফলাফলসমূহ</span>
         </div>
         <div class="overflow-x-auto">
@@ -215,9 +225,35 @@
           </table>
         </div>
       </div>
+
+      <!-- Written Exam History -->
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
+        <div class="p-4 sm:p-5 border-b border-slate-100 flex items-center justify-between">
+          <h3 class="font-extrabold text-purple-900 text-sm sm:text-base flex items-center gap-2">
+            <i data-lucide="pen-tool" class="w-4 h-4 text-purple-600"></i>
+            লিখিত (Written) পরীক্ষার ফলাফল ও মূল্যায়ন
+          </h3>
+          <span class="text-xs text-slate-400">খাতা মূল্যায়ন ও মন্তব্য</span>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs sm:text-sm">
+            <thead class="bg-purple-50/50 text-slate-600 uppercase text-[11px] font-bold border-b border-slate-100">
+              <tr>
+                <th class="px-5 py-3.5">জমা দেওয়ার তারিখ</th>
+                <th class="px-5 py-3.5">পরীক্ষার নাম</th>
+                <th class="px-5 py-3.5">স্ট্যাটাস</th>
+                <th class="px-5 py-3.5">প্রাপ্ত নম্বর</th>
+                <th class="px-5 py-3.5">শিক্ষকের মন্তব্য (Feedback)</th>
+                <th class="px-5 py-3.5 text-right">আপলোড করা খাতা</th>
+              </tr>
+            </thead>
+            <tbody id="writtenHistoryTableBody" class="divide-y divide-slate-100 text-slate-700"></tbody>
+          </table>
+        </div>
+      </div>
     </section>
 
-    <!-- VIEW 3: LIVE EXAM VIEW -->
+    <!-- VIEW 3: LIVE MCQ EXAM VIEW -->
     <section id="examView" class="hidden max-w-4xl mx-auto space-y-6">
       <div class="sticky top-20 z-40 bg-white/95 backdrop-blur-md border border-slate-200 rounded-2xl p-4 sm:p-5 shadow-sm flex items-center justify-between">
         <div>
@@ -241,6 +277,62 @@
         <button type="button" onclick="submitExam()" class="w-full py-4 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-extrabold text-base rounded-2xl shadow-lg shadow-emerald-600/20 hover:scale-[1.005] active:scale-[0.99] transition">
           পরীক্ষা সমাপ্ত করো ও ফলাফল জমা দাও (১০০ মার্ক)
         </button>
+      </div>
+    </section>
+
+    <!-- VIEW 3B: LIVE WRITTEN EXAM & UPLOAD VIEW -->
+    <section id="writtenExamView" class="hidden max-w-4xl mx-auto space-y-6">
+      <div class="sticky top-20 z-40 bg-white/95 backdrop-blur-md border border-purple-200 rounded-2xl p-4 sm:p-5 shadow-sm flex items-center justify-between">
+        <div>
+          <span class="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full bg-purple-100 text-purple-700">লিখিত পরীক্ষা (Written)</span>
+          <h3 class="text-lg font-black text-slate-900 mt-0.5" id="activeWrittenTitle">লিখিত মডেল টেস্ট</h3>
+        </div>
+        <div class="flex items-center gap-2">
+          <div class="text-right hidden sm:block">
+            <div class="text-[11px] text-slate-400 font-bold uppercase">অবশিষ্ট সময়</div>
+            <div class="text-[10px] text-purple-600 font-bold" id="activeWrittenMarks">পূর্ণমান: ৪০</div>
+          </div>
+          <div class="text-xl sm:text-2xl font-black font-mono text-purple-700 bg-purple-50 border border-purple-200 px-4 py-1.5 rounded-xl tracking-wider" id="writtenExamTimer">
+            45:00
+          </div>
+        </div>
+      </div>
+
+      <!-- Question Paper Box -->
+      <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-xs space-y-4">
+        <div class="border-b border-slate-100 pb-3 flex justify-between items-center">
+          <h4 class="font-extrabold text-slate-900 text-base flex items-center gap-2">
+            <i data-lucide="file-text" class="w-5 h-5 text-purple-600"></i> প্রশ্নপত্র (নিচের প্রশ্নগুলোর উত্তর সাদা খাতায় লেখো)
+          </h4>
+        </div>
+        <div id="activeWrittenQuestionsText" class="text-slate-800 text-sm sm:text-base leading-relaxed whitespace-pre-line font-medium bg-slate-50/70 p-5 rounded-2xl border border-slate-200/80"></div>
+      </div>
+
+      <!-- Answer Script Photo Upload Box -->
+      <div class="bg-white border-2 border-dashed border-purple-300 rounded-3xl p-6 sm:p-8 text-center space-y-4">
+        <div class="w-12 h-12 rounded-2xl bg-purple-50 text-purple-600 flex items-center justify-center mx-auto">
+          <i data-lucide="camera" class="w-6 h-6"></i>
+        </div>
+        <div class="space-y-1">
+          <h4 class="font-extrabold text-slate-900 text-base">উত্তরপত্রের ছবি আপলোড করো</h4>
+          <p class="text-xs text-slate-500 max-w-md mx-auto">খাতায় উত্তর লেখা শেষ হলে ফোনের ক্যামেরা দিয়ে স্পষ্টভাবে খাতার ছবি তুলে নিচের বাটনে ক্লিক করে এক বা একাধিক পাতার ছবি সিলেক্ট করো।</p>
+        </div>
+
+        <div>
+          <input type="file" id="writtenAnswerImages" accept="image/*" multiple onchange="previewSelectedImages()" class="hidden">
+          <label for="writtenAnswerImages" class="inline-flex items-center gap-2 px-5 py-3 bg-purple-50 hover:bg-purple-100 text-purple-700 border border-purple-200 font-extrabold text-xs sm:text-sm rounded-xl cursor-pointer transition">
+            <i data-lucide="image-plus" class="w-4 h-4"></i> খাতার ছবি নির্বাচন করো (এক বা একাধিক পাতা)
+          </label>
+        </div>
+
+        <!-- Selected Image Previews -->
+        <div id="writtenImagePreviewGrid" class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2"></div>
+
+        <div class="pt-4">
+          <button type="button" id="submitWrittenBtn" onclick="submitWrittenExam()" class="w-full py-4 bg-gradient-to-r from-purple-700 to-indigo-700 hover:from-purple-800 hover:to-indigo-800 text-white font-extrabold text-base rounded-2xl shadow-lg shadow-purple-600/20 transition">
+            উত্তরপত্র জমা দাও (Submit Answer Sheet)
+          </button>
+        </div>
       </div>
     </section>
 
@@ -278,7 +370,7 @@
             <i data-lucide="crown" class="w-6 h-6 text-amber-500"></i>
             দীক্ষান্তর Owner Control & Marketing Panel
           </h2>
-          <p class="text-xs text-slate-500">নিবন্ধিত শিক্ষার্থী, ফোন নম্বর তালিকা, পরীক্ষার লাইভ রেকর্ড ও রিচার্জ অনুমোদন</p>
+          <p class="text-xs text-slate-500">নিবন্ধিত শিক্ষার্থী, লিখিত খাতা মূল্যায়ন, প্রশ্ন তৈরি ও রিচার্জ অনুমোদন</p>
         </div>
         <div class="flex gap-2">
           <button onclick="exportStudentsCSV()" class="flex items-center gap-1.5 px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-xs transition">
@@ -323,6 +415,64 @@
         <div id="adminRechargeList" class="space-y-2"></div>
       </div>
 
+      <!-- Section W1: Create & Manage Written Exams directly from Owner Panel -->
+      <div class="bg-white border-2 border-purple-200 rounded-2xl p-6 shadow-xs space-y-4">
+        <div>
+          <h3 class="text-base font-extrabold text-purple-950 flex items-center gap-2">
+            <i data-lucide="file-plus-2" class="w-5 h-5 text-purple-600"></i>
+            নতুন লিখিত পরীক্ষা (Written Exam) তৈরি করুন
+          </h3>
+          <p class="text-xs text-slate-500">এখানে প্রশ্ন টাইপ করে পাবলিশ করলেই সাথে সাথে ওয়েবসাইটের "লিখিত পরীক্ষা" ট্যাবে যুক্ত হয়ে যাবে</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-4 gap-3 text-xs">
+          <div class="sm:col-span-2">
+            <label class="block font-bold text-slate-700 mb-1">পরীক্ষার নাম (Title)</label>
+            <input type="text" id="wExamTitle" placeholder="যেমন: ঢাবি খ-ইউনিট লিখিত মডেল টেস্ট ০১" class="w-full border p-2.5 rounded-xl">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">পূর্ণমান (Total Marks)</label>
+            <input type="number" id="wExamMarks" value="40" class="w-full border p-2.5 rounded-xl">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">সময় (মিনিট) ও ফি (৳)</label>
+            <div class="flex gap-2">
+              <input type="number" id="wExamDuration" value="45" placeholder="মিনিট" class="w-1/2 border p-2.5 rounded-xl">
+              <input type="number" id="wExamFee" value="5" placeholder="ফি" class="w-1/2 border p-2.5 rounded-xl">
+            </div>
+          </div>
+        </div>
+
+        <div class="text-xs">
+          <label class="block font-bold text-slate-700 mb-1">লিখিত প্রশ্নসমূহ নিজের হাতে টাইপ করুন</label>
+          <textarea id="wExamQuestions" rows="6" placeholder="১. নিচের অনুচ্ছেদটি বাংলায় অনুবাদ করো (১০ নম্বর):&#10;...&#10;&#10;২. ভাবসম্প্রসারণ লেখো: 'স্বাধীনতা অর্জনের চেয়ে স্বাধীনতা রক্ষা করা কঠিন' (১০ নম্বর)&#10;&#10;৩. Write a short paragraph on 'July Uprising' (10 Marks)" class="w-full border p-3 rounded-xl leading-relaxed"></textarea>
+        </div>
+
+        <button onclick="adminCreateWrittenExam()" id="createWrittenBtn" class="px-5 py-2.5 bg-purple-700 hover:bg-purple-800 text-white font-extrabold text-xs rounded-xl shadow-sm transition">
+          + লিখিত পরীক্ষা পাবলিশ করুন
+        </button>
+
+        <div class="pt-3 border-t border-slate-100">
+          <h4 class="text-xs font-bold text-slate-500 uppercase mb-2">বর্তমান প্রকাশিত লিখিত পরীক্ষাসমূহ:</h4>
+          <div id="adminPublishedWrittenList" class="space-y-2 text-xs"></div>
+        </div>
+      </div>
+
+      <!-- Section W2: Evaluate Student Written Answer Scripts -->
+      <div class="bg-white border-2 border-indigo-200 rounded-2xl p-6 shadow-xs space-y-4">
+        <div class="flex justify-between items-center">
+          <div>
+            <h3 class="text-base font-extrabold text-indigo-950 flex items-center gap-2">
+              <i data-lucide="check-square" class="w-5 h-5 text-indigo-600"></i>
+              শিক্ষার্থীদের জমা দেওয়া লিখিত খাতা মূল্যায়ন (Written Submissions)
+            </h3>
+            <p class="text-xs text-slate-500">ছবির ওপর ক্লিক করে জুম করে খাতা দেখুন এবং নম্বর ও মন্তব্য দিয়ে সাবমিট করুন</p>
+          </div>
+          <button onclick="loadAdminQueue()" class="text-xs text-indigo-600 font-bold hover:underline">রিফ্রেশ</button>
+        </div>
+        <div id="adminWrittenSubmissionsList" class="space-y-4"></div>
+      </div>
+
       <!-- Section B: All Registered Students CRM -->
       <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-xs space-y-4">
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
@@ -356,7 +506,7 @@
         <div>
           <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
             <i data-lucide="clipboard-check" class="w-4 h-4 text-emerald-600"></i>
-            সকল শিক্ষার্থীর পরীক্ষার ফলাফল ও বিস্তারিত মার্কস
+            সকল শিক্ষার্থীর এমসিকিউ পরীক্ষার ফলাফল ও বিস্তারিত মার্কস
           </h3>
           <p class="text-xs text-slate-400">লাইভ পরীক্ষার হিস্ট্রি</p>
         </div>
@@ -453,6 +603,8 @@
 
   <!-- ================= FIREBASE CLOUD & GOOGLE AUTH ENGINE ================= -->
   <script>
+    const IMGBB_API_KEY = "c20a0fa43bc8becfa48c2a74ea933c1f";
+
     const firebaseConfig = {
       apiKey: "AIzaSyDwFuUm21bbQc1MXG9zPalMZTIpAqRYX4U",
       authDomain: "dikkhanntor.firebaseapp.com",
@@ -472,6 +624,7 @@
     let activeUnit = "B_UNIT";
     let activeQuestions = [];
     let currentExam = null;
+    let currentWrittenExam = null;
     let examTimerInterval = null;
     let remainingSeconds = 60 * 60;
     let allLoadedStudents = [];
@@ -595,7 +748,7 @@
     }
 
     function showView(viewId) {
-      ['homeView', 'dashboardView', 'examView', 'resultView', 'adminView'].forEach(id => {
+      ['homeView', 'dashboardView', 'examView', 'writtenExamView', 'resultView', 'adminView'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.classList.toggle('hidden', id !== viewId);
       });
@@ -616,17 +769,23 @@
 
     function switchUnit(unit) {
       activeUnit = unit;
-      ['A_UNIT', 'B_UNIT', 'C_UNIT'].forEach(u => {
+      ['A_UNIT', 'B_UNIT', 'C_UNIT', 'WRITTEN'].forEach(u => {
         const tab = document.getElementById(`tab_${u}`);
         if (tab) {
           if (u === unit) {
-            tab.className = "p-4 rounded-2xl border-2 border-indigo-600 bg-indigo-50/60 text-left transition shadow-xs";
+            tab.className = u === 'WRITTEN' 
+              ? "p-4 rounded-2xl border-2 border-purple-600 bg-purple-50/60 text-left transition shadow-xs"
+              : "p-4 rounded-2xl border-2 border-indigo-600 bg-indigo-50/60 text-left transition shadow-xs";
           } else {
             tab.className = "p-4 rounded-2xl border-2 border-slate-200 bg-white text-left transition hover:border-slate-300";
           }
         }
       });
-      renderUnitExams(unit);
+      if (unit === 'WRITTEN') {
+        renderWrittenExams();
+      } else {
+        renderUnitExams(unit);
+      }
     }
 
     function renderUnitExams(unit) {
@@ -634,8 +793,11 @@
       if (!grid) return;
       let exams = [];
       let unitLabel = unit === 'A_UNIT' ? 'বিজ্ঞান A-Unit' : (unit === 'C_UNIT' ? 'ব্যবসায় শিক্ষা C-Unit' : 'মানবিক B-Unit');
+      
+      // B-Unit has 40 exams now!
+      let totalExams = (unit === 'B_UNIT') ? 40 : 20;
 
-      for (let i = 1; i <= 40; i++) {
+      for (let i = 1; i <= totalExams; i++) {
         exams.push({
           id: i,
           unit: unit,
@@ -665,6 +827,197 @@
       if (window.lucide) lucide.createIcons();
     }
 
+    // ==========================================
+    // WRITTEN EXAM ENGINE (STUDENT & IMG-BB)
+    // ==========================================
+    async function renderWrittenExams() {
+      const grid = document.getElementById('examCardsGrid');
+      if (!grid) return;
+      grid.innerHTML = `<div class="col-span-full py-8 text-center text-slate-400 text-xs">লিখিত পরীক্ষা লোড হচ্ছে...</div>`;
+
+      try {
+        const snap = await db.collection("written_exams").get();
+        const list = [];
+        snap.forEach(doc => {
+          const d = doc.data();
+          d.id = doc.id;
+          list.push(d);
+        });
+        list.sort((a,b) => (b.created_at?.toMillis() || 0) - (a.created_at?.toMillis() || 0));
+
+        if (list.length === 0) {
+          grid.innerHTML = `
+            <div class="col-span-full bg-white border border-slate-200 rounded-2xl p-8 text-center space-y-2">
+              <p class="font-bold text-slate-700 text-sm">এখনো কোনো লিখিত পরীক্ষা প্রকাশিত হয়নি।</p>
+              <p class="text-xs text-slate-400">খুব শীঘ্রই নতুন লিখিত মডেল টেস্ট যুক্ত করা হবে।</p>
+            </div>
+          `;
+          return;
+        }
+
+        grid.innerHTML = list.map(w => `
+          <div class="bg-white border-2 border-purple-100 rounded-2xl p-6 shadow-xs hover:shadow-lg hover:-translate-y-0.5 transition duration-200 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <span class="text-[11px] font-extrabold uppercase px-2.5 py-1 rounded-md bg-purple-100 text-purple-700">লিখিত মূল্যায়ন (Written)</span>
+                <span class="text-xs font-black text-emerald-700 bg-emerald-50 px-2 py-1 rounded-md border border-emerald-200">ফি: ৳${parseFloat(w.fee || 5).toFixed(2)}</span>
+              </div>
+              <h3 class="font-extrabold text-slate-900 text-base mb-1">${w.title}</h3>
+              <p class="text-xs text-slate-500 mb-4">পূর্ণমান: ${w.total_marks || 40} • সময়: ${w.duration || 45} মিনিট • খাতার ছবি আপলোড</p>
+            </div>
+            <button onclick="payAndStartWrittenExam('${w.id}')" 
+                  class="w-full py-3 bg-purple-700 hover:bg-purple-800 text-white font-extrabold text-xs rounded-xl transition flex items-center justify-center gap-2 shadow-sm">
+              <i data-lucide="pen-tool" class="w-3.5 h-3.5"></i> লিখিত পরীক্ষা শুরু করো
+            </button>
+          </div>
+        `).join("");
+        if (window.lucide) lucide.createIcons();
+      } catch (e) {
+        grid.innerHTML = `<div class="col-span-full py-8 text-center text-rose-500 text-xs">লোড করতে সমস্যা হয়েছে।</div>`;
+      }
+    }
+
+    async function payAndStartWrittenExam(examDocId) {
+      if (!currentUser) {
+        handleGoogleSignIn();
+        return;
+      }
+      try {
+        const doc = await db.collection("written_exams").doc(examDocId).get();
+        if (!doc.exists) {
+          alert("পরীক্ষাটি পাওয়া যায়নি!");
+          return;
+        }
+        const wExam = doc.data();
+        wExam.id = doc.id;
+        const fee = parseFloat(wExam.fee || 5);
+
+        const bal = currentProfile?.wallet_balance !== undefined ? currentProfile.wallet_balance : 10.00;
+        if (bal < fee) {
+          alert(`ওয়ালেটে পর্যাপ্ত ব্যালেন্স নেই! এই লিখিত পরীক্ষার ফি ৳${fee.toFixed(2)}। দয়া করে রিচার্জ করুন।`);
+          openModal('rechargeModal');
+          return;
+        }
+
+        if (!confirm(`এই লিখিত পরীক্ষার জন্য আপনার ওয়ালেট থেকে ৳${fee.toFixed(2)} কাটা হবে। আপনি কি প্রস্তুত?`)) return;
+
+        const newBal = bal - fee;
+        currentProfile.wallet_balance = newBal;
+        const navBal = document.getElementById('navBalance');
+        if (navBal) navBal.innerText = parseFloat(newBal).toFixed(2);
+        await db.collection("profiles").doc(currentUser.uid).update({ wallet_balance: newBal });
+
+        currentWrittenExam = wExam;
+        document.getElementById('activeWrittenTitle').innerText = wExam.title;
+        document.getElementById('activeWrittenMarks').innerText = `পূর্ণমান: ${wExam.total_marks || 40}`;
+        document.getElementById('activeWrittenQuestionsText').innerText = wExam.questions_text || '';
+        document.getElementById('writtenAnswerImages').value = "";
+        document.getElementById('writtenImagePreviewGrid').innerHTML = "";
+
+        showView('writtenExamView');
+        if (window.lucide) lucide.createIcons();
+
+        remainingSeconds = (parseInt(wExam.duration) || 45) * 60;
+        clearInterval(examTimerInterval);
+        examTimerInterval = setInterval(() => {
+          remainingSeconds--;
+          let m = Math.floor(remainingSeconds / 60);
+          let s = remainingSeconds % 60;
+          document.getElementById('writtenExamTimer').innerText = `${m < 10 ? '0' : ''}${m}:${s < 10 ? '0' : ''}${s}`;
+          if (remainingSeconds <= 0) {
+            clearInterval(examTimerInterval);
+            alert("নির্ধারিত সময় শেষ! অনুগ্রহ করে দ্রুত খাতার ছবি আপলোড করে জমা দাও।");
+          }
+        }, 1000);
+
+      } catch (e) {
+        alert("সমস্যা হয়েছে: " + e.message);
+      }
+    }
+
+    function previewSelectedImages() {
+      const input = document.getElementById('writtenAnswerImages');
+      const previewGrid = document.getElementById('writtenImagePreviewGrid');
+      previewGrid.innerHTML = "";
+      if (!input.files || input.files.length === 0) return;
+
+      Array.from(input.files).forEach((file, idx) => {
+        const url = URL.createObjectURL(file);
+        previewGrid.innerHTML += `
+          <div class="relative border border-purple-200 rounded-xl overflow-hidden bg-slate-100 h-28 flex items-center justify-center">
+            <img src="${url}" class="object-cover w-full h-full">
+            <span class="absolute bottom-1 right-1 bg-slate-900/80 text-white text-[10px] font-bold px-2 py-0.5 rounded">পাতা ${idx + 1}</span>
+          </div>
+        `;
+      });
+    }
+
+    async function submitWrittenExam() {
+      const input = document.getElementById('writtenAnswerImages');
+      if (!input.files || input.files.length === 0) {
+        alert("দয়া করে তোমার লেখা খাতার অন্তত একটি ছবি সিলেক্ট করো!");
+        return;
+      }
+
+      const btn = document.getElementById('submitWrittenBtn');
+      btn.disabled = true;
+
+      try {
+        const files = Array.from(input.files);
+        const uploadedUrls = [];
+
+        for (let i = 0; i < files.length; i++) {
+          btn.innerText = `খাতার ছবি আপলোড হচ্ছে (${i + 1}/${files.length})... ⏳`;
+          const formData = new FormData();
+          formData.append("image", files[i]);
+
+          const res = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, {
+            method: "POST",
+            body: formData
+          });
+          const data = await res.json();
+          if (data && data.success) {
+            uploadedUrls.push(data.data.url);
+          } else {
+            throw new Error("ছবি আপলোড হতে সমস্যা হয়েছে। আবার চেষ্টা করো।");
+          }
+        }
+
+        btn.innerText = "ডেটাবেসে জমা হচ্ছে... ⏳";
+        clearInterval(examTimerInterval);
+
+        const submission = {
+          userId: currentUser.uid,
+          studentName: currentProfile?.full_name || currentUser.displayName || 'Student',
+          studentEmail: currentUser.email || '',
+          studentPhone: currentProfile?.phone || '',
+          examId: currentWrittenExam?.id || '',
+          examTitle: currentWrittenExam?.title || 'লিখিত পরীক্ষা',
+          totalMarks: parseFloat(currentWrittenExam?.total_marks || 40),
+          images: uploadedUrls,
+          status: 'pending',
+          obtainedMarks: null,
+          feedback: '',
+          date: new Date().toLocaleDateString('bn-BD'),
+          timestamp: new Date().toLocaleString('bn-BD'),
+          created_at: firebase.firestore.FieldValue.serverTimestamp()
+        };
+
+        await db.collection("written_submissions").add(submission);
+        confetti({ particleCount: 120, spread: 70, origin: { y: 0.6 } });
+        alert("তোমার লিখিত পরীক্ষার খাতা সফলভাবে জমা হয়েছে! শিক্ষক খাতা দেখে নম্বর দিলে ড্যাশবোর্ডে দেখতে পাবে।");
+        showView('dashboardView');
+      } catch (e) {
+        alert("ত্রুটি: " + e.message);
+      } finally {
+        btn.disabled = false;
+        btn.innerText = "উত্তরপত্র জমা দাও (Submit Answer Sheet)";
+      }
+    }
+
+    // ==========================================
+    // LIVE MCQ EXAM ENGINE
+    // ==========================================
     async function payAndStartExam(unit, examId, fee, title, duration) {
       if (!currentUser) { 
         handleGoogleSignIn();
@@ -874,18 +1227,10 @@
     }
 
     async function loadDashboardAnalytics() {
-      if (!currentUser) {
-        document.getElementById('historyTableBody').innerHTML = `
-          <tr><td colspan="7" class="px-5 py-8 text-center text-slate-400 text-xs">ফলাফল দেখতে অনুগ্রহ করে লগইন করুন।</td></tr>
-        `;
-        return;
-      }
+      if (!currentUser) return;
 
-      try {
-        const snapshot = await db.collection("exam_attempts")
-          .where("userId", "==", currentUser.uid)
-          .get();
-
+      // 1. Load MCQ History
+      db.collection("exam_attempts").where("userId", "==", currentUser.uid).get().then(snapshot => {
         const attempts = [];
         snapshot.forEach(doc => {
           const data = doc.data();
@@ -920,17 +1265,48 @@
             </tr>
           `).join("");
         } else {
-          document.getElementById('kpiTotalAttempts').innerText = "0";
-          document.getElementById('kpiAvgScore').innerText = "0.00";
-          document.getElementById('kpiMaxScore').innerText = "0.00";
-          document.getElementById('kpiTotalWrongs').innerText = "0";
           document.getElementById('historyTableBody').innerHTML = `
-            <tr><td colspan="7" class="px-5 py-8 text-center text-slate-400 text-xs">এই অ্যাকাউন্টে এখনো কোনো পরীক্ষা সম্পন্ন হয়নি।</td></tr>
+            <tr><td colspan="7" class="px-5 py-6 text-center text-slate-400 text-xs">এখনো কোনো এমসিকিউ পরীক্ষা সম্পন্ন হয়নি।</td></tr>
           `;
         }
-      } catch(e) {
-        console.error("Dashboard fetch error:", e);
-      }
+      });
+
+      // 2. Load Written Exam History
+      db.collection("written_submissions").where("userId", "==", currentUser.uid).get().then(wSnap => {
+        const wList = [];
+        wSnap.forEach(doc => {
+          const d = doc.data();
+          d.id = doc.id;
+          wList.push(d);
+        });
+        wList.sort((a,b) => (b.created_at?.toMillis() || 0) - (a.created_at?.toMillis() || 0));
+
+        const wBody = document.getElementById('writtenHistoryTableBody');
+        if (wList.length === 0) {
+          wBody.innerHTML = `<tr><td colspan="6" class="px-5 py-6 text-center text-slate-400 text-xs">এখনো কোনো লিখিত পরীক্ষার খাতা জমা দেওয়া হয়নি।</td></tr>`;
+        } else {
+          wBody.innerHTML = wList.map(w => `
+            <tr class="hover:bg-slate-50 transition">
+              <td class="px-5 py-3.5 text-xs text-slate-500">${w.date || '-'}</td>
+              <td class="px-5 py-3.5 font-bold text-slate-900">${w.examTitle}</td>
+              <td class="px-5 py-3.5">
+                ${w.status === 'checked' 
+                  ? `<span class="px-2.5 py-1 bg-emerald-50 text-emerald-700 font-bold text-[11px] rounded-full border border-emerald-200">খাতা দেখা হয়েছে ✅</span>`
+                  : `<span class="px-2.5 py-1 bg-amber-50 text-amber-700 font-bold text-[11px] rounded-full border border-amber-200">মূল্যায়ন চলছে ⏳</span>`}
+              </td>
+              <td class="px-5 py-3.5 font-extrabold text-purple-700">
+                ${w.status === 'checked' ? `${w.obtainedMarks} / ${w.totalMarks}` : '-'}
+              </td>
+              <td class="px-5 py-3.5 text-xs text-slate-600 font-medium">${w.feedback || 'কোনো মন্তব্য নেই'}</td>
+              <td class="px-5 py-3.5 text-right space-x-1">
+                ${(w.images || []).map((imgUrl, i) => `
+                  <a href="${imgUrl}" target="_blank" class="inline-block px-2.5 py-1 bg-purple-50 hover:bg-purple-100 text-purple-700 border border-purple-200 rounded-lg text-[11px] font-bold">পাতা ${i+1}</a>
+                `).join("")}
+              </td>
+            </tr>
+          `).join("");
+        }
+      });
     }
 
     async function submitRechargeRequest() {
@@ -974,10 +1350,10 @@
     }
 
     // ==========================================
-    // NON-BLOCKING INDEPENDENT ADMIN ENGINE
+    // NON-BLOCKING FAST OWNER ADMIN ENGINE
     // ==========================================
     function loadAdminQueue() {
-      // 1. Load Registered Students Independently (Fastest)
+      // 1. Load Registered Students Independently
       db.collection("profiles").get().then(profileSnapshot => {
         const students = [];
         profileSnapshot.forEach(doc => students.push(doc.data()));
@@ -987,7 +1363,7 @@
         document.getElementById('adminTotalStudents').innerText = students.length;
         const totalBal = students.reduce((sum, s) => sum + parseFloat(s.wallet_balance || 0), 0);
         document.getElementById('adminTotalBalance').innerText = '৳' + totalBal.toFixed(2);
-      }).catch(e => console.error("Profiles load error:", e));
+      });
 
       // 2. Load Pending Recharges Independently
       db.collection("wallet_recharges").where("status", "==", "pending").get().then(recSnapshot => {
@@ -1022,16 +1398,159 @@
             `).join("");
           }
         }
-      }).catch(e => console.error("Recharges load error:", e));
+      });
 
-      // 3. Load Exam Attempts Independently
+      // 3. Load Published Written Exams
+      db.collection("written_exams").get().then(wSnap => {
+        const list = [];
+        wSnap.forEach(doc => { const d = doc.data(); d.id = doc.id; list.push(d); });
+        const container = document.getElementById('adminPublishedWrittenList');
+        if (list.length === 0) {
+          container.innerHTML = `<p class="text-slate-400 italic">এখনো কোনো লিখিত পরীক্ষা তৈরি করা হয়নি।</p>`;
+        } else {
+          container.innerHTML = list.map(w => `
+            <div class="flex justify-between items-center p-2.5 bg-purple-50/60 border border-purple-200 rounded-xl">
+              <div><strong>${w.title}</strong> (পূর্ণমান: ${w.total_marks}, সময়: ${w.duration} মি., ফি: ৳${w.fee})</div>
+              <button onclick="adminDeleteWrittenExam('${w.id}')" class="text-rose-600 font-bold hover:underline px-2">ডিলিট ✕</button>
+            </div>
+          `).join("");
+        }
+      });
+
+      // 4. Load Student Written Submissions for Grading
+      db.collection("written_submissions").limit(40).get().then(subSnap => {
+        const subs = [];
+        subSnap.forEach(doc => { const d = doc.data(); d.id = doc.id; subs.push(d); });
+        subs.sort((a,b) => (b.created_at?.toMillis() || 0) - (a.created_at?.toMillis() || 0));
+
+        const subContainer = document.getElementById('adminWrittenSubmissionsList');
+        if (subs.length === 0) {
+          subContainer.innerHTML = `<p class="text-xs text-slate-400 italic">এখনো কোনো শিক্ষার্থী লিখিত খাতা জমা দেয়নি।</p>`;
+        } else {
+          subContainer.innerHTML = subs.map(s => `
+            <div class="p-4 border border-slate-200 rounded-2xl bg-slate-50/70 space-y-3 text-xs">
+              <div class="flex flex-col sm:flex-row justify-between gap-2 border-b border-slate-200 pb-2">
+                <div>
+                  <span class="font-extrabold text-slate-900 text-sm">${s.studentName}</span> (${s.studentEmail})<br>
+                  <span class="text-purple-700 font-bold">${s.examTitle}</span> • জমা: ${s.timestamp || s.date}
+                </div>
+                <div>
+                  ${s.status === 'checked' 
+                    ? `<span class="px-3 py-1 bg-emerald-100 text-emerald-800 font-extrabold rounded-full">মূল্যায়ন সম্পন্ন: ${s.obtainedMarks}/${s.totalMarks}</span>`
+                    : `<span class="px-3 py-1 bg-amber-100 text-amber-800 font-extrabold rounded-full">খাতা দেখা বাকি (Pending)</span>`}
+                </div>
+              </div>
+
+              <!-- Answer Script Image Links -->
+              <div class="space-y-1">
+                <div class="font-bold text-slate-600">আপলোড করা খাতার পাতাগুলো (ক্লিক করে বড় করে দেখুন):</div>
+                <div class="flex flex-wrap gap-2 pt-1">
+                  ${(s.images || []).map((url, idx) => `
+                    <a href="${url}" target="_blank" class="flex items-center gap-1.5 px-3 py-2 bg-white hover:bg-indigo-50 text-indigo-700 border border-indigo-200 rounded-xl font-bold shadow-2xs transition">
+                      📄 খাতার পাতা ${idx + 1} দেখুন ↗
+                    </a>
+                  `).join("")}
+                </div>
+              </div>
+
+              <!-- Grading Inputs -->
+              <div class="grid grid-cols-1 sm:grid-cols-4 gap-2 pt-2 items-end">
+                <div>
+                  <label class="block font-bold text-slate-600 mb-1">প্রাপ্ত নম্বর (${s.totalMarks}-এর মধ্যে)</label>
+                  <input type="number" id="grade_marks_${s.id}" value="${s.obtainedMarks !== null ? s.obtainedMarks : ''}" placeholder="যেমন: 28" class="w-full border bg-white p-2 rounded-xl font-bold">
+                </div>
+                <div class="sm:col-span-2">
+                  <label class="block font-bold text-slate-600 mb-1">শিক্ষকের মন্তব্য / পরামর্শ (Feedback)</label>
+                  <input type="text" id="grade_feedback_${s.id}" value="${s.feedback || ''}" placeholder="যেমন: হাতের লেখা ও পয়েন্টগুলো সুন্দর হয়েছে!" class="w-full border bg-white p-2 rounded-xl">
+                </div>
+                <div>
+                  <button onclick="adminSaveWrittenGrade('${s.id}')" class="w-full py-2 bg-indigo-900 hover:bg-indigo-800 text-white font-extrabold rounded-xl transition">
+                    নম্বর সেভ করুন ✓
+                  </button>
+                </div>
+              </div>
+            </div>
+          `).join("");
+        }
+      });
+
+      // 5. Load MCQ Exam Attempts Independently
       db.collection("exam_attempts").limit(50).get().then(attemptsSnapshot => {
         const globalAttempts = [];
         attemptsSnapshot.forEach(doc => globalAttempts.push(doc.data()));
         globalAttempts.sort((a,b) => (b.created_at?.toMillis() || 0) - (a.created_at?.toMillis() || 0));
         renderAdminAttemptsTable(globalAttempts);
         document.getElementById('adminTotalAttemptsCount').innerText = globalAttempts.length;
-      }).catch(e => console.error("Attempts load error:", e));
+      });
+    }
+
+    async function adminCreateWrittenExam() {
+      const title = document.getElementById('wExamTitle').value.trim();
+      const total_marks = parseFloat(document.getElementById('wExamMarks').value) || 40;
+      const duration = parseInt(document.getElementById('wExamDuration').value) || 45;
+      const fee = parseFloat(document.getElementById('wExamFee').value) || 5;
+      const questions_text = document.getElementById('wExamQuestions').value.trim();
+
+      if (!title || !questions_text) {
+        alert("দয়া করে পরীক্ষার নাম এবং প্রশ্নগুলো টাইপ করুন!");
+        return;
+      }
+
+      const btn = document.getElementById('createWrittenBtn');
+      btn.disabled = true;
+      btn.innerText = "পাবলিশ হচ্ছে... ⏳";
+
+      try {
+        await db.collection("written_exams").add({
+          title,
+          total_marks,
+          duration,
+          fee,
+          questions_text,
+          created_at: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        alert("লিখিত পরীক্ষা সফলভাবে পাবলিশ হয়েছে!");
+        document.getElementById('wExamTitle').value = "";
+        document.getElementById('wExamQuestions').value = "";
+        loadAdminQueue();
+      } catch (e) {
+        alert("সমস্যা হয়েছে: " + e.message);
+      } finally {
+        btn.disabled = false;
+        btn.innerText = "+ লিখিত পরীক্ষা পাবলিশ করুন";
+      }
+    }
+
+    async function adminDeleteWrittenExam(docId) {
+      if (!confirm("আপনি কি নিশ্চিত যে এই লিখিত পরীক্ষাটি মুছে ফেলতে চান?")) return;
+      try {
+        await db.collection("written_exams").doc(docId).delete();
+        loadAdminQueue();
+      } catch (e) {
+        alert("ডিলিট করতে সমস্যা হয়েছে।");
+      }
+    }
+
+    async function adminSaveWrittenGrade(submissionId) {
+      const marksVal = document.getElementById(`grade_marks_${submissionId}`).value;
+      const feedbackVal = document.getElementById(`grade_feedback_${submissionId}`).value.trim();
+
+      if (marksVal === "") {
+        alert("দয়া করে প্রাপ্ত নম্বরটি লিখুন!");
+        return;
+      }
+
+      try {
+        await db.collection("written_submissions").doc(submissionId).update({
+          obtainedMarks: parseFloat(marksVal),
+          feedback: feedbackVal || "ভালো প্রচেষ্টা! অনুশীলন চালিয়ে যাও।",
+          status: "checked"
+        });
+        alert("নম্বর এবং মন্তব্য সফলভাবে সেভ হয়েছে! শিক্ষার্থী এখন তার ড্যাশবোর্ডে ফলাফল দেখতে পাবে।");
+        loadAdminQueue();
+      } catch (e) {
+        alert("সেভ করতে সমস্যা হয়েছে: " + e.message);
+      }
     }
 
     function renderAdminStudentsTable(list) {
